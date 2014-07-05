@@ -107,7 +107,6 @@ public class AddNewRoute extends Activity {
         });
 
         directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (transportModeSpinner.getSelectedItem().equals("Bus")) {
