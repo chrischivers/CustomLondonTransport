@@ -1,5 +1,6 @@
 package com.customlondontransport;
 
+
         import java.io.Serializable;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
@@ -14,15 +15,16 @@ public class DayTimeConditions implements Serializable {
     private boolean[] selectedDays = null;
 
     // Constructor for time info and day info
-    public DayTimeConditions(String fromTime, String toTime, boolean[] selectedDays) throws ParseException {
-
-        Date fromTimeDateFormat = new SimpleDateFormat("HH:mm").parse(fromTime);
+    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays) throws ParseException {
+        String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
+        Date fromTimeDate = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
         this.fromTime = Calendar.getInstance();
-        this.fromTime.setTime(fromTimeDateFormat);
+        this.fromTime.setTime(fromTimeDate);
 
-        Date toTimeDateFormat = new SimpleDateFormat("HH:mm").parse(toTime);
+        String toTimeFormatted = ((toTimeHour < 10) ? "0" + toTimeHour : Integer.toString(toTimeHour)) + ":" + ((toTimeMinutes < 10) ? "0" + toTimeMinutes : Integer.toString(toTimeMinutes));
+        Date toTimeDate = new SimpleDateFormat("HH:mm").parse(toTimeFormatted);
         this.toTime = Calendar.getInstance();
-        this.toTime.setTime(toTimeDateFormat);
+        this.toTime.setTime(toTimeDate);
 
         this.selectedDays = new boolean[7];
         this.selectedDays = selectedDays;
@@ -39,17 +41,16 @@ public class DayTimeConditions implements Serializable {
         if (this.fromTime==null) {
             return null;
         } else {
-            this.fromTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DATE));
             return this.fromTime;
         }
     }
+
 
     public Calendar gettoTime() {
         // Sets date to current date before returning to allow Date.After and Date.Before methods to run correctly. Returns null if time not set.
         if (this.toTime==null) {
             return null;
         } else {
-            this.toTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DATE));
             return this.toTime;
         }
     }

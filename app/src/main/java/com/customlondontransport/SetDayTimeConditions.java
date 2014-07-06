@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TimePicker;;
+import android.widget.CheckBox;
+import android.widget.TimePicker;;import java.text.ParseException;
 
 public class SetDayTimeConditions  extends Activity{
     private TimePicker timePickerTo;
@@ -16,6 +16,7 @@ public class SetDayTimeConditions  extends Activity{
     private Button OKButton;
 
     private DayTimeConditions dtc;
+    private boolean[] selectedDays = new boolean[7]; //false by default
 
 
     @Override
@@ -42,6 +43,14 @@ public class SetDayTimeConditions  extends Activity{
         OKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    System.out.println(timePickerFrom.getCurrentHour());
+                    System.out.println(timePickerFrom.getCurrentMinute());
+                    dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(),selectedDays);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent=new Intent();
                 intent.putExtra("DayTimeConditions", dtc);
                 setResult(RESULT_OK, intent);
@@ -49,6 +58,43 @@ public class SetDayTimeConditions  extends Activity{
             }
         });
 
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_sunday:
+                if (checked) {selectedDays[0] = true; }
+                else { selectedDays[0] = false;}
+                break;
+            case R.id.checkbox_monday:
+                if (checked) {selectedDays[1] = true; }
+                else { selectedDays[1] = false;}
+                break;
+            case R.id.checkbox_tuesday:
+                if (checked) {selectedDays[2] = true; }
+                else { selectedDays[2] = false;}
+                break;
+            case R.id.checkbox_wednesday:
+                if (checked) {selectedDays[3] = true; }
+                else { selectedDays[3] = false;}
+                break;
+            case R.id.checkbox_thursday:
+                if (checked) {selectedDays[4] = true; }
+                else { selectedDays[4] = false;}
+                break;
+            case R.id.checkbox_friday:
+                if (checked) {selectedDays[5] = true; }
+                else { selectedDays[5] = false;}
+                break;
+            case R.id.checkbox_saturday:
+                if (checked) {selectedDays[6] = true; }
+                else { selectedDays[6] = false;}
+                break;
+        }
     }
 
 

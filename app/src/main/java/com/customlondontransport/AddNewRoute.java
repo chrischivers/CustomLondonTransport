@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -393,6 +394,7 @@ public class AddNewRoute extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
+            Toast.makeText(this, dtc.toString(), Toast.LENGTH_SHORT).show();
             //print result?
         } else {
             // Nothing
