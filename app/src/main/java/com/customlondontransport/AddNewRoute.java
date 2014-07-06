@@ -6,8 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -18,9 +20,19 @@ public class AddNewRoute extends Activity {
     private Spinner directionSpinner;
     private Spinner startingStopSpinner;
 
-    public static boolean databaseLoaded = false;
+    private TextView transportModeLabel;
+    private TextView routeLineLabel;
+    private TextView directionLabel;
+    private TextView startingStopLabel;
+
+    private Button addRouteToUserListButton;
 
     private MyDatabase db;
+
+    private boolean isTransportModeSet = false;
+    private boolean isRouteLineSet = false;
+    private boolean isDirectionSet = false;
+    private boolean isStartingStopSet = false;
 
 
     @Override
@@ -28,20 +40,23 @@ public class AddNewRoute extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_route);
 
-
+        // pull in the database
         new Thread(new LoadDatabase()).run();
 
-
+        addRouteToUserListButton = (Button) findViewById(R.id.addRouteToUserListButton);
         transportModeSpinner = (Spinner) findViewById(R.id.transportModeSpinner);
         routeLineSpinner = (Spinner) findViewById(R.id.RouteLineSpinner);
         directionSpinner = (Spinner) findViewById(R.id.DirectionSpinner);
         startingStopSpinner = (Spinner) findViewById(R.id.StartingStopSpinner);
+
+        transportModeLabel = (TextView) findViewById(R.id.TransportModeLabel);
+        routeLineLabel = (TextView) findViewById(R.id.RouteLineLabel);
+        directionLabel = (TextView) findViewById(R.id.DirectionLabel);
+        startingStopLabel = (TextView) findViewById(R.id.StartingStopLabel);
+
         ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
 
-        routeLineSpinner.setEnabled(false);
-        directionSpinner.setEnabled(false);
-        startingStopSpinner.setEnabled(false);
-       // addRouteToUserListButton.setEnabled(false);
+        setVisibilities();
 
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
@@ -49,77 +64,110 @@ public class AddNewRoute extends Activity {
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                isRouteLineSet = false;
+                isStartingStopSet = false;
+                isDirectionSet = false;
+
                 if (transportModeSpinner.getSelectedItem().equals("Tube")) {
                     ArrayAdapter<ComboItem> routeLineAdapter = new ArrayAdapter<ComboItem>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLines());
                     routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     routeLineSpinner.setAdapter(routeLineAdapter);
-                    routeLineSpinner.setEnabled(true);
-
-                } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
+                    isTransportModeSet = true;
+                }
+                else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
                     ArrayAdapter<String> routeLineAdapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutes());
                     routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     routeLineSpinner.setAdapter(routeLineAdapter);
-                    routeLineSpinner.setEnabled(true);
+                    isTransportModeSet = true;
                 }
+                else {
+                    isTransportModeSet = false;
+                }
+                setVisibilities();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                routeLineSpinner.setEnabled(false);
+                isTransportModeSet = false;
+                setVisibilities();
             }
         });
 
         routeLineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-                    //Do something for tube
 
-                } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
+                isStartingStopSet = false;
+                isDirectionSet = false;
+
+                if (transportModeSpinner.getSelectedItem().equals("Tube") && !routeLineSpinner.getSelectedItem().equals("")) {
+                    ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((ComboItem) routeLineSpinner.getSelectedItem()).getID()));
+                   startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    startingStopSpinner.setAdapter(startingStopAdapter);
+                    isRouteLineSet = true;
+
+                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !routeLineSpinner.getSelectedItem().equals("")) {
                     ArrayAdapter<ComboItem> directionAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(routeLineSpinner.getSelectedItem().toString()));
                     directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     directionSpinner.setAdapter(directionAdapter);
-                    directionSpinner.setEnabled(true);
+                    isRouteLineSet = true;
                 }
+                else {
+                    isRouteLineSet = false;
+                }
+                setVisibilities();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                directionSpinner.setEnabled(false);
+                isRouteLineSet = false;
+                setVisibilities();
             }
         });
 
         startingStopSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-                    //Do something for tube
 
-                } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-                    //
+                if (transportModeSpinner.getSelectedItem().equals("Tube") && !startingStopSpinner.getSelectedItem().equals("")) {
+                    isStartingStopSet = true;
+
+                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !startingStopSpinner.getSelectedItem().equals("")) {
+                    isStartingStopSet = true;
+                } else {
+                    isStartingStopSet = false;
                 }
+                setVisibilities();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                startingStopSpinner.setEnabled(false);
+                isStartingStopSet = false;
+                setVisibilities();
             }
         });
 
         directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-                   // ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((ComboItem) directionSpinner.getSelectedItem()).getID())));
-                   // startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                  //  startingStopSpinner.setAdapter(startingStopAdapter);
-                   // startingStopSpinner.setEnabled(true);
+                if (transportModeSpinner.getSelectedItem().equals("Bus") && !directionSpinner.getSelectedItem().equals("")) {
+                    ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((ComboItem) directionSpinner.getSelectedItem()).getID())));
+                    startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    startingStopSpinner.setAdapter(startingStopAdapter);
+                    isDirectionSet = true;
+                } else if (transportModeSpinner.getSelectedItem().equals("Tube") && !directionSpinner.getSelectedItem().equals(""))  {
+                    isDirectionSet = true;
+                } else {
+                    isDirectionSet = false;
                 }
+                setVisibilities();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                startingStopSpinner.setEnabled(false);
+                isDirectionSet = false;
+                setVisibilities();
             }
         });
     }
@@ -141,6 +189,82 @@ public class AddNewRoute extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setVisibilities() {
+
+        if (!isTransportModeSet) {
+            routeLineSpinner.setVisibility(View.INVISIBLE);
+            routeLineLabel.setVisibility(View.INVISIBLE);
+            directionSpinner.setVisibility(View.INVISIBLE);
+            directionLabel.setVisibility(View.INVISIBLE);
+            startingStopSpinner.setVisibility(View.INVISIBLE);
+            startingStopLabel.setVisibility(View.INVISIBLE);
+            addRouteToUserListButton.setVisibility(View.INVISIBLE);
+        } else if (!isRouteLineSet) {
+            routeLineSpinner.setVisibility(View.VISIBLE);
+            routeLineLabel.setVisibility(View.VISIBLE);
+            directionSpinner.setVisibility(View.INVISIBLE);
+            directionLabel.setVisibility(View.INVISIBLE);
+            startingStopSpinner.setVisibility(View.INVISIBLE);
+            startingStopLabel.setVisibility(View.INVISIBLE);
+            addRouteToUserListButton.setVisibility(View.INVISIBLE);
+
+
+        } else if (transportModeSpinner.getSelectedItem().equals("Bus")){
+            if (!isDirectionSet) {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.VISIBLE);
+                directionLabel.setVisibility(View.VISIBLE);
+                startingStopSpinner.setVisibility(View.INVISIBLE);
+                startingStopLabel.setVisibility(View.INVISIBLE);
+                addRouteToUserListButton.setVisibility(View.INVISIBLE);
+            }
+            else if (!isStartingStopSet) {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.VISIBLE);
+                directionLabel.setVisibility(View.VISIBLE);
+                startingStopSpinner.setVisibility(View.VISIBLE);
+                startingStopLabel.setVisibility(View.VISIBLE);
+                addRouteToUserListButton.setVisibility(View.INVISIBLE);
+            } else {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.VISIBLE);
+                directionLabel.setVisibility(View.VISIBLE);
+                startingStopSpinner.setVisibility(View.VISIBLE);
+                startingStopLabel.setVisibility(View.VISIBLE);
+                addRouteToUserListButton.setVisibility(View.VISIBLE);
+            }
+        } else if (transportModeSpinner.getSelectedItem().equals("Tube")) {
+            if (!isStartingStopSet) {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.INVISIBLE);
+                directionLabel.setVisibility(View.INVISIBLE);
+                startingStopSpinner.setVisibility(View.VISIBLE);
+                startingStopLabel.setVisibility(View.VISIBLE);
+                addRouteToUserListButton.setVisibility(View.INVISIBLE);
+            } else if (!isDirectionSet) {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.VISIBLE);
+                directionLabel.setVisibility(View.VISIBLE);
+                startingStopSpinner.setVisibility(View.VISIBLE);
+                startingStopLabel.setVisibility(View.VISIBLE);
+                addRouteToUserListButton.setVisibility(View.INVISIBLE);
+            } else {
+                routeLineSpinner.setVisibility(View.VISIBLE);
+                routeLineLabel.setVisibility(View.VISIBLE);
+                directionSpinner.setVisibility(View.VISIBLE);
+                directionLabel.setVisibility(View.VISIBLE);
+                startingStopSpinner.setVisibility(View.VISIBLE);
+                startingStopLabel.setVisibility(View.VISIBLE);
+                addRouteToUserListButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private  List<String> fetchBusRoutes() {

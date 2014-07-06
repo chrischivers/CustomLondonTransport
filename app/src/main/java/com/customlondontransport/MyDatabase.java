@@ -28,13 +28,14 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column1ToFetch = "busRouteID";
         String columnToOrderBy = "_id";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + " FROM " + sqlTable1 +
                 " ORDER BY " + columnToOrderBy+ ";",null);
 
         c.moveToFirst();
-        while (c.moveToNext()) {
+        busRoutes.add(""); //add empty item to the front of the list
+        do  {
            busRoutes.add(c.getString(0));
-        }
+        } while (c.moveToNext());
         return busRoutes;
     }
 
@@ -53,16 +54,16 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column1ToFilterBy = sqlTable1+".busRouteID";
         String column2ToFilterBy = sqlTable1+".busRouteFinalDestination";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch + ", " + column2ToFetch + " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
                 " WHERE " + column1ToFilterBy + " = " + busRouteID + " AND " + column2ToFilterBy + " = '1'" +
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
-        while (c.moveToNext()) {
+        do  {
             busDirections.add(new ComboItem(c.getString(0), c.getString(1)));
-        }
+        } while (c.moveToNext());
         return busDirections;
     }
 
@@ -89,9 +90,9 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + columnToOrderBy +";",null);
 
         c.moveToFirst();
-        while (c.moveToNext()) {
+        do {
             busStops.add(new ComboItem(c.getString(0), c.getString(1)));
-        }
+        } while (c.moveToNext());
         return busStops;
     }
 
@@ -109,9 +110,10 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
-        while (c.moveToNext()) {
+        tubeLines.add(new ComboItem("","")); //add blank item to front of list
+        do  {
             tubeLines.add(new ComboItem(c.getString(0), c.getString(1)));
-        }
+        } while (c.moveToNext());
         return tubeLines;
     }
 
@@ -130,9 +132,9 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column2ToFetch +";",null);
 
         c.moveToFirst();
-        while (c.moveToNext()) {
+        do  {
             tubeStations.add(new ComboItem(c.getString(0), c.getString(1)));
-        }
+        } while (c.moveToNext());
         return tubeStations;
     }
 }

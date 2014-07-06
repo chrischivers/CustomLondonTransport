@@ -4,12 +4,13 @@
     <string name="app_name">Custom London Transport</string>
     <string name="action_settings">Settings</string>
     <string name="welcome">Add a new route</string>
-    <string name="transportModeLabel">Transport mode</string>
+    <string name="TransportModeLabel">Transport mode</string>
     <string name="RouteLineLabel">Route/Line</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
 
     <string-array name="transport_mode_array">
+        <item></item>
         <item>Bus</item>
         <item>Tube</item>
     </string-array>
