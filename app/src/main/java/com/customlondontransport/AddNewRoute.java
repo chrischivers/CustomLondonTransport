@@ -1,7 +1,9 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.nio.channels.AsynchronousCloseException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,6 +37,8 @@ public class AddNewRoute extends Activity {
     private boolean isRouteLineSet = false;
     private boolean isDirectionSet = false;
     private boolean isStartingStopSet = false;
+
+
 
 
     @Override
@@ -131,6 +137,9 @@ public class AddNewRoute extends Activity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (transportModeSpinner.getSelectedItem().equals("Tube") && !startingStopSpinner.getSelectedItem().equals("")) {
+                    ArrayAdapter<ComboItem> directionAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeDirectionsAndPlatforms(((ComboItem) routeLineSpinner.getSelectedItem()).getID(), ((ComboItem) startingStopSpinner.getSelectedItem()).getID()));
+                    directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    directionSpinner.setAdapter(directionAdapter);
                     isStartingStopSet = true;
 
                 } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !startingStopSpinner.getSelectedItem().equals("")) {
@@ -288,6 +297,13 @@ public class AddNewRoute extends Activity {
         return db.getTubeLines();
     }
 
+    private  synchronized List<ComboItem>  fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID)  {
+            APIFetcher apifetcher = new APIFetcher();
+            apifetcher.execute(tubeLineID, tubeStationID);
+            return apifetcher.getTubeDirectionsAndPlatformList();
+
+    }
+
 
 
     //button
@@ -302,12 +318,36 @@ public class AddNewRoute extends Activity {
 
 
     public class LoadDatabase implements Runnable  {
-
         @Override
         public void run() {
             db = new MyDatabase(getApplicationContext());
             System.out.println("Database Loaded");
         }
+    }
+
+    class APIFetcher extends AsyncTask <String, Void, Void>{
+
+        List<ComboItem> tubeDirectionsAndPlatformList;
+
+        @Override
+        protected synchronized Void doInBackground(String... strings) {
+            tubeDirectionsAndPlatformList = null;
+            tubeDirectionsAndPlatformList = (new APIInterface().fetchTubeDirectionsAndPlatforms(strings[0], strings[1]));
+            notifyAll();
+            return null;
+        }
+
+        public synchronized List<ComboItem> getTubeDirectionsAndPlatformList() {
+            while (tubeDirectionsAndPlatformList == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tubeDirectionsAndPlatformList;
+        }
+
     }
 
 
