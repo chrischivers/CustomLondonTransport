@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/HeadingText"
-        android:text="@string/welcome"
+        android:text="@string/AddANewRouteTitleText"
         android:textColor="@color/black_text"
         android:textSize="25sp"
         android:layout_width="wrap_content"

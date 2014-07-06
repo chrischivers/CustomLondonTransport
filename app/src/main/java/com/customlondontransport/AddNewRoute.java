@@ -1,18 +1,16 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.Switch;
@@ -42,6 +40,8 @@ public class AddNewRoute extends Activity {
     private Button addRouteToUserListButton;
 
     private MyDatabase db;
+
+    private DayTimeConditions dtc;
 
     private boolean isTransportModeSet = false;
     private boolean isRouteLineSet = false;
@@ -205,26 +205,11 @@ public class AddNewRoute extends Activity {
         conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    LayoutInflater layoutInflater
-                            = (LayoutInflater) getBaseContext()
-                            .getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View popupView = layoutInflater.inflate(R.layout.conditions_popup, null);
-                    final PopupWindow popupWindow = new PopupWindow(
-                            popupView,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    loadSetDayTimeConditions();
 
-                    Button btnDismiss = (Button) popupView.findViewById(R.id.CancelConditionPopupButton);
-                    btnDismiss.setOnClickListener(new Button.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            popupWindow.dismiss();
-                        }
-                    });
-                    popupWindow.showAsDropDown(headingText); //position in relation to heading tex
                 }
-            }});
+            }
+        });
 
     }
 
@@ -245,6 +230,11 @@ public class AddNewRoute extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loadSetDayTimeConditions() {
+        Intent intent = new Intent(this, SetDayTimeConditions.class);
+        startActivityForResult(intent, 1);
     }
 
     private void setLayout() {
@@ -396,6 +386,17 @@ public class AddNewRoute extends Activity {
             return tubeDirectionsAndPlatformList;
         }
 
+    }
+//TODO
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
+            //print result?
+        } else {
+            // Nothing
+        }
     }
 
 

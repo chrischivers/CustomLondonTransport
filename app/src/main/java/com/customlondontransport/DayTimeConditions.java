@@ -1,11 +1,12 @@
 package com.customlondontransport;
 
+        import java.io.Serializable;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
         import java.util.Date;
 
-public class DayTimeConditions {
+public class DayTimeConditions implements Serializable {
     private Calendar fromTime = null;
     private Calendar toTime = null;
 

@@ -3,13 +3,14 @@
 
     <string name="app_name">Custom London Transport</string>
     <string name="action_settings">Settings</string>
-    <string name="welcome">Add a new route</string>
+    <string name="AddANewRouteTitleText">Add a new route</string>
     <string name="TransportModeLabel">Transport mode</string>
     <string name="RouteLineLabel">Route/Line</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
     <string name="ConditionsLabel">Specify Conditions</string>
     <string name="AddButtonLabel">Add</string>
+    <string name ="ConditionsTitleText">Set Conditions</string>
 
     <string-array name="transport_mode_array">
         <item></item>
@@ -17,14 +18,16 @@
         <item>Tube</item>
     </string-array>
 
-    <string-array name="days_of_the_week">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-    </string-array>
+    //Days of the week
+    <string name ="Monday">Monday</string>
+    <string name ="Tuesday">Tuesday</string>
+    <string name ="Wednesday">Wednesday</string>
+    <string name ="Thursday">Thursday</string>
+    <string name ="Friday">Friday</string>
+    <string name ="Saturday">Saturday</string>
+    <string name ="Sunday">Sunday</string>
+
+
+
 
 </resources>
