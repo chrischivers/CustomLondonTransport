@@ -3,14 +3,19 @@ package com.customlondontransport;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.ArrayAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -26,6 +31,10 @@ public class AddNewRoute extends Activity {
     private TextView routeLineLabel;
     private TextView directionLabel;
     private TextView startingStopLabel;
+    private TextView conditionsLabel;
+    private TextView headingText;
+
+    private Switch conditionsSwitch;
 
     private LinearLayout linearLayoutLeft;
     private LinearLayout linearLayoutRight;
@@ -58,9 +67,14 @@ public class AddNewRoute extends Activity {
         routeLineLabel = (TextView) findViewById(R.id.RouteLineLabel);
         directionLabel = (TextView) findViewById(R.id.DirectionLabel);
         startingStopLabel = (TextView) findViewById(R.id.StartingStopLabel);
+        conditionsLabel = (TextView) findViewById(R.id.ConditionsLabel);
+        headingText = (TextView) findViewById(R.id.HeadingText);
+
+        conditionsSwitch = (Switch) findViewById(R.id.ConditionsSwitch);
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
         linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
+
 
 
         ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
@@ -187,6 +201,31 @@ public class AddNewRoute extends Activity {
                 setLayout();
             }
         });
+
+        conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LayoutInflater layoutInflater
+                            = (LayoutInflater) getBaseContext()
+                            .getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = layoutInflater.inflate(R.layout.conditions_popup, null);
+                    final PopupWindow popupWindow = new PopupWindow(
+                            popupView,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    Button btnDismiss = (Button) popupView.findViewById(R.id.CancelConditionPopupButton);
+                    btnDismiss.setOnClickListener(new Button.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            popupWindow.dismiss();
+                        }
+                    });
+                    popupWindow.showAsDropDown(headingText); //position in relation to heading tex
+                }
+            }});
+
     }
 
     @Override
@@ -250,6 +289,8 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(startingStopSpinner);
                 addRouteToUserListButton.setVisibility(View.INVISIBLE);
             } else {
+                linearLayoutLeft.addView(conditionsLabel);
+                linearLayoutRight.addView(conditionsSwitch);
                 addRouteToUserListButton.setVisibility(View.VISIBLE);
             }
         } else if (transportModeSpinner.getSelectedItem().equals("Tube")) {
@@ -276,6 +317,8 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(directionSpinner);
                 addRouteToUserListButton.setVisibility(View.INVISIBLE);
             } else {
+                linearLayoutLeft.addView(conditionsLabel);
+                linearLayoutRight.addView(conditionsSwitch);
                 addRouteToUserListButton.setVisibility(View.VISIBLE);
             }
         }

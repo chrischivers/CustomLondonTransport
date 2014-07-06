@@ -9,7 +9,7 @@
     tools:context=".SetParameters">
 
     <TextView
-        android:id="@+id/welcomeTextID"
+        android:id="@+id/HeadingText"
         android:text="@string/welcome"
         android:textColor="@color/black_text"
         android:textSize="25sp"
@@ -60,7 +60,9 @@
             android:layout_width="wrap_content"
             android:layout_height="65dp"
             android:id="@+id/ConditionsSwitch"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textOff="None"
+            android:textOn="Set" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,8 +71,8 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/welcomeTextID"
-        android:layout_below="@+id/welcomeTextID"
+        android:layout_alignEnd="@+id/HeadingText"
+        android:layout_below="@+id/HeadingText"
         android:id="@+id/linearLayoutLeft"
         android:layout_marginTop="5dp"
         android:layout_above="@+id/frameLayout">
@@ -137,6 +139,5 @@
             android:layout_gravity="center"
             android:onClick="addAndReturnToUserListView" />
     </FrameLayout>
-
 
 </RelativeLayout>
