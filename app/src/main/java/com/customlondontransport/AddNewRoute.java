@@ -101,7 +101,7 @@ public class AddNewRoute extends Activity {
                 isStartingStopSet = false;
                 isDirectionSet = false;
 
-                if (transportModeSpinner.getSelectedItem().equals("Tube") && !routeLineSpinner.getSelectedItem().equals("")) {
+                if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem)routeLineSpinner.getSelectedItem()).getID().equals("")) {
                     ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((ComboItem) routeLineSpinner.getSelectedItem()).getID()));
                    startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     startingStopSpinner.setAdapter(startingStopAdapter);

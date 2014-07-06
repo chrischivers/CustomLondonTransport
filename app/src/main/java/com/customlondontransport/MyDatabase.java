@@ -126,9 +126,10 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable1 = "tubeStations";
         String column1ToFetch = "tubeStationID";
         String column2ToFetch= "tubeStationName";
+        String column1ToFilterBy = "tubeLineID";
 
         Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
-                " WHERE " + column1ToFetch + " = " + tubeLineID +
+                " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
                 " ORDER BY " + column2ToFetch +";",null);
 
         c.moveToFirst();
