@@ -23,22 +23,15 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/welcomeTextID"
-        android:layout_alignTop="@+id/linearLayout"
-        android:layout_marginTop="5dp"
-        android:id="@+id/linearLayout2"
-        android:layout_alignBottom="@+id/linearLayout">
+        android:id="@+id/linearLayoutRight"
+        android:layout_alignTop="@+id/linearLayoutLeft"
+        android:layout_toRightOf="@+id/linearLayoutLeft">
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:id="@+id/transportModeSpinner"
             android:spinnerMode="dropdown"
-            android:layout_above="@+id/StartingStopLabel"
-            android:layout_alignLeft="@+id/DirectionSpinner"
-            android:layout_alignStart="@+id/DirectionSpinner"
             android:gravity="center_vertical|left" />
 
         <Spinner
@@ -46,8 +39,6 @@
             android:layout_height="65dp"
             android:id="@+id/RouteLineSpinner"
             android:spinnerMode="dropdown"
-            android:layout_alignTop="@+id/RouteLineLabel"
-            android:layout_toRightOf="@+id/welcomeTextID"
             android:gravity="center_vertical|left" />
 
         <Spinner
@@ -55,8 +46,7 @@
             android:layout_height="65dp"
             android:id="@+id/StartingStopSpinner"
             android:spinnerMode="dropdown"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/addRouteToUserListButton"
+
             android:gravity="center_vertical|left" />
 
         <Spinner
@@ -64,10 +54,13 @@
             android:layout_height="65dp"
             android:id="@+id/DirectionSpinner"
             android:spinnerMode="dropdown"
-            android:layout_below="@+id/RouteLineSpinner"
-            android:layout_alignLeft="@+id/RouteLineSpinner"
-            android:layout_alignStart="@+id/RouteLineSpinner"
             android:gravity="center_vertical|left" />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:id="@+id/ConditionsSwitch"
+            android:gravity="center_vertical" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,7 +71,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/welcomeTextID"
         android:layout_below="@+id/welcomeTextID"
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutLeft"
         android:layout_marginTop="5dp"
         android:layout_above="@+id/frameLayout">
 
@@ -89,9 +82,6 @@
             android:text="@string/TransportModeLabel"
             android:id="@+id/TransportModeLabel"
             android:textSize="@dimen/menuTextSize"
-            android:layout_above="@+id/StartingStopSpinner"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:gravity="center_vertical|left" />
 
         <TextView
@@ -101,9 +91,6 @@
             android:text="@string/RouteLineLabel"
             android:id="@+id/RouteLineLabel"
             android:textSize="@dimen/menuTextSize"
-            android:layout_below="@+id/transportMode"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:gravity="center_vertical|left" />
 
         <TextView
@@ -113,9 +100,6 @@
             android:text="@string/StartingStopLabel"
             android:id="@+id/StartingStopLabel"
             android:textSize="@dimen/menuTextSize"
-            android:layout_below="@+id/DirectionSpinner"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:gravity="center_vertical|left" />
 
         <TextView
@@ -125,9 +109,15 @@
             android:text="@string/DirectionLabel"
             android:id="@+id/DirectionLabel"
             android:textSize="@dimen/menuTextSize"
-            android:layout_alignTop="@+id/DirectionSpinner"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:gravity="center_vertical|left" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/ConditionsLabel"
+            android:id="@+id/ConditionsLabel"
+            android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
     </LinearLayout>
 
@@ -142,7 +132,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
+            android:text="@string/AddButtonLabel"
             android:id="@+id/addRouteToUserListButton"
             android:layout_gravity="center"
             android:onClick="addAndReturnToUserListView" />

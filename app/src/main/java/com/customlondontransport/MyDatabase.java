@@ -19,8 +19,8 @@ public class MyDatabase extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public List<String> getBusRoutes() {
-        List<String> busRoutes = new ArrayList<String>();
+    public List<ComboItem> getBusRoutes() {
+        List<ComboItem> busRoutes = new ArrayList<ComboItem>();
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -32,9 +32,9 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + columnToOrderBy+ ";",null);
 
         c.moveToFirst();
-        busRoutes.add(""); //add empty item to the front of the list
+        busRoutes.add(new ComboItem("")); //add empty item to the front of the list
         do  {
-           busRoutes.add(c.getString(0));
+           busRoutes.add(new ComboItem(c.getString(0)));
         } while (c.moveToNext());
         return busRoutes;
     }
@@ -61,6 +61,7 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
+        busDirections.add(new ComboItem("")); //add empty item to the front of the list
         do  {
             busDirections.add(new ComboItem(c.getString(0), c.getString(1)));
         } while (c.moveToNext());
@@ -89,6 +90,7 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " WHERE " + column1ToFilterBy + " = " + busRouteID + " AND " + column2ToFilterBy + " = " + busDirection +
                 " ORDER BY " + columnToOrderBy +";",null);
 
+        busStops.add(new ComboItem("")); //add empty item to the front of the list
         c.moveToFirst();
         do {
             busStops.add(new ComboItem(c.getString(0), c.getString(1)));
@@ -110,7 +112,7 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
-        tubeLines.add(new ComboItem("","")); //add blank item to front of list
+        tubeLines.add(new ComboItem("")); //add blank item to front of list
         do  {
             tubeLines.add(new ComboItem(c.getString(0), c.getString(1)));
         } while (c.moveToNext());
@@ -132,6 +134,7 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
                 " ORDER BY " + column2ToFetch +";",null);
 
+        tubeStations.add(new ComboItem("")); //add blank item to front of list
         c.moveToFirst();
         do  {
             tubeStations.add(new ComboItem(c.getString(0), c.getString(1)));

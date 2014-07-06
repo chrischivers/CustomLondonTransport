@@ -8,6 +8,8 @@
     <string name="RouteLineLabel">Route/Line</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
+    <string name="ConditionsLabel">Specify Conditions</string>
+    <string name="AddButtonLabel">Add</string>
 
     <string-array name="transport_mode_array">
         <item></item>
