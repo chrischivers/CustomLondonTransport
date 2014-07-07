@@ -43,11 +43,13 @@ public class UserRouteItem {
 
     // For UserList View - returns first line
     public String getLine1() {
-        return transportForm + ": " + routeLine + " (To: " + direction.toString();
+        return transportForm + ": " + routeLine + "\nDirection: " + direction.toString();
     }
 
     // For UserList View - returns second line
     public String getLine2() {
-        return "Starting at: " + startingStop + ". Conditions: " + dayTimeConditions;
+        return "Starting at: " + startingStop + "\nConditions: " + dayTimeConditions;
     }
+
+
 }

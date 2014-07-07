@@ -34,6 +34,7 @@ public class AddNewRoute extends Activity {
     private TextView headingText;
 
     private Switch conditionsSwitch;
+    private TextView conditionsPreviewText;
 
     private LinearLayout linearLayoutLeft;
     private LinearLayout linearLayoutRight;
@@ -72,6 +73,7 @@ public class AddNewRoute extends Activity {
         headingText = (TextView) findViewById(R.id.HeadingText);
 
         conditionsSwitch = (Switch) findViewById(R.id.ConditionsSwitch);
+        conditionsPreviewText = (TextView) findViewById(R.id.ConditionsPreviewText);
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
         linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
@@ -207,7 +209,9 @@ public class AddNewRoute extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     loadSetDayTimeConditions();
-
+                } else {
+                    dtc = null;
+                    conditionsPreviewText.setText("");
                 }
             }
         });
@@ -348,7 +352,7 @@ public class AddNewRoute extends Activity {
     //button
     public void addAndReturnToUserListView(View view) {
 
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), routeLineSpinner.getSelectedItem().toString(), ((ComboItem)directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), null, 5);
+        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), routeLineSpinner.getSelectedItem().toString(), ((ComboItem)directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
         UserListView.values.add(userRouteItem);
 
         setResult(RESULT_OK, null);
@@ -388,16 +392,19 @@ public class AddNewRoute extends Activity {
         }
 
     }
-//TODO
+//Return from conditions method
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
-            Toast.makeText(this, dtc.toString(), Toast.LENGTH_SHORT).show();
-            //print result?
+            Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
+            conditionsPreviewText.setText(dtc.toString());
         } else {
-            // Nothing
+            Toast.makeText(this, "No conditions set", Toast.LENGTH_SHORT).show();
+            conditionsSwitch.setChecked(false);
+            conditionsPreviewText.setText("");
+
         }
     }
 
