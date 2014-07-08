@@ -284,6 +284,16 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(startingStopSpinner);
                 addRouteToUserListButton.setVisibility(View.INVISIBLE);
             } else {
+                linearLayoutLeft.removeAllViewsInLayout();
+                linearLayoutRight.removeAllViewsInLayout();
+                linearLayoutLeft.addView(transportModeLabel);
+                linearLayoutRight.addView(transportModeSpinner);
+                linearLayoutLeft.addView(routeLineLabel);
+                linearLayoutRight.addView(routeLineSpinner);
+                linearLayoutLeft.addView(directionLabel);
+                linearLayoutRight.addView(directionSpinner);
+                linearLayoutLeft.addView(startingStopLabel);
+                linearLayoutRight.addView(startingStopSpinner);
                 linearLayoutLeft.addView(conditionsLabel);
                 linearLayoutRight.addView(conditionsSwitch);
                 addRouteToUserListButton.setVisibility(View.VISIBLE);
@@ -312,6 +322,16 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(directionSpinner);
                 addRouteToUserListButton.setVisibility(View.INVISIBLE);
             } else {
+                linearLayoutLeft.removeAllViewsInLayout();
+                linearLayoutRight.removeAllViewsInLayout();
+                linearLayoutLeft.addView(transportModeLabel);
+                linearLayoutRight.addView(transportModeSpinner);
+                linearLayoutLeft.addView(routeLineLabel);
+                linearLayoutRight.addView(routeLineSpinner);
+                linearLayoutLeft.addView(startingStopLabel);
+                linearLayoutRight.addView(startingStopSpinner);
+                linearLayoutLeft.addView(directionLabel);
+                linearLayoutRight.addView(directionSpinner);
                 linearLayoutLeft.addView(conditionsLabel);
                 linearLayoutRight.addView(conditionsSwitch);
                 addRouteToUserListButton.setVisibility(View.VISIBLE);
