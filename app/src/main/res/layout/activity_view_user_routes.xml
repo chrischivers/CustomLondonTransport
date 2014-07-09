@@ -22,15 +22,23 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/frameLayout">
+        android:id="@+id/frameLayout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Run Query"
+            android:id="@+id/RunQueryButton"
+            android:layout_gravity="left|center_vertical" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add New Route"
-            android:id="@+id/newRoute"
-            android:layout_gravity="center"
-            android:onClick="loadAddNewRoute" />
+            android:id="@+id/addNewRouteButton"
+            android:layout_gravity="right|center_vertical" />
     </FrameLayout>
 
 </RelativeLayout>

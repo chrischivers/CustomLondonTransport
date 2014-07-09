@@ -42,6 +42,29 @@ public class APIInterface  {
     }
 
 
+    public List<List<String>> fetchBusData(String busNumber, String busStop, String direction) throws {
+        List<List<String>> busDataList = new ArrayList<List<String>>();
+
+        URL TflBusAPIURL = null;
+        TflBusAPIURL = new URL("http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName=" + busNumber + "&StopCode1=" + busStop.getID() + "&DirectionID=" + direction.getID() + "&VisitNumber=1&ReturnList=LineName,StopPointName,DestinationText,EstimatedTime");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(TflBusAPIURL.openStream()));
+        CSVReader reader = new CSVReader(in, ',', '"', 1);
+        String [] lineData;
+        while ((lineData = reader.readNext()) != null) {
+            List<String> temporaryList = new ArrayList<String>();
+            temporaryList.add("Bus");
+            temporaryList.add(lineData[2]);
+            temporaryList.add(lineData[1]);
+            temporaryList.add(lineData[3]);
+            temporaryList.add(lineData[4].substring(0, lineData[4].length()-1)); //cutting off final [ character
+            busDataList.add(temporaryList);
+
+        }
+        reader.close();
+        return busDataList;
+    }
+
 }
 
 

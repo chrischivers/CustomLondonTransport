@@ -17,6 +17,9 @@ import java.util.List;
 
 public class UserListView extends Activity {
     private ListView listView ;
+    private Button addNewRouteButton;
+    private Button runQueryButton;
+
     public static List<UserRouteItem> values = new ArrayList<UserRouteItem>();
     private static boolean hasDatabaseBeenLoaded = false;
 
@@ -27,6 +30,8 @@ public class UserListView extends Activity {
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.userListView);
+        addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
+        runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
         ArrayAdapter<UserRouteItem> adapter = new ArrayAdapter<UserRouteItem>(this, android.R.layout.simple_list_item_2, android.R.id.text1, values) {
             @Override
@@ -66,12 +71,23 @@ public class UserListView extends Activity {
             }
 
         });
+
+        addNewRouteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddNewRoute.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        runQueryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
-    public void loadAddNewRoute(View view) {
-        Intent intent = new Intent(this, AddNewRoute.class);
-        startActivityForResult(intent, 1);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
