@@ -28,6 +28,11 @@
             android:name=".SetDayTimeConditions"
             android:label="Set Day and Time Conditions"
             />
+
+        <activity
+            android:name=".QueryResults"
+            android:label="View Query Results"
+            />
     </application>
 
 </manifest>

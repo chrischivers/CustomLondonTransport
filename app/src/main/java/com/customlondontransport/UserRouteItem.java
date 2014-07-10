@@ -2,13 +2,13 @@ package com.customlondontransport;
 
 public class UserRouteItem {
     String transportForm;
-    String routeLine;
+    ComboItem routeLine;
     ComboItem direction;
     ComboItem startingStop;
     DayTimeConditions dayTimeConditions;
     int numberToShow;
 
-    public UserRouteItem(String transportForm, String routeLine, ComboItem direction, ComboItem startingStop, DayTimeConditions dayTimeConditions, int numberToShow) {
+    public UserRouteItem(String transportForm, ComboItem routeLine, ComboItem direction, ComboItem startingStop, DayTimeConditions dayTimeConditions, int numberToShow) {
         this.transportForm = transportForm;
         this.routeLine = routeLine;
         this.direction = direction;
@@ -21,7 +21,7 @@ public class UserRouteItem {
         return transportForm;
     }
 
-    public String getRouteLine() {
+    public ComboItem getRouteLine() {
         return routeLine;
     }
 

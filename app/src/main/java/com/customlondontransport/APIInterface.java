@@ -13,7 +13,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class APIInterface  {
+public class APIInterface   {
 
 
     public List<ComboItem> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
@@ -66,7 +66,7 @@ public class APIInterface  {
         return busDataList;
     }
 
-    public List<ResultRowItem> fetchTubeData(ComboItem tubeLine, ComboItem tubeStation, String directionPlatform) {
+    public List<ResultRowItem> fetchTubeData(ComboItem tubeLine, ComboItem tubeStation, ComboItem directionPlatform) {
         List<ResultRowItem> tubeDataList = new ArrayList<ResultRowItem>();
         try {
             URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLine.getID() + "/" + tubeStation.getID());
@@ -78,7 +78,10 @@ public class APIInterface  {
             String inputLine;
 
             while ((inputLine = reader.readLine()) != null) {
-                if (inputLine.matches("\\s+<P N=\"" + directionPlatform + ".*")) {
+                System.out.println("Input Line =" + inputLine);
+                System.out.println("Direction Platform = " + directionPlatform.getID());
+
+                if (inputLine.matches("\\s+<P N=\"" + directionPlatform.getID() + ".*")) {
                     try {
                         inputLine = reader.readLine();
                         while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
@@ -87,7 +90,7 @@ public class APIInterface  {
                             int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
 
                             tubeDataList.add(new ResultRowItem("Tube", tubeLine.getLabel(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex))));
-
+                            inputLine = reader.readLine();
                         }
                     } catch (IndexOutOfBoundsException ex) {
                         System.out.println("Index out of bounds exception");

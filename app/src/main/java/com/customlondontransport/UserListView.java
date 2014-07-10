@@ -20,7 +20,7 @@ public class UserListView extends Activity {
     private Button addNewRouteButton;
     private Button runQueryButton;
 
-    public static List<UserRouteItem> values = new ArrayList<UserRouteItem>();
+    public static List<UserRouteItem> userRouteValues = new ArrayList<UserRouteItem>();
     private static boolean hasDatabaseBeenLoaded = false;
 
     @Override
@@ -33,15 +33,15 @@ public class UserListView extends Activity {
         addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
         runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
-        ArrayAdapter<UserRouteItem> adapter = new ArrayAdapter<UserRouteItem>(this, android.R.layout.simple_list_item_2, android.R.id.text1, values) {
+        ArrayAdapter<UserRouteItem> adapter = new ArrayAdapter<UserRouteItem>(this, android.R.layout.simple_list_item_2, android.R.id.text1, userRouteValues) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView text1 = (TextView) view.findViewById(android.R.id.text1);
                 TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
-                text1.setText(values.get(position).getLine1());
-                text2.setText(values.get(position).getLine2());
+                text1.setText(userRouteValues.get(position).getLine1());
+                text2.setText(userRouteValues.get(position).getLine2());
                 return view;
             }
         };
@@ -83,7 +83,8 @@ public class UserListView extends Activity {
         runQueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getApplicationContext(), QueryResults.class);
+                startActivityForResult(intent, 2);
             }
         });
     }
@@ -100,3 +101,4 @@ public class UserListView extends Activity {
     }
 
 }
+

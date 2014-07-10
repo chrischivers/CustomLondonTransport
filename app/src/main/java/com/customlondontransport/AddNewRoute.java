@@ -372,8 +372,8 @@ public class AddNewRoute extends Activity {
     //button
     public void addAndReturnToUserListView(View view) {
 
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), routeLineSpinner.getSelectedItem().toString(), ((ComboItem)directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
-        UserListView.values.add(userRouteItem);
+        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((ComboItem)routeLineSpinner.getSelectedItem()), ((ComboItem)directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
+        UserListView.userRouteValues.add(userRouteItem);
 
         setResult(RESULT_OK, null);
         finish();
