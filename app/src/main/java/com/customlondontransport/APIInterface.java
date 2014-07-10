@@ -42,27 +42,63 @@ public class APIInterface  {
     }
 
 
-    public List<List<String>> fetchBusData(String busNumber, String busStop, String direction) throws {
-        List<List<String>> busDataList = new ArrayList<List<String>>();
+    public List<ResultRowItem> fetchBusData(String busNumber, String busStop, String direction){
+        List<ResultRowItem> busDataList = new ArrayList<ResultRowItem>();
 
-        URL TflBusAPIURL = null;
-        TflBusAPIURL = new URL("http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName=" + busNumber + "&StopCode1=" + busStop.getID() + "&DirectionID=" + direction.getID() + "&VisitNumber=1&ReturnList=LineName,StopPointName,DestinationText,EstimatedTime");
+        try {
+            URL url = new URL("http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName=" + busNumber + "&StopCode1=" + busStop + "&DirectionID=" + direction + "&VisitNumber=1&ReturnList=LineName,StopPointName,DestinationText,EstimatedTime");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(TflBusAPIURL.openStream()));
-        CSVReader reader = new CSVReader(in, ',', '"', 1);
-        String [] lineData;
-        while ((lineData = reader.readNext()) != null) {
-            List<String> temporaryList = new ArrayList<String>();
-            temporaryList.add("Bus");
-            temporaryList.add(lineData[2]);
-            temporaryList.add(lineData[1]);
-            temporaryList.add(lineData[3]);
-            temporaryList.add(lineData[4].substring(0, lineData[4].length()-1)); //cutting off final [ character
-            busDataList.add(temporaryList);
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
+            String inputLine;
+
+            while ((inputLine = reader.readLine()) != null) {
+                String[] inputLineSplit = inputLine.split(",");
+                busDataList.add(new ResultRowItem("Bus",inputLineSplit[2],inputLineSplit[1],inputLineSplit[3],inputLineSplit[4]));
+
+            }
+        } catch(IOException ex){
+            System.out.println(ex);
         }
-        reader.close();
+
         return busDataList;
+    }
+
+    public List<ResultRowItem> fetchTubeData(ComboItem tubeLine, ComboItem tubeStation, String directionPlatform) {
+        List<ResultRowItem> tubeDataList = new ArrayList<ResultRowItem>();
+        try {
+            URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLine.getID() + "/" + tubeStation.getID());
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String inputLine;
+
+            while ((inputLine = reader.readLine()) != null) {
+                if (inputLine.matches("\\s+<P N=\"" + directionPlatform + ".*")) {
+                    try {
+                        inputLine = reader.readLine();
+                        while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
+
+                            int destinationIndex = inputLine.indexOf("Destination=\"") + 13;
+                            int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
+
+                            tubeDataList.add(new ResultRowItem("Tube", tubeLine.getLabel(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex))));
+
+                        }
+                    } catch (IndexOutOfBoundsException ex) {
+                        System.out.println("Index out of bounds exception");
+
+                    }
+                }
+            }
+        } catch(IOException ex){
+            System.out.println(ex);
+        }
+        return tubeDataList;
     }
 
 }
