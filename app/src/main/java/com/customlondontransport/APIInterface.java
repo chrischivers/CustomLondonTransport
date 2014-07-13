@@ -42,21 +42,30 @@ public class APIInterface   {
     }
 
 
-    public List<ResultRowItem> fetchBusData(String busNumber, String busStop, String direction){
+    public List<ResultRowItem> fetchBusData(ComboItem busRoute, ComboItem busStop, ComboItem busDirection){
         List<ResultRowItem> busDataList = new ArrayList<ResultRowItem>();
 
         try {
-            URL url = new URL("http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName=" + busNumber + "&StopCode1=" + busStop + "&DirectionID=" + direction + "&VisitNumber=1&ReturnList=LineName,StopPointName,DestinationText,EstimatedTime");
+            URL url = new URL("http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineName=" + busRoute.getID() + "&StopCode1=" + busStop.getID() + "&DirectionID=" + busDirection.getID() + "&VisitNumber=1&ReturnList=LineName,StopPointName,DestinationText,EstimatedTime");
+            System.out.println(url.toString());
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
             String inputLine;
+            reader.readLine(); //skip first line (header)
 
             while ((inputLine = reader.readLine()) != null) {
                 String[] inputLineSplit = inputLine.split(",");
-                busDataList.add(new ResultRowItem("Bus",inputLineSplit[2],inputLineSplit[1],inputLineSplit[3],inputLineSplit[4]));
+
+                String startingStopFormatted = inputLineSplit[1].substring(1,inputLineSplit[1].length()-1);
+                String busRouteFormatted = inputLineSplit[2].substring(1,inputLineSplit[2].length()-1);
+                String destinationFormatted = inputLineSplit[3].substring(1,inputLineSplit[3].length()-1);
+                Long secondsTo = ((Long.parseLong(inputLineSplit[4].substring(0,inputLineSplit[4].length()-1))-System.currentTimeMillis())/1000);
+
+
+                busDataList.add(new ResultRowItem("Bus",busRouteFormatted,startingStopFormatted,destinationFormatted, secondsTo));
 
             }
         } catch(IOException ex){
@@ -89,7 +98,7 @@ public class APIInterface   {
                             int destinationIndex = inputLine.indexOf("Destination=\"") + 13;
                             int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
 
-                            tubeDataList.add(new ResultRowItem("Tube", tubeLine.getLabel(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex))));
+                            tubeDataList.add(new ResultRowItem("Tube", tubeLine.getLabel(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), Long.parseLong(inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex)))));
                             inputLine = reader.readLine();
                         }
                     } catch (IndexOutOfBoundsException ex) {

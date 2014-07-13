@@ -7,9 +7,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 /**
  * Created by Chris on 10/07/2014.
@@ -17,11 +21,13 @@ import java.util.List;
 public class QueryResults extends Activity {
 
     private TableLayout queryResultsTable;
+    private List<ResultRowItem> resultRows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query_results);
+        resultRows = new ArrayList<ResultRowItem>();
         runQuery();
     }
 
@@ -36,7 +42,7 @@ public class QueryResults extends Activity {
         int currentDayOfTheWeek = c.get(Calendar.DAY_OF_WEEK);
         Date currentTime = c.getTime();
 
-        // Iterate through each line of the table
+        // Iterate through each line of the table adding to resultRows List
         for (UserRouteItem uri : UserListView.userRouteValues) {
             boolean processThisRow = false;
 
@@ -72,100 +78,19 @@ public class QueryResults extends Activity {
                 try {
                     if (uri.getTransportForm().equals("Bus")) {
                         int j = 0;
-                        for (ResultRowItem result : api.fetchBusData(uri.getRouteLine().getID(), uri.getStartingStop().getID(), uri.getDirection().getID())) {
+                        for (ResultRowItem result : fetchRowData(new ComboItem("Bus"), uri.getRouteLine(), uri.getStartingStop(), uri.getDirection())) {
                             if (j < numberToObtain || numberToObtain == -1) {
-                                String minutesRemaining = Long.toString((((Long.parseLong(result.getTimeUntilArrival()) - System.currentTimeMillis()) / 1000) / 60));
-                                String secondsRemaining = (Long.toString((((Long.parseLong(result.getTimeUntilArrival()) - System.currentTimeMillis()) / 1000) % 60)));
-
-                                // this loop adds '0' prefix to single digit seconds
-                                if (secondsRemaining.length() == 1) {
-                                    secondsRemaining = "0" + secondsRemaining;
-                                }
-
-                                // this loop adds '0' prefix to single digit minutes
-                                if (minutesRemaining.length() == 1) {
-                                    minutesRemaining = "0" + minutesRemaining;
-                                }
-
-                                //Output methods go here
+                                resultRows.add(result);
+                                j++;
                             }
                         }
-
                     } else if (uri.getTransportForm().equals("Tube")) {
                         int j = 0;
-                        for (ResultRowItem result : fetchTubeData(uri.getRouteLine(), uri.getStartingStop(), uri.getDirection())) {
+                        for (ResultRowItem result : fetchRowData(new ComboItem("Tube"), uri.getRouteLine(), uri.getStartingStop(), uri.getDirection())) {
                             if (j < numberToObtain || numberToObtain == -1) {
-                                String minutesRemaining = Long.toString(Long.parseLong(result.getTimeUntilArrival()) / 60);
-                                String secondsRemaining = (Long.toString(Long.parseLong(result.getTimeUntilArrival()) - (Long.parseLong(minutesRemaining) * 60)));
-
-                                // this loop adds '0' prefix to single digit seconds
-                                if (secondsRemaining.length() == 1) {
-                                    secondsRemaining = "0" + secondsRemaining;
-                                }
-
-                                // this loop adds '0' prefix to single digit minutes
-                                if (minutesRemaining.length() == 1) {
-                                    minutesRemaining = "0" + minutesRemaining;
-                                }
-                                // Create a TableRow and give it an ID
-                                TableRow tr = new TableRow(this);
-                                tr.setId(++tableRowIDCounter);
-                                tr.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-
-                                // Transport Mode
-                                TextView transportMode = new TextView(this);
-                                transportMode.setId(tableRowIDCounter+1);
-                                transportMode.setText("Tube");
-                                transportMode.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-                                tr.addView(transportMode);
-
-                                // Route LineRow
-                                TextView routeLine = new TextView(this);
-                                routeLine.setId(tableRowIDCounter+2);
-                                routeLine.setText(result.getRouteLine());
-                                routeLine.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-                                tr.addView(routeLine);
-
-                                // Starting Stop Station
-                                TextView startingStopStation = new TextView(this);
-                                startingStopStation.setId(tableRowIDCounter+3);
-                                startingStopStation.setText(result.getStopStationName());
-                                startingStopStation.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-                                tr.addView(startingStopStation);
-
-                                // Destination
-                                TextView destination = new TextView(this);
-                                destination.setId(tableRowIDCounter+4);
-                                destination.setText(result.getDestination());
-                                destination.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-                                tr.addView(destination);
-
-                                // Time To Arrival
-                                TextView timeToArrival = new TextView(this);
-                                timeToArrival.setId(tableRowIDCounter+5);
-                                timeToArrival.setText(result.getTimeUntilArrival());
-                                timeToArrival.setLayoutParams(new TableRow.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
-                                tr.addView(timeToArrival);
-
-                                // Add the TableRow to the TableLayout
-                                queryResultsTable.addView(tr, new TableLayout.LayoutParams(
-                                        TableRow.LayoutParams.FILL_PARENT,
-                                        TableRow.LayoutParams.WRAP_CONTENT));
+                                resultRows.add(result);
+                                j++;
                             }
-
-                            j++;
                         }
                     }
                 } catch (Exception e) {
@@ -174,36 +99,121 @@ public class QueryResults extends Activity {
             }
         }
 
+        // Sort resultRows list by time
+        Collections.sort(resultRows);
+
+        //Populate table
+
+        for (ResultRowItem result : resultRows) {
+
+            String minutesRemaining = Long.toString((result.getTimeUntilArrival()) / 60);
+            String secondsRemaining = Long.toString((result.getTimeUntilArrival()) % 60);
+
+            // this loop adds '0' prefix to single digit seconds
+            if (secondsRemaining.length() == 1) {
+                secondsRemaining = "0" + secondsRemaining;
+            }
+
+            // this loop adds '0' prefix to single digit minutes
+            if (minutesRemaining.length() == 1) {
+                minutesRemaining = "0" + minutesRemaining;
+            }
+
+            // Create a TableRow and give it an ID
+            TableRow tr = new TableRow(this);
+            tr.setId(++tableRowIDCounter);
+            tr.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+
+            // Transport Mode
+            TextView transportMode = new TextView(this);
+            transportMode.setId(tableRowIDCounter+1);
+            transportMode.setText("Bus");
+            transportMode.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            tr.addView(transportMode);
+
+            // Route LineRow
+            TextView routeLine = new TextView(this);
+            routeLine.setId(tableRowIDCounter+2);
+            routeLine.setText(result.getRouteLine());
+            routeLine.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            tr.addView(routeLine);
+
+            // Starting Stop Station
+            TextView startingStopStation = new TextView(this);
+            startingStopStation.setId(tableRowIDCounter+3);
+            startingStopStation.setText(result.getStopStationName());
+            startingStopStation.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            tr.addView(startingStopStation);
+
+            // Destination
+            TextView destination = new TextView(this);
+            destination.setId(tableRowIDCounter+4);
+            destination.setText(result.getDestination());
+            destination.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            tr.addView(destination);
+
+            // Time To Arrival
+            TextView timeToArrival = new TextView(this);
+            timeToArrival.setId(tableRowIDCounter+5);
+            timeToArrival.setText(minutesRemaining + ":" + secondsRemaining);
+            timeToArrival.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+            tr.addView(timeToArrival);
+
+            // Add the TableRow to the TableLayout
+            queryResultsTable.addView(tr, new TableLayout.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT));
+        }
+
     }
-    private  synchronized List<ResultRowItem> fetchTubeData(ComboItem tubeLine, ComboItem tubeStation, ComboItem directionPlatform) {
+
+    private  synchronized List<ResultRowItem> fetchRowData(ComboItem transportType, ComboItem routeLine, ComboItem startingStopStation, ComboItem direction) {
         APIFetcher apifetcher = new APIFetcher();
-        apifetcher.execute(tubeLine, tubeStation, directionPlatform);
-        return apifetcher.getTubeData();
+        apifetcher.execute(transportType, routeLine, startingStopStation, direction);
+        return apifetcher.getRowData();
     }
 
     class APIFetcher extends AsyncTask<ComboItem, Void, Void> {
 
-        List<ResultRowItem> tubeData;
+        List<ResultRowItem> rowData;
 
         @Override
         protected synchronized Void doInBackground(ComboItem... comboItems) {
-            tubeData = null;
-            tubeData = (new APIInterface().fetchTubeData(comboItems[0],comboItems[1],comboItems[2]));
+            rowData = null;
+            if (comboItems[0].getID().equals("Tube")){
+                rowData = (new APIInterface().fetchTubeData(comboItems[1], comboItems[2], comboItems[3]));
+            } else if (comboItems[0].getID().equals("Bus")){
+                rowData = (new APIInterface().fetchBusData(comboItems[1], comboItems[2], comboItems[3]));
+            } else {
+                throw new IllegalArgumentException("Invalid transport type");
+            }
             notifyAll();
             return null;
         }
 
-        public synchronized List<ResultRowItem> getTubeData() {
-            while (tubeData == null) {
+        public synchronized List<ResultRowItem> getRowData() {
+            while (rowData == null) {
                 try {
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            return tubeData;
+            return rowData;
         }
 
-    }
+      }
 }
 
