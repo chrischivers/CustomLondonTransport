@@ -80,6 +80,7 @@ public class QueryResults extends Activity {
                         int j = 0;
                         for (ResultRowItem result : fetchRowData(new ComboItem("Bus"), uri.getRouteLine(), uri.getStartingStop(), uri.getDirection())) {
                             if (j < numberToObtain || numberToObtain == -1) {
+                                System.out.println(result);
                                 resultRows.add(result);
                                 j++;
                             }
@@ -106,18 +107,7 @@ public class QueryResults extends Activity {
 
         for (ResultRowItem result : resultRows) {
 
-            String minutesRemaining = Long.toString((result.getTimeUntilArrival()) / 60);
-            String secondsRemaining = Long.toString((result.getTimeUntilArrival()) % 60);
 
-            // this loop adds '0' prefix to single digit seconds
-            if (secondsRemaining.length() == 1) {
-                secondsRemaining = "0" + secondsRemaining;
-            }
-
-            // this loop adds '0' prefix to single digit minutes
-            if (minutesRemaining.length() == 1) {
-                minutesRemaining = "0" + minutesRemaining;
-            }
 
             // Create a TableRow and give it an ID
             TableRow tr = new TableRow(this);
@@ -129,7 +119,7 @@ public class QueryResults extends Activity {
             // Transport Mode
             TextView transportMode = new TextView(this);
             transportMode.setId(tableRowIDCounter+1);
-            transportMode.setText("Bus");
+            transportMode.setText(result.getTransportMode());
             transportMode.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -147,7 +137,7 @@ public class QueryResults extends Activity {
             // Starting Stop Station
             TextView startingStopStation = new TextView(this);
             startingStopStation.setId(tableRowIDCounter+3);
-            startingStopStation.setText(result.getStopStationName());
+            startingStopStation.setText(result.getStopStationNameTrimmed());
             startingStopStation.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -156,7 +146,7 @@ public class QueryResults extends Activity {
             // Destination
             TextView destination = new TextView(this);
             destination.setId(tableRowIDCounter+4);
-            destination.setText(result.getDestination());
+            destination.setText(result.getDestinationTrimmed());
             destination.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -165,7 +155,7 @@ public class QueryResults extends Activity {
             // Time To Arrival
             TextView timeToArrival = new TextView(this);
             timeToArrival.setId(tableRowIDCounter+5);
-            timeToArrival.setText(minutesRemaining + ":" + secondsRemaining);
+            timeToArrival.setText(result.getTimeUntilArrivalFormattedString());
             timeToArrival.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -207,10 +197,12 @@ public class QueryResults extends Activity {
             while (rowData == null) {
                 try {
                     wait();
+                    System.out.println("Waiting");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+
             return rowData;
         }
 

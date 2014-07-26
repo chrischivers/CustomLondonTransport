@@ -68,6 +68,7 @@ public class APIInterface   {
                 busDataList.add(new ResultRowItem("Bus",busRouteFormatted,startingStopFormatted,destinationFormatted, secondsTo));
 
             }
+
         } catch(IOException ex){
             System.out.println(ex);
         }

@@ -25,12 +25,46 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         return StopStationName;
     }
 
+    public String getStopStationNameTrimmed () {
+        if (StopStationName.length() < 10) {
+            return StopStationName;
+        } else {
+            return StopStationName.substring(0,10) + "...";
+        }
+    }
+
     public String getDestination() {
         return Destination;
     }
 
+    public String getDestinationTrimmed() {
+        if (Destination.length() < 10) {
+            return Destination;
+        } else {
+            return Destination.substring(0,10) + "...";
+        }
+    }
+
     public Long getTimeUntilArrival() {
         return TimeUntilArrival;
+    }
+
+    public String getTimeUntilArrivalFormattedString () {
+
+        String minutesRemaining = Long.toString((this.getTimeUntilArrival()) / 60);
+        String secondsRemaining = Long.toString((this.getTimeUntilArrival()) % 60);
+
+        // this loop adds '0' prefix to single digit seconds
+        if (secondsRemaining.length() == 1) {
+            secondsRemaining = "0" + secondsRemaining;
+        }
+
+        // this loop adds '0' prefix to single digit minutes
+        if (minutesRemaining.length() == 1) {
+            minutesRemaining = "0" + minutesRemaining;
+        }
+
+        return minutesRemaining + ":" + secondsRemaining;
     }
 
     public ResultRowItem(String transportMode, String routeLine, String stopStationName, String destination, Long timeUntilArrival) {
@@ -51,5 +85,10 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
          } else {
              return 0;
          }
+    }
+
+    @Override
+    public String toString() {
+        return transportMode + ", " + routeLine + ", " + StopStationName + ", " + Destination + ", " +  TimeUntilArrival;
     }
 }
