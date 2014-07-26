@@ -3,6 +3,8 @@ package com.customlondontransport;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserListView extends Activity {
-    private ListView listView ;
+    private ListView userListView;
     private Button addNewRouteButton;
     private Button runQueryButton;
 
@@ -29,7 +31,8 @@ public class UserListView extends Activity {
         setContentView(R.layout.activity_view_user_routes);
 
         // Get ListView object from xml
-        listView = (ListView) findViewById(R.id.userListView);
+        userListView = (ListView) findViewById(R.id.userListView);
+        registerForContextMenu(userListView);
         addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
         runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
@@ -47,12 +50,14 @@ public class UserListView extends Activity {
         };
 
 
+
+
         // Assign adapter to ListView
-        listView.setAdapter(adapter);
+        userListView.setAdapter(adapter);
 
 
         // ListView Item Click Listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -98,6 +103,14 @@ public class UserListView extends Activity {
             startActivity(refresh);
             this.finish();
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_list_view_menu, menu);
     }
 
 }

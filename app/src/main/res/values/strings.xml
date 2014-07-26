@@ -27,7 +27,8 @@
     <string name ="Saturday">Saturday</string>
     <string name ="Sunday">Sunday</string>
 
-
+// Menu text
+    <string name ="Delete">Delete</string>
 
 
 </resources>
