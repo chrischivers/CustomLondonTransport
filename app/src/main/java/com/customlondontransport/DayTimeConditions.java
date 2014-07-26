@@ -2,14 +2,15 @@ package com.customlondontransport;
 
 
         import java.io.Serializable;
+        import java.text.DateFormat;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
         import java.util.Date;
 
 public class DayTimeConditions implements Serializable {
-    private Calendar fromTime = null;
-    private Calendar toTime = null;
+    private Date fromTime = new Date();
+    private Date toTime = new Date();
 
     //Sunday to Saturday
     private boolean[] selectedDays = null;
@@ -17,14 +18,10 @@ public class DayTimeConditions implements Serializable {
     // Constructor for time info and day info
     public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays) throws ParseException {
         String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
-        Date fromTimeDate = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
-        this.fromTime = Calendar.getInstance();
-        this.fromTime.setTime(fromTimeDate);
+        this.fromTime = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
 
         String toTimeFormatted = ((toTimeHour < 10) ? "0" + toTimeHour : Integer.toString(toTimeHour)) + ":" + ((toTimeMinutes < 10) ? "0" + toTimeMinutes : Integer.toString(toTimeMinutes));
-        Date toTimeDate = new SimpleDateFormat("HH:mm").parse(toTimeFormatted);
-        this.toTime = Calendar.getInstance();
-        this.toTime.setTime(toTimeDate);
+        this.toTime = new SimpleDateFormat("HH:mm").parse(toTimeFormatted);
 
         this.selectedDays = new boolean[7];
         this.selectedDays = selectedDays;
@@ -36,7 +33,7 @@ public class DayTimeConditions implements Serializable {
         this.selectedDays = selectedDays;
     }
 
-    public Calendar getfromTime() {
+    public Date getFromTime() {
         // Sets date to current date before returning to allow Date.After and Date.Before methods to run correctly. Returns null if time not set.
         if (this.fromTime==null) {
             return null;
@@ -46,7 +43,7 @@ public class DayTimeConditions implements Serializable {
     }
 
 
-    public Calendar gettoTime() {
+    public Date getToTime() {
         // Sets date to current date before returning to allow Date.After and Date.Before methods to run correctly. Returns null if time not set.
         if (this.toTime==null) {
             return null;
@@ -74,9 +71,20 @@ public class DayTimeConditions implements Serializable {
             }
         }
         if (fromTime != null && toTime != null) {
-            fromTimeTwoDigits = "From: " + String.format("%02d:%02d", this.fromTime.get(Calendar.HOUR_OF_DAY), this.fromTime.get(Calendar.MINUTE));
-            toTimeTwoDigits = " To: " + String.format("%02d:%02d", this.toTime.get(Calendar.HOUR_OF_DAY), this.toTime.get(Calendar.MINUTE));
+            fromTimeTwoDigits = "From: " + this.fromTime;
+            toTimeTwoDigits = " To: " + this.toTime;
         }
         return daysString + fromTimeTwoDigits + toTimeTwoDigits;
+    }
+
+    public boolean isCurrentTimeWithinRange() {
+        DateFormat f = new SimpleDateFormat("HH:mm");
+        Date currentDate = new Date();
+        if (f.format(currentDate).compareTo(f.format(this.fromTime)) >= 0 && f.format(currentDate).compareTo(f.format(this.toTime)) <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

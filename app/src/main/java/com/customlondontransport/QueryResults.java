@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.transform.Result;
-
 /**
  * Created by Chris on 10/07/2014.
  */
@@ -50,14 +48,16 @@ public class QueryResults extends Activity {
             if (uri.getDayTimeConditions() != null) {
                 // if condition contain currents day of the week process this row
                 if (((DayTimeConditions) uri.getDayTimeConditions()).getSelectedDays()[currentDayOfTheWeek - 1]) {
+
                     // if time or date is null (i.e. any time) process the row
-                    if (((DayTimeConditions) uri.getDayTimeConditions()).getfromTime() == null || ((DayTimeConditions) uri.getDayTimeConditions()).gettoTime() == null) {
+                    if (((DayTimeConditions) uri.getDayTimeConditions()).getFromTime() == null || ((DayTimeConditions) uri.getDayTimeConditions()).getToTime() == null) {
                         processThisRow = true;
                         // if current time is within to/from time range
-                    } else if (currentTime.after(((DayTimeConditions) uri.getDayTimeConditions()).getfromTime().getTime())
-                            && currentTime.before(((DayTimeConditions) uri.getDayTimeConditions()).gettoTime().getTime())) {
+                    } else if (((DayTimeConditions) uri.getDayTimeConditions()).isCurrentTimeWithinRange()) {
                         processThisRow = true;
+                        System.out.println("Here2");
                     }
+
                 }
             }
             // else if condition equals null
@@ -127,7 +127,7 @@ public class QueryResults extends Activity {
 
             // Route LineRow
             TextView routeLine = new TextView(this);
-            routeLine.setId(tableRowIDCounter+2);
+            routeLine.setId(tableRowIDCounter + 2);
             routeLine.setText(result.getRouteLine());
             routeLine.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
