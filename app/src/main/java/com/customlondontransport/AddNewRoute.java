@@ -113,6 +113,24 @@ public class AddNewRoute extends Activity {
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
 
+        // Adjust transport spinner if in EDIT MODE
+        if (inEditMode) {
+            String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
+            int adapterPosition = transportModeAdapter.getPosition(transportMode);
+            transportModeSpinner.setSelection(adapterPosition);
+            onTransportModeSpinnerChange();
+        }
+
+        // Set conditions if in EDIT MODE
+        if (inEditMode) {
+            dtc = UserListView.userRouteValues.get(positionToRestore).getDayTimeConditions();
+            if (dtc == null) {
+                conditionsSwitch.setChecked(false);
+            } else {
+                conditionsSwitch.setChecked(true);
+            }
+        }
+
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -176,14 +194,7 @@ public class AddNewRoute extends Activity {
             }
         });
 
-        // Adjust transport spinner if in EDIT MODE
-        if (inEditMode) {
-            //transport Spinner
-            String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
-            int adapterPosition = transportModeAdapter.getPosition(transportMode);
-            transportModeSpinner.setSelection(adapterPosition);
-            onTransportModeSpinnerChange();
-        }
+
     }
 
 
@@ -231,7 +242,6 @@ public class AddNewRoute extends Activity {
         } else {
             isTransportModeSet = false;
         }
-        setLayout();
 
         // IF IN EDIT MODE
         if (inEditMode) {
@@ -244,6 +254,7 @@ public class AddNewRoute extends Activity {
             }
             onRouteLineSpinnerChange();
         }
+        setLayout();
     }
 
     public void onRouteLineSpinnerChange() {
