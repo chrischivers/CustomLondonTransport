@@ -57,7 +57,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         Cursor c = db.rawQuery("SELECT " + column1ToFetch + ", " + column2ToFetch + " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
-                " WHERE " + column1ToFilterBy + " = " + busRouteID + " AND " + column2ToFilterBy + " = '1'" +
+                " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = '1'" +
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
@@ -87,7 +87,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
-                " WHERE " + column1ToFilterBy + " = " + busRouteID + " AND " + column2ToFilterBy + " = " + busDirection +
+                " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
                 " ORDER BY " + columnToOrderBy +";",null);
 
         busStops.add(new ComboItem("")); //add empty item to the front of the list

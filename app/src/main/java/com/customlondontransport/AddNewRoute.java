@@ -56,6 +56,15 @@ public class AddNewRoute extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_route);
 
+        // get UserRouteValues position if any (applies if UserRouteItem is being edited)
+        boolean inEditMode = false;
+        int positionToRestore = -1; //-1 as default if not in edit mode;
+        if (getIntent().hasExtra("Position")) {
+            Bundle b = getIntent().getExtras();
+            positionToRestore = b.getInt("Position");
+            inEditMode = true;
+        }
+
         // pull in the database
         new Thread(new LoadDatabase()).run();
 
@@ -77,7 +86,6 @@ public class AddNewRoute extends Activity {
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
         linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
-
 
 
         ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
@@ -105,14 +113,12 @@ public class AddNewRoute extends Activity {
                     routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     routeLineSpinner.setAdapter(routeLineAdapter);
                     isTransportModeSet = true;
-                }
-                else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
+                } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
                     ArrayAdapter<ComboItem> routeLineAdapter = new ArrayAdapter<ComboItem>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutes());
                     routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     routeLineSpinner.setAdapter(routeLineAdapter);
                     isTransportModeSet = true;
-                }
-                else {
+                } else {
                     isTransportModeSet = false;
                 }
                 setLayout();
@@ -132,19 +138,18 @@ public class AddNewRoute extends Activity {
                 isStartingStopSet = false;
                 isDirectionSet = false;
 
-                if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem)routeLineSpinner.getSelectedItem()).getID().equals("")) {
+                if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem) routeLineSpinner.getSelectedItem()).getID().equals("")) {
                     ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((ComboItem) routeLineSpinner.getSelectedItem()).getID()));
-                   startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     startingStopSpinner.setAdapter(startingStopAdapter);
                     isRouteLineSet = true;
 
-                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem)routeLineSpinner.getSelectedItem()).getID().equals("")) {
+                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem) routeLineSpinner.getSelectedItem()).getID().equals("")) {
                     ArrayAdapter<ComboItem> directionAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(routeLineSpinner.getSelectedItem().toString()));
                     directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     directionSpinner.setAdapter(directionAdapter);
                     isRouteLineSet = true;
-                }
-                else {
+                } else {
                     isRouteLineSet = false;
                 }
                 setLayout();
@@ -161,13 +166,13 @@ public class AddNewRoute extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem)startingStopSpinner.getSelectedItem()).getID().equals("")) {
+                if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem) startingStopSpinner.getSelectedItem()).getID().equals("")) {
                     ArrayAdapter<ComboItem> directionAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeDirectionsAndPlatforms(((ComboItem) routeLineSpinner.getSelectedItem()).getID(), ((ComboItem) startingStopSpinner.getSelectedItem()).getID()));
                     directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     directionSpinner.setAdapter(directionAdapter);
                     isStartingStopSet = true;
 
-                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem)startingStopSpinner.getSelectedItem()).getID().equals("")) {
+                } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem) startingStopSpinner.getSelectedItem()).getID().equals("")) {
                     isStartingStopSet = true;
                 } else {
                     isStartingStopSet = false;
@@ -185,12 +190,12 @@ public class AddNewRoute extends Activity {
         directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem)directionSpinner.getSelectedItem()).getID().equals("")) {
+                if (transportModeSpinner.getSelectedItem().equals("Bus") && !((ComboItem) directionSpinner.getSelectedItem()).getID().equals("")) {
                     ArrayAdapter<ComboItem> startingStopAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((ComboItem) directionSpinner.getSelectedItem()).getID())));
                     startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     startingStopSpinner.setAdapter(startingStopAdapter);
                     isDirectionSet = true;
-                } else if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem)directionSpinner.getSelectedItem()).getID().equals(""))  {
+                } else if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem) directionSpinner.getSelectedItem()).getID().equals("")) {
                     isDirectionSet = true;
                 } else {
                     isDirectionSet = false;
@@ -215,6 +220,13 @@ public class AddNewRoute extends Activity {
                 }
             }
         });
+
+        //Deal with restoring state in edit mode
+        if (inEditMode) {
+            String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
+            int adapterPosition = transportModeAdapter.getPosition(transportMode);
+            transportModeSpinner.setSelection(adapterPosition);
+        }
 
     }
 
@@ -259,7 +271,7 @@ public class AddNewRoute extends Activity {
             linearLayoutRight.addView(routeLineSpinner);
             addRouteToUserListButton.setVisibility(View.INVISIBLE);
 
-        } else if (transportModeSpinner.getSelectedItem().equals("Bus")){
+        } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
             if (!isDirectionSet) {
                 linearLayoutLeft.removeAllViewsInLayout();
                 linearLayoutRight.removeAllViewsInLayout();
@@ -270,8 +282,7 @@ public class AddNewRoute extends Activity {
                 linearLayoutLeft.addView(directionLabel);
                 linearLayoutRight.addView(directionSpinner);
                 addRouteToUserListButton.setVisibility(View.INVISIBLE);
-            }
-            else if (!isStartingStopSet) {
+            } else if (!isStartingStopSet) {
                 linearLayoutLeft.removeAllViewsInLayout();
                 linearLayoutRight.removeAllViewsInLayout();
                 linearLayoutLeft.addView(transportModeLabel);
@@ -339,7 +350,7 @@ public class AddNewRoute extends Activity {
         }
     }
 
-    private  List<ComboItem> fetchBusRoutes() {
+    private List<ComboItem> fetchBusRoutes() {
         return db.getBusRoutes();
     }
 
@@ -348,7 +359,7 @@ public class AddNewRoute extends Activity {
     }
 
 
-    private List<ComboItem>  fetchBusStops(String busRoute, int busDirection) {
+    private List<ComboItem> fetchBusStops(String busRoute, int busDirection) {
         return db.getBusStops(busRoute, busDirection);
     }
 
@@ -356,23 +367,22 @@ public class AddNewRoute extends Activity {
         return db.getTubeStations(tubeLineID);
     }
 
-    private List<ComboItem> fetchTubeLines () {
+    private List<ComboItem> fetchTubeLines() {
         return db.getTubeLines();
     }
 
-    private  synchronized List<ComboItem>  fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID)  {
-            APIFetcher apifetcher = new APIFetcher();
-            apifetcher.execute(tubeLineID, tubeStationID);
-            return apifetcher.getTubeDirectionsAndPlatformList();
+    private synchronized List<ComboItem> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
+        APIFetcher apifetcher = new APIFetcher();
+        apifetcher.execute(tubeLineID, tubeStationID);
+        return apifetcher.getTubeDirectionsAndPlatformList();
 
     }
-
 
 
     //button
     public void addAndReturnToUserListView(View view) {
 
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((ComboItem)routeLineSpinner.getSelectedItem()), ((ComboItem)directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
+        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((ComboItem) routeLineSpinner.getSelectedItem()), ((ComboItem) directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
         UserListView.userRouteValues.add(userRouteItem);
 
         setResult(RESULT_OK, null);
@@ -380,7 +390,7 @@ public class AddNewRoute extends Activity {
     }
 
 
-    public class LoadDatabase implements Runnable  {
+    public class LoadDatabase implements Runnable {
         @Override
         public void run() {
             db = new MyDatabase(getApplicationContext());
@@ -388,7 +398,7 @@ public class AddNewRoute extends Activity {
         }
     }
 
-    class APIFetcher extends AsyncTask <String, Void, Void>{
+    class APIFetcher extends AsyncTask<String, Void, Void> {
 
         List<ComboItem> tubeDirectionsAndPlatformList;
 
@@ -412,11 +422,12 @@ public class AddNewRoute extends Activity {
         }
 
     }
-//Return from conditions method
+
+    //Return from conditions method
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
             Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
             conditionsPreviewText.setText(dtc.toString());

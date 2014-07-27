@@ -1,16 +1,16 @@
 package com.customlondontransport;
 
 
-        import java.io.Serializable;
-        import java.text.DateFormat;
-        import java.text.ParseException;
-        import java.text.SimpleDateFormat;
-        import java.util.Calendar;
-        import java.util.Date;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DayTimeConditions implements Serializable {
     private Date fromTime = new Date();
     private Date toTime = new Date();
+    private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
     //Sunday to Saturday
     private boolean[] selectedDays = null;
@@ -71,16 +71,15 @@ public class DayTimeConditions implements Serializable {
             }
         }
         if (fromTime != null && toTime != null) {
-            fromTimeTwoDigits = "From: " + this.fromTime;
-            toTimeTwoDigits = " To: " + this.toTime;
+            fromTimeTwoDigits = "From: " + dateFormat.format(fromTime);
+            toTimeTwoDigits = " To: " + dateFormat.format(toTime);
         }
         return daysString + fromTimeTwoDigits + toTimeTwoDigits;
     }
 
     public boolean isCurrentTimeWithinRange() {
-        DateFormat f = new SimpleDateFormat("HH:mm");
         Date currentDate = new Date();
-        if (f.format(currentDate).compareTo(f.format(this.fromTime)) >= 0 && f.format(currentDate).compareTo(f.format(this.toTime)) <= 0) {
+        if (dateFormat.format(currentDate).compareTo(dateFormat.format(this.fromTime)) >= 0 && dateFormat.format(currentDate).compareTo(dateFormat.format(this.toTime)) <= 0) {
             return true;
         } else {
             return false;

@@ -29,6 +29,6 @@
 
 // Menu text
     <string name ="Delete">Delete</string>
-
+    <string name ="Edit">Edit</string>
 
 </resources>

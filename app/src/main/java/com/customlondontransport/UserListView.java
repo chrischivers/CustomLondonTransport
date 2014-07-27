@@ -104,6 +104,9 @@ public class UserListView extends Activity {
             case R.id.delete:
                 deleteItem(info.position);
                 return true;
+            case R.id.edit:
+                editItem(info.position);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
@@ -115,7 +118,14 @@ public class UserListView extends Activity {
         Toast.makeText(getApplicationContext(),"Item Deleted", Toast.LENGTH_LONG).show();
         setUpNewArrayAdapter();
         userListView.setAdapter(setUpNewArrayAdapter());
+    }
 
+    public void editItem(int position) {
+        Intent intent = new Intent(getApplicationContext(), AddNewRoute.class);
+        Bundle b = new Bundle();
+        b.putInt("Position", position);
+        intent.putExtras(b);
+        startActivityForResult(intent, 1);
     }
 
     public ArrayAdapter<UserRouteItem> setUpNewArrayAdapter() {

@@ -1,8 +1,12 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -10,7 +14,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,7 +41,6 @@ public class QueryResults extends Activity {
         // get current day of the week. 1 - 7 from Sunday to Saturday
         Calendar c = Calendar.getInstance();
         int currentDayOfTheWeek = c.get(Calendar.DAY_OF_WEEK);
-        Date currentTime = c.getTime();
 
         // Iterate through each line of the table adding to resultRows List
         for (UserRouteItem uri : UserListView.userRouteValues) {
@@ -107,8 +109,6 @@ public class QueryResults extends Activity {
 
         for (ResultRowItem result : resultRows) {
 
-
-
             // Create a TableRow and give it an ID
             TableRow tr = new TableRow(this);
             tr.setId(++tableRowIDCounter);
@@ -120,6 +120,7 @@ public class QueryResults extends Activity {
             TextView transportMode = new TextView(this);
             transportMode.setId(tableRowIDCounter+1);
             transportMode.setText(result.getTransportMode());
+            transportMode.setLines(1);
             transportMode.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -129,6 +130,7 @@ public class QueryResults extends Activity {
             TextView routeLine = new TextView(this);
             routeLine.setId(tableRowIDCounter + 2);
             routeLine.setText(result.getRouteLine());
+            routeLine.setLines(1);
             routeLine.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -137,7 +139,9 @@ public class QueryResults extends Activity {
             // Starting Stop Station
             TextView startingStopStation = new TextView(this);
             startingStopStation.setId(tableRowIDCounter+3);
-            startingStopStation.setText(result.getStopStationNameTrimmed());
+            startingStopStation.setText(result.getStopStationName());
+            startingStopStation.setLines(1);
+            startingStopStation.setEllipsize(TextUtils.TruncateAt.END);
             startingStopStation.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -146,7 +150,10 @@ public class QueryResults extends Activity {
             // Destination
             TextView destination = new TextView(this);
             destination.setId(tableRowIDCounter+4);
-            destination.setText(result.getDestinationTrimmed());
+            destination.setText(result.getDestination());
+            destination.setLines(1);
+            destination.setEllipsize(TextUtils.TruncateAt.END);
+
             destination.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -156,6 +163,7 @@ public class QueryResults extends Activity {
             TextView timeToArrival = new TextView(this);
             timeToArrival.setId(tableRowIDCounter+5);
             timeToArrival.setText(result.getTimeUntilArrivalFormattedString());
+            timeToArrival.setLines(1);
             timeToArrival.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));

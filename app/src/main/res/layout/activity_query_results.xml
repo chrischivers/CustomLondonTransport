@@ -2,13 +2,15 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="5dip">
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/QueryResultsTable"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:stretchColumns="*">
+        android:stretchColumns="1,2,3"
+        android:shrinkColumns="1,2,3">
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -17,46 +19,56 @@
             android:padding="5dip" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/transportModeHeader"
                 android:text="Tr"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_width="40dp"
+                android:lines="1" />
 
             <TextView
-                android:id="@+id/textView3"
-                android:text="R"
+                android:id="@+id/routeHeader"
+                android:text="Route"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:lines="1"
+                android:minWidth="20dp" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/startingStopHeader"
                 android:text="Starting"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:lines="1"
+                android:minWidth="80dp" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/destinationHeader"
                 android:text="Destination"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:layout_column="3"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:lines="1"
+                android:minWidth="80dp"
+                android:layout_width="wrap_content" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/timeHeader"
                 android:text="Time"
                 android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_column="4"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:lines="1" />
 
         </TableRow>
 

@@ -25,25 +25,25 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         return StopStationName;
     }
 
-    public String getStopStationNameTrimmed () {
+    /*public String getStopStationNameTrimmed () {
         if (StopStationName.length() < 10) {
             return StopStationName;
         } else {
             return StopStationName.substring(0,10) + "...";
         }
-    }
+    }*/
 
     public String getDestination() {
         return Destination;
     }
 
-    public String getDestinationTrimmed() {
+    /*public String getDestinationTrimmed() {
         if (Destination.length() < 10) {
             return Destination;
         } else {
             return Destination.substring(0,10) + "...";
         }
-    }
+    }*/
 
     public Long getTimeUntilArrival() {
         return TimeUntilArrival;
