@@ -133,10 +133,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/AddButtonLabel"
-            android:id="@+id/addRouteToUserListButton"
+            android:id="@+id/addToOrUpdateUserListButton"
             android:layout_gravity="center"
-            android:onClick="addAndReturnToUserListView" />
+            android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
 
     <TextView
