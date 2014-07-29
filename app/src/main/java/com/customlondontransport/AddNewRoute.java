@@ -347,11 +347,8 @@ public class AddNewRoute extends Activity {
                 }
                 onStartingStopSpinnerChange();
             }
-        } else if (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem) directionSpinner.getSelectedItem()).getID().equals("")) {
-            isDirectionSet = true;
-        } else {
-            isDirectionSet = false;
         }
+        isDirectionSet = (transportModeSpinner.getSelectedItem().equals("Tube") && !((ComboItem) directionSpinner.getSelectedItem()).getID().equals("")); //simplified if statement
         setLayout();
     }
 
