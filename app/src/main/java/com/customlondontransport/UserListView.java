@@ -48,16 +48,7 @@ public class UserListView extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition, Toast.LENGTH_LONG)
-                        .show();
-
+                // Nothing happens on click
             }
 
         });

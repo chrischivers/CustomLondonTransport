@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dip">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout">
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/QueryResultsTable"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:stretchColumns="1,2,3"
-        android:shrinkColumns="1,2,3">
+        android:shrinkColumns="1,2,3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/frameLayout" >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -24,7 +29,8 @@
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:textStyle="bold"
                 android:layout_width="40dp"
-                android:lines="1" />
+                android:lines="1"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/routeHeader"
@@ -41,18 +47,17 @@
                 android:id="@+id/startingStopHeader"
                 android:text="Starting"
                 android:textAppearance="@android:style/TextAppearance.Small"
-
                 android:layout_height="wrap_content"
                 android:layout_column="2"
                 android:textStyle="bold"
                 android:lines="1"
-                android:minWidth="80dp" />
+                android:minWidth="80dp"
+                android:layout_width="wrap_content" />
 
             <TextView
                 android:id="@+id/destinationHeader"
                 android:text="Destination"
                 android:textAppearance="@android:style/TextAppearance.Small"
-
                 android:layout_height="wrap_content"
                 android:layout_column="3"
                 android:textStyle="bold"
@@ -69,10 +74,23 @@
                 android:layout_column="4"
                 android:textStyle="bold"
                 android:lines="1" />
-
         </TableRow>
-
-
-
     </TableLayout>
-</LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/frameLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh"
+            android:id="@+id/refreshQueryButton"
+            android:layout_gravity="center"
+            android:layout_column="2" />
+    </FrameLayout>
+</RelativeLayout>

@@ -1,12 +1,12 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,20 +22,33 @@ import java.util.List;
 public class QueryResults extends Activity {
 
     private TableLayout queryResultsTable;
+    private Button refreshQueryButton;
     private List<ResultRowItem> resultRows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query_results);
+
         resultRows = new ArrayList<ResultRowItem>();
+        refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
+        queryResultsTable = (TableLayout) findViewById(R.id.QueryResultsTable);
+
         runQuery();
+
+        refreshQueryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshScreen();
+
+            }
+        });
     }
 
     private void runQuery() {
         APIInterface api = new APIInterface();
         //clearOutputListTable();
-        queryResultsTable = (TableLayout) findViewById(R.id.QueryResultsTable);
+
         int tableRowIDCounter = 0;
 
         // get current day of the week. 1 - 7 from Sunday to Saturday
@@ -174,6 +187,13 @@ public class QueryResults extends Activity {
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
         }
+
+    }
+
+    public void refreshScreen() {
+        Intent refresh = new Intent(this, QueryResults.class);
+        startActivity(refresh);
+        this.finish();
 
     }
 
