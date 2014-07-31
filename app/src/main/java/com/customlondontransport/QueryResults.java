@@ -1,7 +1,6 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,29 +22,32 @@ public class QueryResults extends Activity {
 
     private TableLayout queryResultsTable;
     private Button refreshQueryButton;
-    private List<ResultRowItem> resultRows;
+    private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query_results);
 
-        resultRows = new ArrayList<ResultRowItem>();
         refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
         queryResultsTable = (TableLayout) findViewById(R.id.QueryResultsTable);
+
 
         runQuery();
 
         refreshQueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                refreshScreen();
+                clearAndRefreshTable();
+
 
             }
         });
     }
 
     private void runQuery() {
+
+        resultRows = new ArrayList<ResultRowItem>();
         APIInterface api = new APIInterface();
         //clearOutputListTable();
 
@@ -95,7 +97,6 @@ public class QueryResults extends Activity {
                         int j = 0;
                         for (ResultRowItem result : fetchRowData(new ComboItem("Bus"), uri.getRouteLine(), uri.getStartingStop(), uri.getDirection())) {
                             if (j < numberToObtain || numberToObtain == -1) {
-                                System.out.println(result);
                                 resultRows.add(result);
                                 j++;
                             }
@@ -190,10 +191,14 @@ public class QueryResults extends Activity {
 
     }
 
-    public void refreshScreen() {
-        Intent refresh = new Intent(this, QueryResults.class);
-        startActivity(refresh);
-        this.finish();
+    public void clearAndRefreshTable() {
+
+        while (queryResultsTable.getChildCount() >1) {
+            System.out.println(queryResultsTable.getChildCount());
+            ((TableRow) queryResultsTable.getChildAt(1)).removeAllViews();
+            queryResultsTable.removeViewAt(1);
+        }
+        runQuery();
 
     }
 
