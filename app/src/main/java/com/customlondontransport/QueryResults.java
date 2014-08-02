@@ -39,8 +39,6 @@ public class QueryResults extends Activity {
             @Override
             public void onClick(View view) {
                 clearAndRefreshTable();
-
-
             }
         });
     }

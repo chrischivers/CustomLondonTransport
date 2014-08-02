@@ -37,9 +37,10 @@ public class UserListView extends Activity {
         addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
         runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
-
         // Assign adapter to ListView
-        userListView.setAdapter(setUpNewArrayAdapter());
+        if (userRouteValues.size() > 0) {
+            userListView.setAdapter(setUpNewArrayAdapter());
+        }
 
         // ListView Item Click Listener
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,6 +135,7 @@ public class UserListView extends Activity {
         };
         return adapter;
     }
+
 
 }
 
