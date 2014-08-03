@@ -1,6 +1,8 @@
 package com.customlondontransport;
 
-public class UserRouteItem {
+import java.io.Serializable;
+
+public class UserRouteItem implements Serializable {
     String transportForm;
     ComboItem routeLine;
     ComboItem direction;

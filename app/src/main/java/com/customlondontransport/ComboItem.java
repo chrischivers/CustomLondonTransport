@@ -1,6 +1,8 @@
 package com.customlondontransport;
 
-public class ComboItem {
+import java.io.Serializable;
+
+public class ComboItem implements Serializable{
     private String id;
     private String label;
 

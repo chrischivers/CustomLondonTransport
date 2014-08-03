@@ -1,7 +1,9 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -15,6 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.utils.ObjectSerializer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +28,19 @@ public class UserListView extends Activity {
     private Button addNewRouteButton;
     private Button runQueryButton;
 
-    public static List<UserRouteItem> userRouteValues = new ArrayList<UserRouteItem>();
+    public static List<UserRouteItem> userRouteValues;
     private static boolean hasDatabaseBeenLoaded = false;
+
+    private SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user_routes);
+
+       restoreListFromPrefs();
+
 
         // Get ListView object from xml
         userListView = (ListView) findViewById(R.id.userListView);
@@ -76,6 +87,9 @@ public class UserListView extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
+
+            saveListToPrefs();
+
             Intent refresh = new Intent(this, UserListView.class);
             startActivity(refresh);
             this.finish();
@@ -105,11 +119,12 @@ public class UserListView extends Activity {
     }
 
     public void deleteItem(int position) {
-     userRouteValues.remove(position);
+        userRouteValues.remove(position);
         // Show Alert
         Toast.makeText(getApplicationContext(),"Item Deleted", Toast.LENGTH_LONG).show();
-        setUpNewArrayAdapter();
+        saveListToPrefs();
         userListView.setAdapter(setUpNewArrayAdapter());
+
     }
 
     public void editItem(int position) {
@@ -136,6 +151,33 @@ public class UserListView extends Activity {
         return adapter;
     }
 
+    public void restoreListFromPrefs() {
+
+        if (null == userRouteValues) {
+            userRouteValues = new ArrayList<UserRouteItem>();
+        }
+
+        SharedPreferences prefs = getSharedPreferences("User_List_View", Context.MODE_PRIVATE);
+
+        try {
+            userRouteValues = (ArrayList<UserRouteItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveListToPrefs() {
+        //save the task list to preference
+        SharedPreferences prefs = getSharedPreferences("User_List_View", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        try {
+            editor.putString("User_Route_Values", ObjectSerializer.serialize((java.io.Serializable) userRouteValues));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        editor.commit();
+
+    }
 
 }
 
