@@ -163,18 +163,7 @@ public class UserListView extends Activity {
     }
 
     public ArrayAdapter<UserRouteItem> setUpNewArrayAdapter() {
-        ArrayAdapter<UserRouteItem> adapter = new ArrayAdapter<UserRouteItem>(this, android.R.layout.simple_list_item_2, android.R.id.text1, userRouteValues) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-
-                text1.setText(userRouteValues.get(position).getLine1());
-                text2.setText(userRouteValues.get(position).getLine2());
-                return view;
-            }
-        };
+        ArrayAdapter<UserRouteItem> adapter = new CustomList<UserRouteItem>(this, userRouteValues, R.drawable.bus_icon);
         return adapter;
     }
 

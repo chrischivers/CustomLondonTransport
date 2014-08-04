@@ -45,13 +45,22 @@ public class UserRouteItem implements Serializable {
 
     // For UserList View - returns first line
     public String getLine1() {
-        return transportForm + ": " + routeLine + "\nDirection: " + direction.toString();
+
+        String conditions;
+        if (dayTimeConditions == null) {
+            conditions = "\nNo conditions set";
+        } else {
+            conditions = "\nConditions: " + dayTimeConditions;
+        }
+
+        return routeLine + "Direction: " + direction.toString() + "\nStarting at: " + startingStop + ". " + conditions;
     }
 
-    // For UserList View - returns second line
+    /*// For UserList View - returns second line
     public String getLine2() {
-        return "Starting at: " + startingStop + "\nConditions: " + dayTimeConditions;
-    }
 
+        return "Starting at: " + startingStop
+    }
+*/
 
 }
