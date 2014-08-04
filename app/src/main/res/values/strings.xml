@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Custom London Transport</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_reset_route">Reset</string>
+    <string name="action_clear_user_routes">Clear All</string>
     <string name="AddANewRouteTitleText">Add a new route</string>
     <string name="TransportModeLabel">Transport mode</string>
     <string name="RouteLineLabel">Route/Line</string>

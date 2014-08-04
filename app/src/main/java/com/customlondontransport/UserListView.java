@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,7 +101,7 @@ public class UserListView extends Activity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_list_view_menu, menu);
+        inflater.inflate(R.menu.user_list_view_popup_menu, menu);
     }
 
     @Override
@@ -117,6 +118,32 @@ public class UserListView extends Activity {
                 return super.onContextItemSelected(item);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.user_list_view_action_bar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.clear_user_routes) {
+            userRouteValues.clear();
+            // Show Alert
+            Toast.makeText(getApplicationContext(),"List Cleared", Toast.LENGTH_LONG).show();
+            saveListToPrefs();
+            userListView.setAdapter(setUpNewArrayAdapter());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
 
     public void deleteItem(int position) {
         userRouteValues.remove(position);
