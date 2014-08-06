@@ -5,5 +5,9 @@
     <color name="text_color">#0099CC</color>
     <color name="background_color">#F0FF00</color>
     <color name="black_text">#000000</color>
+    <color name="white_text">#FFFFFF</color>
+
+    <color name="text_shadow_black">#000000</color>
+    <color name="text_shadow_white">#FFFFFF</color>
 
 </resources>

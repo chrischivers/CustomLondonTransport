@@ -53,7 +53,7 @@ public class UserRouteItem implements Serializable {
             conditions = "\nConditions: " + dayTimeConditions;
         }
 
-        return routeLine + "Direction: " + direction.toString() + "\nStarting at: " + startingStop + ". " + conditions;
+        return "Direction: " + direction.toString() + "\nStarting at: " + startingStop + ". " + conditions;
     }
 
     /*// For UserList View - returns second line

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+
     <TableRow android:layout_width="wrap_content">
 
         <RelativeLayout
@@ -26,11 +27,14 @@
                 android:layout_alignLeft="@+id/img"
                 android:layout_alignBottom="@+id/img"
                 android:layout_alignRight="@+id/img"
-                android:text="322"
                 android:textColor="@color/black_text"
                 android:textStyle="bold"
                 android:gravity="center_vertical|center_horizontal"
-                android:textSize="23sp" />
+                android:textSize="23sp"
+                android:shadowColor="@color/text_shadow_white"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="8"/>
 
         </RelativeLayout>
 

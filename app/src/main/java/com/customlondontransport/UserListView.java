@@ -163,7 +163,7 @@ public class UserListView extends Activity {
     }
 
     public ArrayAdapter<UserRouteItem> setUpNewArrayAdapter() {
-        ArrayAdapter<UserRouteItem> adapter = new CustomList<UserRouteItem>(this, userRouteValues, R.drawable.bus_icon);
+        ArrayAdapter<UserRouteItem> adapter = new CustomList<UserRouteItem>(this, userRouteValues);
         return adapter;
     }
 
