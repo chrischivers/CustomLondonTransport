@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:id="@+id/widgetQueryLinearLayout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/widgetButton1" />
+        <LinearLayout
+
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/transportModeHeader"
+                android:text="Tr"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:textStyle="bold"
+                android:layout_width="30dp"
+                android:lines="1"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/routeHeader"
+                android:text="Route"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/startingStopHeader"
+                android:text="Starting"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:lines="1"
+                android:layout_width="90dp"/>
+
+            <TextView
+                android:id="@+id/destinationHeader"
+                android:text="Destination"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:lines="1"
+                android:layout_width="88dp"/>
+
+            <TextView
+                android:id="@+id/timeHeader"
+                android:text="Time"
+                android:textAppearance="@android:style/TextAppearance.Small"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:lines="1"/>
+         </LinearLayout>
 </LinearLayout>

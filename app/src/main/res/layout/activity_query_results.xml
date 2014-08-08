@@ -24,7 +24,7 @@
                 android:text="Tr"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:textStyle="bold"
-                android:layout_width="30dp"
+                android:layout_width="40dp"
                 android:lines="1"
                 android:layout_height="wrap_content" />
 
@@ -34,42 +34,27 @@
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
                 android:textStyle="bold"
-                android:lines="1"
-                android:minWidth="20dp"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/transportModeHeader"
-                android:layout_toEndOf="@+id/transportModeHeader" />
+                android:lines="1" />
 
             <TextView
                 android:id="@+id/startingStopHeader"
                 android:text="Starting"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
+
                 android:textStyle="bold"
                 android:lines="1"
-                android:minWidth="80dp"
-                android:layout_width="110dp"
-                android:layout_alignBaseline="@+id/routeHeader"
-                android:layout_alignBottom="@+id/routeHeader"
-                android:layout_toRightOf="@+id/routeHeader"
-                android:layout_toEndOf="@+id/routeHeader" />
+                android:layout_width="120dp"/>
 
             <TextView
                 android:id="@+id/destinationHeader"
                 android:text="Destination"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
-                android:layout_column="3"
                 android:textStyle="bold"
                 android:lines="1"
-                android:minWidth="80dp"
-                android:layout_width="110dp"
-                android:layout_toEndOf="@+id/startingStopHeader"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/startingStopHeader" />
+                android:layout_width="115dp"/>
 
             <TextView
                 android:id="@+id/timeHeader"
@@ -77,13 +62,8 @@
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_column="4"
                 android:textStyle="bold"
-                android:lines="1"
-                android:layout_toEndOf="@+id/destinationHeader"
-                android:layout_alignBaseline="@+id/destinationHeader"
-                android:layout_alignBottom="@+id/destinationHeader"
-                android:layout_toRightOf="@+id/destinationHeader" />
+                android:lines="1"/>
         </LinearLayout>
 
 
