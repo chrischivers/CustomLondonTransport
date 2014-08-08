@@ -90,8 +90,6 @@ public class APIInterface   {
             String inputLine;
 
             while ((inputLine = reader.readLine()) != null) {
-                System.out.println("Input Line =" + inputLine);
-                System.out.println("Direction Platform = " + directionPlatform.getID());
 
                 if (inputLine.matches("\\s+<P N=\"" + directionPlatform.getID() + ".*")) {
                     try {
