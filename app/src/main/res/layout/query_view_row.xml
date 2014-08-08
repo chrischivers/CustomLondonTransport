@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/linearLayout">
+
+    <TextView
+        android:id="@+id/transportModeQueryResult"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:layout_width="40dp"
+        android:lines="1"
+        android:layout_height="wrap_content"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/routeLineQueryResult"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:minWidth="20dp"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/startingStopQueryResult"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:minWidth="80dp"
+        android:layout_width="120dp"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/directionQueryResult"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:minWidth="80dp"
+        android:layout_width="115dp"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/timeQueryResult"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:ellipsize="end" />
+</LinearLayout>

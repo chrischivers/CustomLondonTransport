@@ -1,11 +1,14 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,7 +23,7 @@ import java.util.List;
  */
 public class QueryResults extends Activity {
 
-    private TableLayout queryResultsTable;
+    private LinearLayout queryResultsLayout;
     private Button refreshQueryButton;
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
 
@@ -30,7 +33,7 @@ public class QueryResults extends Activity {
         setContentView(R.layout.activity_query_results);
 
         refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
-        queryResultsTable = (TableLayout) findViewById(R.id.QueryResultsTable);
+        queryResultsLayout = (LinearLayout) findViewById(R.id.queryResultsLayout);
 
 
         runQuery();
@@ -121,83 +124,28 @@ public class QueryResults extends Activity {
 
         for (ResultRowItem result : resultRows) {
 
-            // Create a TableRow and give it an ID
-            TableRow tr = new TableRow(this);
-            tr.setId(++tableRowIDCounter);
-            tr.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View myView = inflater.inflate(R.layout.query_view_row, null);
 
-            // Transport Mode
-            TextView transportMode = new TextView(this);
-            transportMode.setId(tableRowIDCounter+1);
-            transportMode.setText(result.getTransportMode());
-            transportMode.setLines(1);
-            transportMode.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            tr.addView(transportMode);
-
-            // Route LineRow
-            TextView routeLine = new TextView(this);
-            routeLine.setId(tableRowIDCounter + 2);
-            routeLine.setText(result.getRouteLine());
-            routeLine.setLines(1);
-            routeLine.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            tr.addView(routeLine);
-
-            // Starting Stop Station
-            TextView startingStopStation = new TextView(this);
-            startingStopStation.setId(tableRowIDCounter+3);
-            startingStopStation.setText(result.getStopStationName());
-            startingStopStation.setLines(1);
-            startingStopStation.setEllipsize(TextUtils.TruncateAt.END);
-            startingStopStation.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            tr.addView(startingStopStation);
-
-            // Destination
-            TextView destination = new TextView(this);
-            destination.setId(tableRowIDCounter+4);
-            destination.setText(result.getDestination());
-            destination.setLines(1);
-            destination.setEllipsize(TextUtils.TruncateAt.END);
-
-            destination.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            tr.addView(destination);
-
-            // Time To Arrival
-            TextView timeToArrival = new TextView(this);
-            timeToArrival.setId(tableRowIDCounter+5);
-            timeToArrival.setText(result.getTimeUntilArrivalFormattedString());
-            timeToArrival.setLines(1);
-            timeToArrival.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
-            tr.addView(timeToArrival);
-
-            // Add the TableRow to the TableLayout
-            queryResultsTable.addView(tr, new TableLayout.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.WRAP_CONTENT));
+            ((TextView) myView.findViewById(R.id.transportModeQueryResult)).setText(result.getTransportMode());
+            ((TextView) myView.findViewById(R.id.routeLineQueryResult)).setText(result.getRouteLine());
+            ((TextView) myView.findViewById(R.id.startingStopQueryResult)).setText(result.getStopStationName());
+            ((TextView) myView.findViewById(R.id.directionQueryResult)).setText(result.getDestination());
+            ((TextView) myView.findViewById(R.id.timeQueryResult)).setText(result.getTimeUntilArrivalFormattedString());
+            queryResultsLayout.addView(myView);
         }
 
     }
 
     public void clearAndRefreshTable() {
 
-        while (queryResultsTable.getChildCount() >1) {
+        /*while (queryResultsTable.getChildCount() >1) {
             System.out.println(queryResultsTable.getChildCount());
             ((TableRow) queryResultsTable.getChildAt(1)).removeAllViews();
             queryResultsTable.removeViewAt(1);
         }
         runQuery();
-
+*/
     }
 
     private  synchronized List<ResultRowItem> fetchRowData(ComboItem transportType, ComboItem routeLine, ComboItem startingStopStation, ComboItem direction) {
