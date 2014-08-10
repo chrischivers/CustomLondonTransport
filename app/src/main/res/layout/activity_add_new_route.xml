@@ -29,21 +29,21 @@
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/transportModeSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/RouteLineSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/StartingStopSpinner"
             android:spinnerMode="dropdown"
 
@@ -51,21 +51,21 @@
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/DirectionSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/MaxNumberSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Switch
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:id="@+id/ConditionsSwitch"
             android:gravity="center_vertical"
             android:textOff="None"
@@ -85,7 +85,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/TransportModeLabel"
             android:id="@+id/TransportModeLabel"
@@ -94,7 +94,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/RouteLineLabel"
             android:id="@+id/RouteLineLabel"
@@ -103,7 +103,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/StartingStopLabel"
             android:id="@+id/StartingStopLabel"
@@ -112,7 +112,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/DirectionLabel"
             android:id="@+id/DirectionLabel"
@@ -121,7 +121,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/MaxNumberLabel"
             android:id="@+id/MaxNumberLabel"
@@ -130,7 +130,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/ConditionsLabel"
             android:id="@+id/ConditionsLabel"

@@ -11,12 +11,13 @@ public class DayTimeConditions implements Serializable {
     private Date fromTime = new Date();
     private Date toTime = new Date();
     private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+    private int radiusFromStartingStop;
 
     //Sunday to Saturday
     private boolean[] selectedDays = null;
 
     // Constructor for time info and day info
-    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays) throws ParseException {
+    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays, int radiusFromStartingStop) throws ParseException {
         String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
         this.fromTime = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
 
@@ -25,6 +26,7 @@ public class DayTimeConditions implements Serializable {
 
         this.selectedDays = new boolean[7];
         this.selectedDays = selectedDays;
+        this.radiusFromStartingStop = radiusFromStartingStop;
     }
 
     // Constructor if no time info required
@@ -56,6 +58,10 @@ public class DayTimeConditions implements Serializable {
         return this.selectedDays;
     }
 
+    public int getRadiusFromStartingStop() {
+        return this.radiusFromStartingStop;
+    }
+
     @Override
     public String toString() {
         String daysString = "";
@@ -74,7 +80,7 @@ public class DayTimeConditions implements Serializable {
             fromTimeTwoDigits = "From: " + dateFormat.format(fromTime);
             toTimeTwoDigits = " To: " + dateFormat.format(toTime);
         }
-        return daysString + fromTimeTwoDigits + toTimeTwoDigits;
+        return daysString + fromTimeTwoDigits + toTimeTwoDigits + "\n" + radiusFromStartingStop + " metres from starting stop.";
     }
 
     public boolean isCurrentTimeWithinRange() {

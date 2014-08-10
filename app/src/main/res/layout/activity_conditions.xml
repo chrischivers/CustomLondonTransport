@@ -90,7 +90,8 @@
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="From:   "
                             android:id="@+id/SelectTimeFromLabel"
-                            android:textColor="@color/black_text" />
+                            android:textColor="@color/black_text"
+                            android:textStyle="bold" />
 
                         <TimePicker
                             android:layout_width="wrap_content"
@@ -114,7 +115,8 @@
                             android:id="@+id/SelectTimeToLabel"
                             android:textColor="@color/black_text"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp" />
+                            android:layout_marginTop="10dp"
+                            android:textStyle="bold" />
 
                         <TimePicker
                             android:layout_width="wrap_content"
@@ -146,7 +148,8 @@
                         android:layout_alignParentTop="true"
                         android:layout_alignLeft="@+id/SelectDaysMultipleChoiceList"
                         android:layout_alignStart="@+id/SelectDaysMultipleChoiceList"
-                        android:layout_marginBottom="10dp" />
+                        android:layout_marginBottom="10dp"
+                        android:textStyle="bold" />
 
                     <CheckBox android:id="@+id/checkbox_monday"
                         android:layout_width="wrap_content"
@@ -154,49 +157,69 @@
                         android:text="@string/Monday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_tuesday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Tuesday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_wednesday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Wednesday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_thursday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Thursday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_friday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Friday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_saturday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Saturday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
                     <CheckBox android:id="@+id/checkbox_sunday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Sunday"
                         android:onClick="onCheckboxClicked"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:paddingBottom="10dp" />
+                        android:paddingBottom="5dp" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Radius from starting station"
+                            android:id="@+id/radiusStartingStopLabel"
+                            android:layout_marginTop="15dp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radiusStartingStopSpinner" />
+                    </LinearLayout>
 
 
                 </LinearLayout>

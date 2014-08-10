@@ -4,19 +4,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TimePicker;;import java.text.ParseException;
 
 public class SetDayTimeConditions  extends Activity{
+
+    private ArrayAdapter<CharSequence> radiusStartingStopAdapter;
+
     private TimePicker timePickerTo;
     private TimePicker timePickerFrom;
+    private Spinner radiusStartingStopSpinner;
 
     private Button cancelButton;
     private Button OKButton;
 
+
     private DayTimeConditions dtc;
     private boolean[] selectedDays = new boolean[7]; //false by default
+
+
 
 
     @Override
@@ -28,6 +37,11 @@ public class SetDayTimeConditions  extends Activity{
         timePickerFrom = (TimePicker) findViewById(R.id.timePickerFrom);
         timePickerTo.setIs24HourView(true);
         timePickerFrom.setIs24HourView(true);
+
+        radiusStartingStopSpinner = (Spinner) findViewById(R.id.radiusStartingStopSpinner);
+        radiusStartingStopAdapter = ArrayAdapter.createFromResource(this, R.array.radius_starting_station_array, android.R.layout.simple_spinner_item);
+        radiusStartingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        radiusStartingStopSpinner.setAdapter(radiusStartingStopAdapter);
 
         cancelButton = (Button) findViewById(R.id.CancelConditionPopupButton);
         OKButton = (Button) findViewById(R.id.OkConditionPopupButton);
@@ -46,7 +60,11 @@ public class SetDayTimeConditions  extends Activity{
                 try {
                     System.out.println(timePickerFrom.getCurrentHour());
                     System.out.println(timePickerFrom.getCurrentMinute());
-                    dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(),selectedDays);
+                    int radiusFromStartingStop = -1;
+                    if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("Off")) {
+                        radiusFromStartingStop = Integer.parseInt(radiusStartingStopSpinner.getSelectedItem().toString());
+                    }
+                    dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(),selectedDays, radiusFromStartingStop);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
