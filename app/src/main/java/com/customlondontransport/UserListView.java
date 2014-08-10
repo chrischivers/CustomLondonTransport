@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -173,7 +174,7 @@ public class UserListView extends Activity {
             userRouteValues = new ArrayList<UserRouteItem>();
         }
 
-        SharedPreferences prefs = getSharedPreferences("User_List_View", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
             userRouteValues = (ArrayList<UserRouteItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
@@ -184,7 +185,7 @@ public class UserListView extends Activity {
 
     public void saveListToPrefs() {
         //save the task list to preference
-        SharedPreferences prefs = getSharedPreferences("User_List_View", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         try {
             editor.putString("User_Route_Values", ObjectSerializer.serialize((java.io.Serializable) userRouteValues));

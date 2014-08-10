@@ -33,7 +33,7 @@ public class QueryResults extends Activity {
         queryResultsLayout = (LinearLayout) findViewById(R.id.queryResultsLayout);
 
 
-        resultRows = new APIInterface().runQueryAndSort();
+        resultRows = new APIInterface().runQueryAndSort(UserListView.userRouteValues);
 
         //Populate table
 

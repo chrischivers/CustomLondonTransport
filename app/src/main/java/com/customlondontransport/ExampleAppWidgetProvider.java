@@ -6,8 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
+import com.utils.ObjectSerializer;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +21,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     public static String ACTION = "ActionName";
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
+    public static List<UserRouteItem> userRouteValues;
 
 
     @Override
@@ -26,7 +32,9 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         ComponentName watchWidget;
         RemoteViews rv;
 
-        resultRows = new APIInterface().runQueryAndSort();
+        restoreListFromPrefs(context);
+
+        resultRows = new APIInterface().runQueryAndSort(userRouteValues);
 
         for (int i = 0; i < appWidgetIds.length; i++) {
             int appWidgetID = appWidgetIds[i];
@@ -54,10 +62,12 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             ComponentName watchWidget;
             RemoteViews rv;
 
+            restoreListFromPrefs(context);
+
             watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
             rv= new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
-            resultRows = new APIInterface().runQueryAndSort();
+            resultRows = new APIInterface().runQueryAndSort(userRouteValues);
             rv = updateWidgetQuery(context, rv);
 
             appWidgetManager.updateAppWidget(watchWidget, rv);
@@ -82,5 +92,21 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         }
         return rv;
     }
+
+    //TODO
+    public void restoreListFromPrefs(Context context) {
+
+        if (null == userRouteValues) {
+            userRouteValues = new ArrayList<UserRouteItem>();
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        try {
+            userRouteValues = (ArrayList<UserRouteItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

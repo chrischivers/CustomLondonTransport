@@ -114,7 +114,7 @@ public class APIInterface   {
         return tubeDataList;
     }
 
-    public List runQueryAndSort() {
+    public List runQueryAndSort(List<UserRouteItem> userRouteList) {
         List resultRows = new ArrayList<ResultRowItem>();
         APIInterface api = new APIInterface();
         //clearOutputListTable();
@@ -126,7 +126,7 @@ public class APIInterface   {
         int currentDayOfTheWeek = c.get(Calendar.DAY_OF_WEEK);
 
         // Iterate through each line of the table adding to resultRows List
-        for (UserRouteItem userRouteItem: UserListView.userRouteValues) {
+        for (UserRouteItem userRouteItem: userRouteList) {
             boolean processThisRow = false;
 
             // if condition does not equal null

@@ -4,12 +4,13 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:id="@+id/query_row_linear_layout">
+    android:id="@+id/query_row_linear_layout"
+    android:gravity="top">
 
     <TextView
         android:id="@+id/transportModeQueryResult"
         android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_width="30dp"
+        android:layout_width="35dp"
         android:lines="1"
         android:layout_height="wrap_content"
         android:ellipsize="end" />
@@ -17,7 +18,7 @@
     <TextView
         android:id="@+id/routeLineQueryResult"
         android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_width="45dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:lines="1"
         android:minWidth="20dp"
@@ -36,7 +37,7 @@
         android:textAppearance="@android:style/TextAppearance.Small"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:layout_width="88dp"
+        android:layout_width="95dp"
         android:ellipsize="end" />
 
     <TextView
