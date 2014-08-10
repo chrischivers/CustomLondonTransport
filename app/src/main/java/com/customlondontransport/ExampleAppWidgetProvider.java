@@ -27,7 +27,6 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        System.out.println("Here 2");
 
         ComponentName watchWidget;
         RemoteViews rv;
@@ -57,7 +56,6 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        System.out.println("Here4");
         super.onReceive(context, intent);
         if (intent.getAction().equals(ACTION)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -95,9 +93,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         return rv;
     }
 
-    //TODO
     public void restoreListFromPrefs(Context context) {
-        System.out.println("Here3");
 
         userRouteValues = new ArrayList<UserRouteItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -107,7 +103,6 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Size =" + userRouteValues.size());
     }
 
 

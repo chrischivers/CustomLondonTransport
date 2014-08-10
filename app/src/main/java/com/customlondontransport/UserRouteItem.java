@@ -8,15 +8,15 @@ public class UserRouteItem implements Serializable {
     ComboItem direction;
     ComboItem startingStop;
     DayTimeConditions dayTimeConditions;
-    int numberToShow;
+    int maxNumberToShow;
 
-    public UserRouteItem(String transportForm, ComboItem routeLine, ComboItem direction, ComboItem startingStop, DayTimeConditions dayTimeConditions, int numberToShow) {
+    public UserRouteItem(String transportForm, ComboItem routeLine, ComboItem direction, ComboItem startingStop, DayTimeConditions dayTimeConditions, int maxNumberToShow) {
         this.transportForm = transportForm;
         this.routeLine = routeLine;
         this.direction = direction;
         this.startingStop = startingStop;
         this.dayTimeConditions = dayTimeConditions;
-        this.numberToShow = numberToShow;
+        this.maxNumberToShow = maxNumberToShow;
     }
 
     public String getTransportForm() {
@@ -39,8 +39,8 @@ public class UserRouteItem implements Serializable {
         return dayTimeConditions;
     }
 
-    public int getNumberToShow() {
-        return numberToShow;
+    public int getMaxNumberToShow() {
+        return maxNumberToShow;
     }
 
     // For UserList View - returns first line
@@ -55,12 +55,5 @@ public class UserRouteItem implements Serializable {
 
         return "Direction: " + direction.toString() + "\nStarting at: " + startingStop + ". " + conditions;
     }
-
-    /*// For UserList View - returns second line
-    public String getLine2() {
-
-        return "Starting at: " + startingStop
-    }
-*/
 
 }

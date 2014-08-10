@@ -21,7 +21,6 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:minWidth="20dp"
         android:ellipsize="end" />
 
     <TextView

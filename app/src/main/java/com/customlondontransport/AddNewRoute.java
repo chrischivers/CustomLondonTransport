@@ -32,16 +32,19 @@ public class AddNewRoute extends Activity {
     private Spinner routeLineSpinner;
     private Spinner directionSpinner;
     private Spinner startingStopSpinner;
+    private Spinner maxNumberSpinner;
 
     private ArrayAdapter<ComboItem> routeLineAdapter;
     private ArrayAdapter<CharSequence> transportModeAdapter;
     private ArrayAdapter<ComboItem> startingStopAdapter;
     private ArrayAdapter<ComboItem> directionAdapter;
+    private ArrayAdapter<CharSequence> maxNumberAdapter;
 
     private TextView transportModeLabel;
     private TextView routeLineLabel;
     private TextView directionLabel;
     private TextView startingStopLabel;
+    private TextView maxNumberLabel;
     private TextView conditionsLabel;
     private TextView headingText;
 
@@ -88,11 +91,13 @@ public class AddNewRoute extends Activity {
         routeLineSpinner = (Spinner) findViewById(R.id.RouteLineSpinner);
         directionSpinner = (Spinner) findViewById(R.id.DirectionSpinner);
         startingStopSpinner = (Spinner) findViewById(R.id.StartingStopSpinner);
+        maxNumberSpinner = (Spinner) findViewById(R.id.MaxNumberSpinner);
 
         transportModeLabel = (TextView) findViewById(R.id.TransportModeLabel);
         routeLineLabel = (TextView) findViewById(R.id.RouteLineLabel);
         directionLabel = (TextView) findViewById(R.id.DirectionLabel);
         startingStopLabel = (TextView) findViewById(R.id.StartingStopLabel);
+        maxNumberLabel = (TextView) findViewById(R.id.MaxNumberLabel);
         conditionsLabel = (TextView) findViewById(R.id.ConditionsLabel);
         headingText = (TextView) findViewById(R.id.HeadingText);
 
@@ -102,8 +107,9 @@ public class AddNewRoute extends Activity {
         linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
         linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
 
-        // Populate transport mode adapter as default first step
+        // Populate transport mode adapter and Max Number Adapter as default first step
         transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
+        maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
 
         linearLayoutLeft.removeAllViewsInLayout();
         linearLayoutRight.removeAllViewsInLayout();
@@ -115,6 +121,9 @@ public class AddNewRoute extends Activity {
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
 
+        maxNumberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        maxNumberSpinner.setAdapter(maxNumberAdapter);
+
         // Adjust transport spinner if in EDIT MODE
         if (inEditMode) {
             String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
@@ -122,6 +131,11 @@ public class AddNewRoute extends Activity {
             transportModeSpinner.setSelection(adapterPosition);
             onTransportModeSpinnerChange();
         }
+        // Set MaxNumber if in EDIT MODE
+        if (inEditMode) {
+           maxNumberSpinner.setSelection(UserListView.userRouteValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
+        }
+
 
         // Set conditions if in EDIT MODE
         if (inEditMode) {
@@ -419,6 +433,8 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(startingStopSpinner);
                 linearLayoutLeft.addView(conditionsLabel);
                 linearLayoutRight.addView(conditionsSwitch);
+                linearLayoutLeft.addView(maxNumberLabel);
+                linearLayoutRight.addView(maxNumberSpinner);
                 addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
             }
         } else if (transportModeSpinner.getSelectedItem().equals("Tube")) {
@@ -457,6 +473,8 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight.addView(directionSpinner);
                 linearLayoutLeft.addView(conditionsLabel);
                 linearLayoutRight.addView(conditionsSwitch);
+                linearLayoutLeft.addView(maxNumberLabel);
+                linearLayoutRight.addView(maxNumberSpinner);
                 addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
             }
         }
@@ -493,8 +511,8 @@ public class AddNewRoute extends Activity {
 
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
-
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((ComboItem) routeLineSpinner.getSelectedItem()), ((ComboItem) directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, 5);
+        int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
+        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((ComboItem) routeLineSpinner.getSelectedItem()), ((ComboItem) directionSpinner.getSelectedItem()), ((ComboItem) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
 
         if (!inEditMode) {
             // If not in EDIT MODE then add to List
@@ -514,6 +532,22 @@ public class AddNewRoute extends Activity {
         public void run() {
             db = new MyDatabase(getApplicationContext());
             System.out.println("Database Loaded");
+        }
+    }
+
+    //Return from conditions method
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
+            Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
+            conditionsPreviewText.setText(dtc.toString());
+        } else {
+            Toast.makeText(this, "No conditions set", Toast.LENGTH_SHORT).show();
+            conditionsSwitch.setChecked(false);
+            conditionsPreviewText.setText("");
+
         }
     }
 
@@ -542,19 +576,5 @@ public class AddNewRoute extends Activity {
 
     }
 
-    //Return from conditions method
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
-            Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
-            conditionsPreviewText.setText(dtc.toString());
-        } else {
-            Toast.makeText(this, "No conditions set", Toast.LENGTH_SHORT).show();
-            conditionsSwitch.setChecked(false);
-            conditionsPreviewText.setText("");
 
-        }
-    }
 }

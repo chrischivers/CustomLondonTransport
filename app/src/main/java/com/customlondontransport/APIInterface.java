@@ -152,19 +152,12 @@ public class APIInterface   {
             // start processing row if processThisRow set to true
             if (processThisRow) {
 
-                int numberToObtain = 5; //set as 5 for testing
-                //TODO Add in Number to Obtain variable
-                //if (queryListTableModel.getValueAt(i, 5).toString().equals("All")) {
-                //    numberToObtain = -1;
-                //} else {
-                //    numberToObtain = Integer.parseInt(queryListTableModel.getValueAt(i, 5).toString());
-                // }
-
+                int numberToObtain = userRouteItem.getMaxNumberToShow(); // 0 = all
                 try {
                     if (userRouteItem.getTransportForm().equals("Bus")) {
                         int j = 0;
                         for (ResultRowItem result : fetchRowData(new ComboItem("Bus"), userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
-                            if (j < numberToObtain || numberToObtain == -1) {
+                            if (j < numberToObtain || numberToObtain == 0) {
                                 resultRows.add(result);
                                 j++;
                             }
@@ -172,7 +165,7 @@ public class APIInterface   {
                     } else if (userRouteItem.getTransportForm().equals("Tube")) {
                         int j = 0;
                         for (ResultRowItem result : fetchRowData(new ComboItem("Tube"), userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
-                            if (j < numberToObtain || numberToObtain == -1) {
+                            if (j < numberToObtain || numberToObtain == 0) {
                                 resultRows.add(result);
                                 j++;
                             }

@@ -9,6 +9,7 @@
     <string name="RouteLineLabel">Route/Line</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
+    <string name="MaxNumberLabel">Maximum Entries</string>
     <string name="ConditionsLabel">Specify Conditions</string>
     <string name="AddButtonLabel">Add</string>
     <string name ="ConditionsTitleText">Set Conditions</string>
@@ -17,6 +18,20 @@
         <item></item>
         <item>Bus</item>
         <item>Tube</item>
+    </string-array>
+
+    <string-array name="max_number_array">
+        <item>All</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
 
     //Days of the week

@@ -33,6 +33,26 @@ public class QueryResults extends Activity {
         queryResultsLayout = (LinearLayout) findViewById(R.id.queryResultsLayout);
 
 
+        refreshAndPopulate();
+
+        refreshQueryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAndRefreshTable();
+            }
+        });
+    }
+
+    public void clearAndRefreshTable() {
+
+        while (queryResultsLayout.getChildCount() >1) {
+            ((LinearLayout) queryResultsLayout.getChildAt(1)).removeAllViews();
+            queryResultsLayout.removeViewAt(1);
+        }
+        refreshAndPopulate();
+    }
+
+    public void refreshAndPopulate() {
         resultRows = new APIInterface().runQueryAndSort(UserListView.userRouteValues);
 
         //Populate table
@@ -50,27 +70,7 @@ public class QueryResults extends Activity {
             queryResultsLayout.addView(myView);
         }
 
-        refreshQueryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAndRefreshTable();
-            }
-        });
     }
-
-    public void clearAndRefreshTable() {
-
-        //TODO
-        /*while (queryResultsTable.getChildCount() >1) {
-            System.out.println(queryResultsTable.getChildCount());
-            ((TableRow) queryResultsTable.getChildAt(1)).removeAllViews();
-            queryResultsTable.removeViewAt(1);
-        }
-        runQuery();
-*/
-    }
-
-
 
 
 }
