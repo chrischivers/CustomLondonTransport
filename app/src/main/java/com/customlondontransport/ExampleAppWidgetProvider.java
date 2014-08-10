@@ -56,6 +56,8 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        System.out.println("Here4");
         super.onReceive(context, intent);
         if (intent.getAction().equals(ACTION)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -95,10 +97,9 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
     //TODO
     public void restoreListFromPrefs(Context context) {
+        System.out.println("Here3");
 
-        if (null == userRouteValues) {
-            userRouteValues = new ArrayList<UserRouteItem>();
-        }
+        userRouteValues = new ArrayList<UserRouteItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
@@ -106,6 +107,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Size =" + userRouteValues.size());
     }
 
 
