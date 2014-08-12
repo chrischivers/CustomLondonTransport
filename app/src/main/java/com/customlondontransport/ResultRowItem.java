@@ -37,13 +37,6 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         return Destination;
     }
 
-    /*public String getDestinationTrimmed() {
-        if (Destination.length() < 10) {
-            return Destination;
-        } else {
-            return Destination.substring(0,10) + "...";
-        }
-    }*/
 
     public Long getTimeUntilArrival() {
         return TimeUntilArrival;

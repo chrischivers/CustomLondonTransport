@@ -11,7 +11,7 @@ public class DayTimeConditions implements Serializable {
     private Date fromTime = new Date();
     private Date toTime = new Date();
     private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-    private int radiusFromStartingStop;
+    private int radiusFromStartingStop  = -1;
 
     //Sunday to Saturday
     private boolean[] selectedDays = null;

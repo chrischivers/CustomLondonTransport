@@ -60,8 +60,8 @@ public class SetDayTimeConditions  extends Activity{
                 try {
                     System.out.println(timePickerFrom.getCurrentHour());
                     System.out.println(timePickerFrom.getCurrentMinute());
-                    int radiusFromStartingStop = -1;
-                    if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("Off")) {
+                    int radiusFromStartingStop = -1; // -1 if none selected
+                    if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("OFF")) {
                         radiusFromStartingStop = Integer.parseInt(radiusStartingStopSpinner.getSelectedItem().toString());
                     }
                     dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(),selectedDays, radiusFromStartingStop);

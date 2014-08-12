@@ -5,7 +5,15 @@ import java.io.Serializable;
 public class ComboItem implements Serializable{
     private String id;
     private String label;
+    private float longitudeCoordinate;
+    private float latitudeCoordinate;
 
+    public ComboItem(String id, String label, float longitudeCoordinate, float latitudeCoordinate) {
+        this.id = id;
+        this.label = label;
+        this.longitudeCoordinate = longitudeCoordinate;
+        this.latitudeCoordinate = latitudeCoordinate;
+    }
     public ComboItem(String id, String label) {
         this.id = id;
         this.label = label;
@@ -23,6 +31,10 @@ public class ComboItem implements Serializable{
     public String getLabel() {
         return this.label;
     }
+
+    public float getLongitudeCoordinate() { return this.longitudeCoordinate; }
+
+    public float getLatitudeCoordinate() { return this.latitudeCoordinate; }
 
     @Override
     public String toString() {

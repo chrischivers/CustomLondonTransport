@@ -1,5 +1,6 @@
 package com.customlondontransport;
 
+import android.location.Location;
 import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
@@ -114,7 +115,7 @@ public class APIInterface   {
         return tubeDataList;
     }
 
-    public List runQueryAndSort(List<UserRouteItem> userRouteList) {
+    public List runQueryAndSort(List<UserRouteItem> userRouteList, Location currentLocation) {
         List resultRows = new ArrayList<ResultRowItem>();
         APIInterface api = new APIInterface();
         //clearOutputListTable();
@@ -140,15 +141,34 @@ public class APIInterface   {
                         // if current time is within to/from time range
                     } else if (((DayTimeConditions) userRouteItem.getDayTimeConditions()).isCurrentTimeWithinRange()) {
                         processThisRow = true;
-                        System.out.println("Here2");
                     }
+                }
 
+
+            //Check location is within the range
+
+                if (currentLocation != null) {
+                    Location startingStopLocation = new Location("");
+                    startingStopLocation.setLongitude(userRouteItem.getStartingStop().getLongitudeCoordinate());
+                    startingStopLocation.setLatitude(userRouteItem.getStartingStop().getLatitudeCoordinate());
+
+                    // Set processThisRow to false if the distance is greater than the given radius
+                    if (userRouteItem.getDayTimeConditions().getRadiusFromStartingStop() != -1) {
+                        if (currentLocation.distanceTo(startingStopLocation) > userRouteItem.getDayTimeConditions().getRadiusFromStartingStop()) {
+                            processThisRow = false;
+                        }
+                    }
+                } else {
+                    //TODO
+                    System.out.println("Current Location is null");
                 }
             }
             // else if condition equals null
             else {
                 processThisRow = true;
             }
+
+
             // start processing row if processThisRow set to true
             if (processThisRow) {
 
@@ -188,39 +208,41 @@ public class APIInterface   {
         return apifetcher.getRowData();
     }
 
-}
+    class APIFetcher extends AsyncTask<ComboItem, Void, Void> {
 
-class APIFetcher extends AsyncTask<ComboItem, Void, Void> {
+        List<ResultRowItem> rowData;
 
-    List<ResultRowItem> rowData;
-
-    @Override
-    protected synchronized Void doInBackground(ComboItem... comboItems) {
-        rowData = null;
-        if (comboItems[0].getID().equals("Tube")){
-            rowData = (new APIInterface().fetchTubeData(comboItems[1], comboItems[2], comboItems[3]));
-        } else if (comboItems[0].getID().equals("Bus")){
-            rowData = (new APIInterface().fetchBusData(comboItems[1], comboItems[2], comboItems[3]));
-        } else {
-            throw new IllegalArgumentException("Invalid transport type");
-        }
-        notifyAll();
-        return null;
-    }
-
-    public synchronized List<ResultRowItem> getRowData() {
-        while (rowData == null) {
-            try {
-                wait();
-                System.out.println("Waiting");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        @Override
+        protected synchronized Void doInBackground(ComboItem... comboItems) {
+            rowData = null;
+            if (comboItems[0].getID().equals("Tube")){
+                rowData = (new APIInterface().fetchTubeData(comboItems[1], comboItems[2], comboItems[3]));
+            } else if (comboItems[0].getID().equals("Bus")){
+                rowData = (new APIInterface().fetchBusData(comboItems[1], comboItems[2], comboItems[3]));
+            } else {
+                throw new IllegalArgumentException("Invalid transport type");
             }
+            notifyAll();
+            return null;
         }
 
-        return rowData;
+        public synchronized List<ResultRowItem> getRowData() {
+            while (rowData == null) {
+                try {
+                    wait();
+                    System.out.println("Waiting");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return rowData;
+        }
+
     }
 
 }
+
+
 
 

@@ -78,13 +78,15 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable2 = "busStops";
         String column1ToFetch = sqlTable1+".busStopID";
         String column2ToFetch= sqlTable2+".busStopName";
+        String column3ToFetch= sqlTable2+".longitude";
+        String column4ToFetch= sqlTable2+".latitude";
         String column1ToInnerJoin = sqlTable1+".busStopID";
         String column2ToInnerJoin = sqlTable2+"._id";
         String column1ToFilterBy = sqlTable1+".busRouteID";
         String column2ToFilterBy = sqlTable1+".busRouteDirection";
         String columnToOrderBy = sqlTable1+"._id";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
                 " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
@@ -93,7 +95,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         busStops.add(new ComboItem("")); //add empty item to the front of the list
         c.moveToFirst();
         do {
-            busStops.add(new ComboItem(c.getString(0), c.getString(1)));
+            busStops.add(new ComboItem(c.getString(0), c.getString(1), Float.parseFloat(c.getString(2)), Float.parseFloat(c.getString(3))));
         } while (c.moveToNext());
         return busStops;
     }
@@ -128,16 +130,18 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable1 = "tubeStations";
         String column1ToFetch = "tubeStationID";
         String column2ToFetch= "tubeStationName";
+        String column3ToFetch = "longitude";
+        String column4ToFetch = "latitude";
         String column1ToFilterBy = "tubeLineID";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch + ", " + column2ToFetch + ", " + column3ToFetch + ", " + column4ToFetch + " FROM " + sqlTable1 +
                 " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
                 " ORDER BY " + column2ToFetch +";",null);
 
         tubeStations.add(new ComboItem("")); //add blank item to front of list
         c.moveToFirst();
         do  {
-            tubeStations.add(new ComboItem(c.getString(0), c.getString(1)));
+            tubeStations.add(new ComboItem(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
         } while (c.moveToNext());
         return tubeStations;
     }
