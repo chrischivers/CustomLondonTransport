@@ -27,6 +27,22 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     private GPSTracker gps;
     private Location currentLocation;
 
+    @Override
+    public void onEnabled(Context context) {
+
+        ComponentName watchWidget;
+        RemoteViews rv;
+
+        Intent intent = new Intent(context, getClass());
+        intent.setAction(ACTION);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+        rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
+        watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
+
+        rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
+    }
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
