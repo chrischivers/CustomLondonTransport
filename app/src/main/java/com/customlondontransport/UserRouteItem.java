@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class UserRouteItem implements Serializable {
     String transportForm;
-    ComboItem routeLine;
-    ComboItem direction;
-    ComboItem startingStop;
+    RouteLine routeLine;
+    Direction direction;
+    StationStop startingStop;
     DayTimeConditions dayTimeConditions;
     int maxNumberToShow;
 
-    public UserRouteItem(String transportForm, ComboItem routeLine, ComboItem direction, ComboItem startingStop, DayTimeConditions dayTimeConditions, int maxNumberToShow) {
+    public UserRouteItem(String transportForm, RouteLine routeLine, Direction direction, StationStop startingStop, DayTimeConditions dayTimeConditions, int maxNumberToShow) {
         this.transportForm = transportForm;
         this.routeLine = routeLine;
         this.direction = direction;
@@ -23,15 +23,15 @@ public class UserRouteItem implements Serializable {
         return transportForm;
     }
 
-    public ComboItem getRouteLine() {
+    public RouteLine getRouteLine() {
         return routeLine;
     }
 
-    public ComboItem getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public ComboItem getStartingStop() {
+    public StationStop getStartingStop() {
         return startingStop;
     }
 

@@ -14,14 +14,10 @@ public class StationStop implements Serializable{
         this.longitudeCoordinate = longitudeCoordinate;
         this.latitudeCoordinate = latitudeCoordinate;
     }
-    public StationStop(String id, String label) {
-        this.id = id;
-        this.label = label;
-    }
 
-    public StationStop(String label) {
-        this.id = label;
-        this.label = label;
+    public StationStop() {
+        this.id = "";
+        this.label = "";
     }
 
     public String getID() {
@@ -38,10 +34,6 @@ public class StationStop implements Serializable{
 
     @Override
     public String toString() {
-        if (label == null) {
-            return id;
-        } else {
             return label;
-        }
     }
 }

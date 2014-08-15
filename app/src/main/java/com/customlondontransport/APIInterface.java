@@ -19,8 +19,8 @@ import java.util.List;
 public class APIInterface   {
 
 
-    public List<ComboItem> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
-        List<ComboItem> tubeDirectionPlatformList = new ArrayList<ComboItem>();
+    public List<Direction> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
+        List<Direction> tubeDirectionPlatformList = new ArrayList<Direction>();
 
         try {
 
@@ -35,7 +35,7 @@ public class APIInterface   {
             while ((inputLine = reader.readLine()) != null) {
                 if(inputLine.matches("\\s+<P N=.*")) {
                     String directionPlatform = inputLine.substring(inputLine.indexOf("\"")+1,inputLine.indexOf("\" Num"));
-                    tubeDirectionPlatformList.add(new ComboItem(directionPlatform));
+                    tubeDirectionPlatformList.add(new Direction(directionPlatform));
                 }
             }
         } catch(IOException ex){
@@ -45,7 +45,7 @@ public class APIInterface   {
     }
 
 
-    public List<ResultRowItem> fetchBusData(ComboItem busRoute, ComboItem busStop, ComboItem busDirection){
+    public List<ResultRowItem> fetchBusData(RouteLine busRoute, StationStop busStop, Direction busDirection){
         List<ResultRowItem> busDataList = new ArrayList<ResultRowItem>();
 
         try {
@@ -68,7 +68,7 @@ public class APIInterface   {
                 Long secondsTo = ((Long.parseLong(inputLineSplit[4].substring(0,inputLineSplit[4].length()-1))-System.currentTimeMillis())/1000);
 
 
-                busDataList.add(new ResultRowItem("Bus",new ComboItem(busRouteFormatted),startingStopFormatted,destinationFormatted, secondsTo));
+                busDataList.add(new ResultRowItem("Bus",new RouteLine(busRouteFormatted),startingStopFormatted,destinationFormatted, secondsTo));
 
             }
 
@@ -79,7 +79,7 @@ public class APIInterface   {
         return busDataList;
     }
 
-    public List<ResultRowItem> fetchTubeData(ComboItem tubeLine, ComboItem tubeStation, ComboItem directionPlatform) {
+    public List<ResultRowItem> fetchTubeData(RouteLine tubeLine, StationStop tubeStation, Direction directionPlatform) {
         List<ResultRowItem> tubeDataList = new ArrayList<ResultRowItem>();
         try {
             URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLine.getID() + "/" + tubeStation.getID());
@@ -176,7 +176,7 @@ public class APIInterface   {
                 try {
                     if (userRouteItem.getTransportForm().equals("Bus")) {
                         int j = 0;
-                        for (ResultRowItem result : fetchRowData(new ComboItem("Bus"), userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
+                        for (ResultRowItem result : fetchRowData("Bus", userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
                             if (j < numberToObtain || numberToObtain == 0) {
                                 resultRows.add(result);
                                 j++;
@@ -184,7 +184,7 @@ public class APIInterface   {
                         }
                     } else if (userRouteItem.getTransportForm().equals("Tube")) {
                         int j = 0;
-                        for (ResultRowItem result : fetchRowData(new ComboItem("Tube"), userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
+                        for (ResultRowItem result : fetchRowData("Tube", userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
                             if (j < numberToObtain || numberToObtain == 0) {
                                 resultRows.add(result);
                                 j++;
@@ -202,23 +202,23 @@ public class APIInterface   {
         return resultRows;
     }
 
-    private  synchronized List<ResultRowItem> fetchRowData(ComboItem transportType, ComboItem routeLine, ComboItem startingStopStation, ComboItem direction) {
+    private  synchronized List<ResultRowItem> fetchRowData(String transportType, RouteLine routeLine, StationStop startingStopStation, Direction direction) {
         APIFetcher apifetcher = new APIFetcher();
         apifetcher.execute(transportType, routeLine, startingStopStation, direction);
         return apifetcher.getRowData();
     }
 
-    class APIFetcher extends AsyncTask<ComboItem, Void, Void> {
+    class APIFetcher extends AsyncTask<Object, Void, Void> {
 
         List<ResultRowItem> rowData;
 
         @Override
-        protected synchronized Void doInBackground(ComboItem... comboItems) {
+        protected synchronized Void doInBackground(Object... objects) {
             rowData = null;
-            if (comboItems[0].getID().equals("Tube")){
-                rowData = (new APIInterface().fetchTubeData(comboItems[1], comboItems[2], comboItems[3]));
-            } else if (comboItems[0].getID().equals("Bus")){
-                rowData = (new APIInterface().fetchBusData(comboItems[1], comboItems[2], comboItems[3]));
+            if (((String) objects[0]).equals("Tube")){
+                rowData = (new APIInterface().fetchTubeData(((RouteLine) objects[1]), ((StationStop) objects[2]), ((Direction) objects[3])));
+            } else if (((String) objects[0]).equals("Bus")){
+                rowData = (new APIInterface().fetchBusData(((RouteLine) objects[1]), ((StationStop) objects[2]), ((Direction) objects[3])));
             } else {
                 throw new IllegalArgumentException("Invalid transport type");
             }

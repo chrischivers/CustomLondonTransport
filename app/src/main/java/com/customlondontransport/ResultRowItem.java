@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class ResultRowItem implements Comparable<ResultRowItem> {
 
     private String transportMode;
-    private ComboItem routeLine;
+    private RouteLine routeLine;
     private String StopStationName;
     private String Destination;
     private Long TimeUntilArrival;
@@ -17,7 +17,7 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         return transportMode;
     }
 
-    public ComboItem getRouteLine() {
+    public RouteLine getRouteLine() {
         return routeLine;
     }
 
@@ -60,7 +60,7 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         return minutesRemaining + ":" + secondsRemaining;
     }
 
-    public ResultRowItem(String transportMode, ComboItem routeLine, String stopStationName, String destination, Long timeUntilArrival) {
+    public ResultRowItem(String transportMode, RouteLine routeLine, String stopStationName, String destination, Long timeUntilArrival) {
 
         this.transportMode = transportMode;
         this.routeLine = routeLine;
