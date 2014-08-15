@@ -68,7 +68,7 @@ public class APIInterface   {
                 Long secondsTo = ((Long.parseLong(inputLineSplit[4].substring(0,inputLineSplit[4].length()-1))-System.currentTimeMillis())/1000);
 
 
-                busDataList.add(new ResultRowItem("Bus",busRouteFormatted,startingStopFormatted,destinationFormatted, secondsTo));
+                busDataList.add(new ResultRowItem("Bus",new ComboItem(busRouteFormatted),startingStopFormatted,destinationFormatted, secondsTo));
 
             }
 
@@ -100,7 +100,7 @@ public class APIInterface   {
                             int destinationIndex = inputLine.indexOf("Destination=\"") + 13;
                             int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
 
-                            tubeDataList.add(new ResultRowItem("Tube", tubeLine.getLabel(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), Long.parseLong(inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex)))));
+                            tubeDataList.add(new ResultRowItem("Tube", tubeLine, tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), Long.parseLong(inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex)))));
                             inputLine = reader.readLine();
                         }
                     } catch (IndexOutOfBoundsException ex) {

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -125,8 +126,16 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
         for (ResultRowItem result : resultRows) {
             RemoteViews queryRowRemoteView = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
-            queryRowRemoteView.setTextViewText(R.id.transportModeQueryResult, result.getTransportMode());
-            queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine());
+
+            String imageName = result.getRouteLine().getID().toLowerCase() + "_line_icon";
+
+            if (result.getTransportMode().equals("Bus")) {
+                queryRowRemoteView.setImageViewResource(R.id.transportModeImageQueryResult, R.drawable.bus_icon);
+
+            } else if (result.getTransportMode().equals("Tube")) {
+                queryRowRemoteView.setImageViewResource(R.id.transportModeImageQueryResult, context.getResources().getIdentifier(imageName, "drawable", context.getPackageName()));
+            }
+            queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getID());
             queryRowRemoteView.setTextViewText(R.id.startingStopQueryResult, result.getStopStationName());
             queryRowRemoteView.setTextViewText(R.id.directionQueryResult, result.getDestination());
             queryRowRemoteView.setTextViewText(R.id.timeQueryResult, result.getTimeUntilArrivalFormattedString());

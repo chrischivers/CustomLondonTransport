@@ -7,28 +7,28 @@
     android:id="@+id/query_row_linear_layout"
     android:gravity="top">
 
-    <TextView
-        android:id="@+id/transportModeQueryResult"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_width="35dp"
+    <ImageView
+        android:id="@+id/transportModeImageQueryResult"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:lines="1"
-        android:layout_height="wrap_content"
-        android:ellipsize="end" />
+        android:layout_centerInParent="true"
+        android:paddingRight="5dp" />
 
     <TextView
         android:id="@+id/routeLineQueryResult"
         android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:ellipsize="end" />
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/startingStopQueryResult"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:layout_width="90dp"
+        android:layout_width="100dp"
         android:ellipsize="end" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:textAppearance="@android:style/TextAppearance.Small"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:layout_width="95dp"
+        android:layout_width="110dp"
         android:ellipsize="end" />
 
     <TextView
@@ -46,4 +46,5 @@
         android:layout_height="wrap_content"
         android:lines="1"
         android:ellipsize="end" />
+
 </LinearLayout>

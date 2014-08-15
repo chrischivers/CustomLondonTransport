@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -95,8 +96,16 @@ public class QueryResults extends Activity  {
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View myView = inflater.inflate(R.layout.query_view_row, null);
 
-            ((TextView) myView.findViewById(R.id.transportModeQueryResult)).setText(result.getTransportMode());
-            ((TextView) myView.findViewById(R.id.routeLineQueryResult)).setText(result.getRouteLine());
+            String imageName = result.getRouteLine().getID().toLowerCase() + "_line_icon";
+
+            if (result.getTransportMode().equals("Bus")) {
+                ((ImageView) myView.findViewById(R.id.transportModeImageQueryResult)).setImageResource(R.drawable.bus_icon);
+
+            } else if (result.getTransportMode().equals("Tube")) {
+                ((ImageView) myView.findViewById(R.id.transportModeImageQueryResult)).setImageResource(getApplicationContext().getResources().getIdentifier(imageName, "drawable", getApplicationContext().getPackageName()));
+            }
+
+            ((TextView) myView.findViewById(R.id.routeLineQueryResult)).setText(result.getRouteLine().getID());
             ((TextView) myView.findViewById(R.id.startingStopQueryResult)).setText(result.getStopStationName());
             ((TextView) myView.findViewById(R.id.directionQueryResult)).setText(result.getDestination());
             ((TextView) myView.findViewById(R.id.timeQueryResult)).setText(result.getTimeUntilArrivalFormattedString());
