@@ -1,43 +1,23 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 public class QueryResults extends Activity  {
 
     private LinearLayout queryResultsLayout;
-    private Button refreshQueryButton;
-    private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
-    private GPSTracker gps;
     private Location currentLocation;
 
     @Override
@@ -46,7 +26,7 @@ public class QueryResults extends Activity  {
         setContentView(R.layout.activity_query_results);
 
 
-        gps = new GPSTracker(QueryResults.this);
+        GPSTracker gps = new GPSTracker(QueryResults.this);
 
         // check if GPS enabled
         if(gps.canGetLocation()){
@@ -61,7 +41,7 @@ public class QueryResults extends Activity  {
         }
 
 
-        refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
+        Button refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
         queryResultsLayout = (LinearLayout) findViewById(R.id.queryResultsLayout);
 
 
@@ -86,7 +66,7 @@ public class QueryResults extends Activity  {
     }
 
     public void refreshAndPopulate() {
-        resultRows = new APIInterface().runQueryAndSort(UserListView.userRouteValues, currentLocation);
+        List<ResultRowItem> resultRows = new APIInterface().runQueryAndSort(UserListView.userRouteValues, currentLocation);
 
 
         //Populate table
@@ -115,11 +95,4 @@ public class QueryResults extends Activity  {
     }
 
 
-
-
 }
-
-
-
-
-

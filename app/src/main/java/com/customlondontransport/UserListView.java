@@ -1,7 +1,6 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,12 +10,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.utils.ObjectSerializer;
@@ -27,13 +24,8 @@ import java.util.List;
 
 public class UserListView extends Activity {
     private ListView userListView;
-    private Button addNewRouteButton;
-    private Button runQueryButton;
 
     public static List<UserRouteItem> userRouteValues;
-    private static boolean hasDatabaseBeenLoaded = false;
-
-    private SharedPreferences prefs;
 
 
     @Override
@@ -47,8 +39,8 @@ public class UserListView extends Activity {
         // Get ListView object from xml
         userListView = (ListView) findViewById(R.id.userListView);
         registerForContextMenu(userListView);
-        addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
-        runQueryButton = (Button) findViewById(R.id.RunQueryButton);
+        Button addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
+        Button runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
         // Assign adapter to ListView
         if (userRouteValues.size() > 0) {
@@ -164,10 +156,10 @@ public class UserListView extends Activity {
     }
 
     public ArrayAdapter<UserRouteItem> setUpNewArrayAdapter() {
-        ArrayAdapter<UserRouteItem> adapter = new CustomList<UserRouteItem>(this, userRouteValues);
-        return adapter;
+        return new CustomList<UserRouteItem>(this, userRouteValues);
     }
 
+    @SuppressWarnings("unchecked")
     public void restoreListFromPrefs() {
 
         if (null == userRouteValues) {
@@ -192,7 +184,7 @@ public class UserListView extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        editor.commit();
+        editor.apply();
 
     }
 

@@ -25,11 +25,6 @@ public class Direction implements Serializable{
         return this.id;
     }
 
-    public String getLabel() {
-        return this.label;
-    }
-
-
     @Override
     public String toString() {
 

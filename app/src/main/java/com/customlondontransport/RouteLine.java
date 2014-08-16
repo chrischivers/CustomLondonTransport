@@ -37,7 +37,7 @@ public class RouteLine implements Serializable{
 
     @Override
     public String toString() {
-        if (this.fullName == null || this.fullName.equals(null)) {
+        if (this.fullName == null || this.fullName.equals("")) {
             return this.id;
         } else {
             return this.fullName;

@@ -8,18 +8,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.TimePicker;;import java.text.ParseException;
+import android.widget.TimePicker;
+import java.text.ParseException;
 
 public class SetDayTimeConditions  extends Activity{
-
-    private ArrayAdapter<CharSequence> radiusStartingStopAdapter;
 
     private TimePicker timePickerTo;
     private TimePicker timePickerFrom;
     private Spinner radiusStartingStopSpinner;
-
-    private Button cancelButton;
-    private Button OKButton;
 
 
     private DayTimeConditions dtc;
@@ -39,12 +35,12 @@ public class SetDayTimeConditions  extends Activity{
         timePickerFrom.setIs24HourView(true);
 
         radiusStartingStopSpinner = (Spinner) findViewById(R.id.radiusStartingStopSpinner);
-        radiusStartingStopAdapter = ArrayAdapter.createFromResource(this, R.array.radius_starting_station_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> radiusStartingStopAdapter = ArrayAdapter.createFromResource(this, R.array.radius_starting_station_array, android.R.layout.simple_spinner_item);
         radiusStartingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         radiusStartingStopSpinner.setAdapter(radiusStartingStopAdapter);
 
-        cancelButton = (Button) findViewById(R.id.CancelConditionPopupButton);
-        OKButton = (Button) findViewById(R.id.OkConditionPopupButton);
+        Button cancelButton = (Button) findViewById(R.id.CancelConditionPopupButton);
+        Button OKButton = (Button) findViewById(R.id.OkConditionPopupButton);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,12 +60,12 @@ public class SetDayTimeConditions  extends Activity{
                     if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("OFF")) {
                         radiusFromStartingStop = Integer.parseInt(radiusStartingStopSpinner.getSelectedItem().toString());
                     }
-                    dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(),selectedDays, radiusFromStartingStop);
+                    dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), selectedDays, radiusFromStartingStop);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.putExtra("DayTimeConditions", dtc);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -85,32 +81,25 @@ public class SetDayTimeConditions  extends Activity{
         // Check which checkbox was clicked
         switch(view.getId()) {
             case R.id.checkbox_sunday:
-                if (checked) {selectedDays[0] = true; }
-                else { selectedDays[0] = false;}
+                selectedDays[0] = checked;
                 break;
             case R.id.checkbox_monday:
-                if (checked) {selectedDays[1] = true; }
-                else { selectedDays[1] = false;}
+                selectedDays[1] = checked;
                 break;
             case R.id.checkbox_tuesday:
-                if (checked) {selectedDays[2] = true; }
-                else { selectedDays[2] = false;}
+                selectedDays[2] = checked;
                 break;
             case R.id.checkbox_wednesday:
-                if (checked) {selectedDays[3] = true; }
-                else { selectedDays[3] = false;}
+                selectedDays[3] = checked;
                 break;
             case R.id.checkbox_thursday:
-                if (checked) {selectedDays[4] = true; }
-                else { selectedDays[4] = false;}
+                selectedDays[4] = checked;
                 break;
             case R.id.checkbox_friday:
-                if (checked) {selectedDays[5] = true; }
-                else { selectedDays[5] = false;}
+                selectedDays[5] = checked;
                 break;
             case R.id.checkbox_saturday:
-                if (checked) {selectedDays[6] = true; }
-                else { selectedDays[6] = false;}
+                selectedDays[6] = checked;
                 break;
         }
     }

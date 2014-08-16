@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.utils.ObjectSerializer;
 
@@ -19,29 +17,44 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.utils.ObjectSerializer.deserialize;
+
 public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
-    public static String ACTION = "ActionName";
+    public static String REFRESH = "Refresh";
+    public static String LOADSETTINGS = "Load Settings";
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
     public static List<UserRouteItem> userRouteValues;
     private GPSTracker gps;
     private Location currentLocation;
 
+
     @Override
     public void onEnabled(Context context) {
 
-        ComponentName watchWidget;
         RemoteViews rv;
 
         Intent intent = new Intent(context, getClass());
-        intent.setAction(ACTION);
+        intent.setAction(REFRESH);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
-        watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
 
         rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
+
+        // Sets Settings button
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+        Intent i = new Intent();
+        i.setClassName("com.customlondontransport", "com.customlondontransport.UserListView");
+        PendingIntent myPI = PendingIntent.getService(context, 0, i, 0);
+
+        rv.setOnClickPendingIntent(R.id.settingsImageButton, myPI);
+
+        ComponentName comp = new ComponentName(context.getPackageName(), ExampleAppWidgetProvider.class.getName());
+
+        mgr.updateAppWidget(comp, rv);
+
     }
 
 
@@ -60,28 +73,24 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             gps.showSettingsAlert();
         }
 
-        ComponentName watchWidget;
         RemoteViews rv;
 
         restoreListFromPrefs(context);
 
         resultRows = new APIInterface().runQueryAndSort(userRouteValues, currentLocation);
 
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            int appWidgetID = appWidgetIds[i];
-
+        for (int appWidgetID : appWidgetIds) {
             Intent intent = new Intent(context, getClass());
-            intent.setAction(ACTION);
+            intent.setAction(REFRESH);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
             rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
-            watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
 
             rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
 
             rv = updateWidgetQuery(context, rv);
 
-            appWidgetManager.updateAppWidget(appWidgetIds, rv);
+            appWidgetManager.updateAppWidget(appWidgetID, rv);
         }
     }
 
@@ -89,7 +98,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
 
         super.onReceive(context, intent);
-        if (intent.getAction().equals(ACTION)) {
+        if (intent.getAction().equals(REFRESH)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             gps = new GPSTracker(context);
@@ -115,9 +124,6 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             rv = updateWidgetQuery(context, rv);
 
             appWidgetManager.updateAppWidget(watchWidget, rv);
-
-
-
         }
     }
 
@@ -144,14 +150,14 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
         }
         return rv;
     }
-
+    @SuppressWarnings("unchecked")
     public void restoreListFromPrefs(Context context) {
 
         userRouteValues = new ArrayList<UserRouteItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
-            userRouteValues = (ArrayList<UserRouteItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
+            userRouteValues = (ArrayList<UserRouteItem>) deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
         } catch (IOException e) {
             e.printStackTrace();
         }

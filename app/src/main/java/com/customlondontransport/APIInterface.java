@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class APIInterface   {
                 }
             }
         } catch(IOException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return tubeDirectionPlatformList;
     }
@@ -73,7 +72,7 @@ public class APIInterface   {
             }
 
         } catch(IOException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return busDataList;
@@ -110,17 +109,14 @@ public class APIInterface   {
                 }
             }
         } catch(IOException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return tubeDataList;
     }
 
-    public List runQueryAndSort(List<UserRouteItem> userRouteList, Location currentLocation) {
-        List resultRows = new ArrayList<ResultRowItem>();
-        APIInterface api = new APIInterface();
+    public List<ResultRowItem> runQueryAndSort(List<UserRouteItem> userRouteList, Location currentLocation) {
+        List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
         //clearOutputListTable();
-
-        int tableRowIDCounter = 0;
 
         // get current day of the week. 1 - 7 from Sunday to Saturday
         Calendar c = Calendar.getInstance();
@@ -133,13 +129,13 @@ public class APIInterface   {
             // if condition does not equal null
             if (userRouteItem.getDayTimeConditions() != null) {
                 // if condition contain currents day of the week process this row
-                if (((DayTimeConditions) userRouteItem.getDayTimeConditions()).getSelectedDays()[currentDayOfTheWeek - 1]) {
+                if (userRouteItem.getDayTimeConditions().getSelectedDays()[currentDayOfTheWeek - 1]) {
 
                     // if time or date is null (i.e. any time) process the row
-                    if (((DayTimeConditions) userRouteItem.getDayTimeConditions()).getFromTime() == null || ((DayTimeConditions) userRouteItem.getDayTimeConditions()).getToTime() == null) {
+                    if (userRouteItem.getDayTimeConditions().getFromTime() == null || userRouteItem.getDayTimeConditions().getToTime() == null) {
                         processThisRow = true;
                         // if current time is within to/from time range
-                    } else if (((DayTimeConditions) userRouteItem.getDayTimeConditions()).isCurrentTimeWithinRange()) {
+                    } else if (userRouteItem.getDayTimeConditions().isCurrentTimeWithinRange()) {
                         processThisRow = true;
                     }
                 }
@@ -215,9 +211,9 @@ public class APIInterface   {
         @Override
         protected synchronized Void doInBackground(Object... objects) {
             rowData = null;
-            if (((String) objects[0]).equals("Tube")){
+            if (objects[0].equals("Tube")){
                 rowData = (new APIInterface().fetchTubeData(((RouteLine) objects[1]), ((StationStop) objects[2]), ((Direction) objects[3])));
-            } else if (((String) objects[0]).equals("Bus")){
+            } else if (objects[0].equals("Bus")){
                 rowData = (new APIInterface().fetchBusData(((RouteLine) objects[1]), ((StationStop) objects[2]), ((Direction) objects[3])));
             } else {
                 throw new IllegalArgumentException("Invalid transport type");
