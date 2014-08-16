@@ -138,11 +138,13 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
             if (result.getTransportMode().equals("Bus")) {
                 queryRowRemoteView.setImageViewResource(R.id.transportModeImageQueryResult, R.drawable.bus_icon);
+                queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getID());
 
             } else if (result.getTransportMode().equals("Tube")) {
                 queryRowRemoteView.setImageViewResource(R.id.transportModeImageQueryResult, context.getResources().getIdentifier(imageName, "drawable", context.getPackageName()));
+                queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getAbrvName());
             }
-            queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getAbrvName());
+
             queryRowRemoteView.setTextViewText(R.id.startingStopQueryResult, result.getStopStationName());
             queryRowRemoteView.setTextViewText(R.id.directionQueryResult, result.getDestination());
             queryRowRemoteView.setTextViewText(R.id.timeQueryResult, result.getTimeUntilArrivalFormattedString());
