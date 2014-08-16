@@ -107,15 +107,16 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         String sqlTable1 = "tubeLines";
         String column1ToFetch = "_id";
-        String column2ToFetch= "tubeLineName";
+        String column2ToFetch = "tubeLineAbrvName";
+        String column3ToFetch= "tubeLineFullName";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch + " FROM " + sqlTable1 +
-                " ORDER BY " + column1ToFetch + ";",null);
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " + column2ToFetch +", " +column3ToFetch + " FROM " + sqlTable1 +
+                " ORDER BY " + column3ToFetch + ";",null);
 
         c.moveToFirst();
         tubeLines.add(new RouteLine()); //add blank item to front of list
         do  {
-            tubeLines.add(new RouteLine(c.getString(0), c.getString(1)));
+            tubeLines.add(new RouteLine(c.getString(0), c.getString(1), c.getString(2)));
         } while (c.moveToNext());
         return tubeLines;
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
@@ -13,12 +14,13 @@
         android:layout_height="20dp"
         android:lines="1"
         android:layout_centerInParent="true"
-        android:paddingRight="5dp" />
+        android:paddingRight="5dp"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/routeLineQueryResult"
         android:textAppearance="@android:style/TextAppearance.Small"
-        android:layout_width="30dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:lines="1"
         android:ellipsize="end"/>
@@ -28,7 +30,7 @@
         android:textAppearance="@android:style/TextAppearance.Small"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:layout_width="100dp"
+        android:layout_width="115dp"
         android:ellipsize="end" />
 
     <TextView
@@ -36,7 +38,7 @@
         android:textAppearance="@android:style/TextAppearance.Small"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:layout_width="110dp"
+        android:layout_width="115dp"
         android:ellipsize="end" />
 
     <TextView

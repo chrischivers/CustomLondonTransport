@@ -13,6 +13,7 @@ public class RouteLine implements Serializable{
 
     public RouteLine(String id, String fullName) {
         this.id = id;
+        this.abrvName = fullName;
         this.fullName = fullName;
     }
     public RouteLine(String id, String abrvName, String fullName) {
@@ -30,6 +31,8 @@ public class RouteLine implements Serializable{
     public String getID() {
         return this.id;
     }
+
+    public String getAbrvName() {return this.abrvName; }
 
     public String getFullName() {
         return this.fullName;

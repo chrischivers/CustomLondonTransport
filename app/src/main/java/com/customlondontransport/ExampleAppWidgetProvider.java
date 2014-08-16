@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
@@ -35,25 +36,13 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
         RemoteViews rv;
 
-        Intent intent = new Intent(context, getClass());
-        intent.setAction(REFRESH);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        Intent refreshIntent = new Intent(context, getClass());
+        refreshIntent.setAction(REFRESH);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, 0);
 
         rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
         rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
-
-        // Sets Settings button
-        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-        Intent i = new Intent();
-        i.setClassName("com.customlondontransport", "com.customlondontransport.UserListView");
-        PendingIntent myPI = PendingIntent.getService(context, 0, i, 0);
-
-        rv.setOnClickPendingIntent(R.id.settingsImageButton, myPI);
-
-        ComponentName comp = new ComponentName(context.getPackageName(), ExampleAppWidgetProvider.class.getName());
-
-        mgr.updateAppWidget(comp, rv);
 
     }
 
@@ -90,8 +79,20 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
             rv = updateWidgetQuery(context, rv);
 
-            appWidgetManager.updateAppWidget(appWidgetID, rv);
+            // Sets Settings button
+            Intent settingsIntent = new Intent(context, UserListView.class);
+            settingsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetID);  // Identifies the particular widget...
+            settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // Make the pending intent unique...
+            settingsIntent.setData(Uri.parse(settingsIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent pendIntent = PendingIntent.getActivity(context, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            rv.setOnClickPendingIntent(R.id.settingsImageButton, pendIntent);
+
+            appWidgetManager.updateAppWidget(appWidgetID,rv);
         }
+
+
     }
 
     @Override
@@ -141,7 +142,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             } else if (result.getTransportMode().equals("Tube")) {
                 queryRowRemoteView.setImageViewResource(R.id.transportModeImageQueryResult, context.getResources().getIdentifier(imageName, "drawable", context.getPackageName()));
             }
-            queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getID());
+            queryRowRemoteView.setTextViewText(R.id.routeLineQueryResult, result.getRouteLine().getAbrvName());
             queryRowRemoteView.setTextViewText(R.id.startingStopQueryResult, result.getStopStationName());
             queryRowRemoteView.setTextViewText(R.id.directionQueryResult, result.getDestination());
             queryRowRemoteView.setTextViewText(R.id.timeQueryResult, result.getTimeUntilArrivalFormattedString());

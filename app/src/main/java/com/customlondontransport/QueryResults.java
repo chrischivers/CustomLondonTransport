@@ -85,7 +85,7 @@ public class QueryResults extends Activity  {
                 ((ImageView) myView.findViewById(R.id.transportModeImageQueryResult)).setImageResource(getApplicationContext().getResources().getIdentifier(imageName, "drawable", getApplicationContext().getPackageName()));
             }
 
-            ((TextView) myView.findViewById(R.id.routeLineQueryResult)).setText(result.getRouteLine().getID());
+            ((TextView) myView.findViewById(R.id.routeLineQueryResult)).setText(result.getRouteLine().getAbrvName());
             ((TextView) myView.findViewById(R.id.startingStopQueryResult)).setText(result.getStopStationName());
             ((TextView) myView.findViewById(R.id.directionQueryResult)).setText(result.getDestination());
             ((TextView) myView.findViewById(R.id.timeQueryResult)).setText(result.getTimeUntilArrivalFormattedString());
