@@ -207,6 +207,7 @@ public class AddNewRoute extends Activity {
         });
 
         conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     loadSetDayTimeConditions();
@@ -217,6 +218,13 @@ public class AddNewRoute extends Activity {
             }
         });
 
+        filterNearestToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
 
     }
 
@@ -544,9 +552,9 @@ public class AddNewRoute extends Activity {
 
             @Override
             public int compare(StationStop lhs, StationStop rhs) {
-                if (lhs.getLocation().distanceTo(currentLocation) < rhs.getLocation().distanceTo(currentLocation)) {
+                if (lhs.getLocation().distanceTo(currentLocation) > rhs.getLocation().distanceTo(currentLocation)) {
                     return 1;
-                } else if (lhs.getLocation().distanceTo(currentLocation) > rhs.getLocation().distanceTo(currentLocation)) {
+                } else if (lhs.getLocation().distanceTo(currentLocation) < rhs.getLocation().distanceTo(currentLocation)) {
                     return -1;
                 } else {
                     return 0;
@@ -613,6 +621,11 @@ public class AddNewRoute extends Activity {
             currentLocation = null;
             gps.showSettingsAlert();
         }
+
+        //TODO
+        //For emulator testing GPS being set manually
+        currentLocation.setLatitude(51.465053721837);
+        currentLocation.setLongitude(-0.29280117154);
     }
 
     class APIFetcher extends AsyncTask<String, Void, Void> {

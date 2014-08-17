@@ -94,7 +94,6 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
                 " ORDER BY " + columnToOrderBy +";",null);
 
-        busStops.add(new StationStop()); //add empty item to the front of the list
         c.moveToFirst();
         do {
             busStops.add(new StationStop(c.getString(0), c.getString(1), Float.parseFloat(c.getString(2)), Float.parseFloat(c.getString(3))));
@@ -135,7 +134,8 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         String sqlTable1 = "busRoutes";
         String sqlTable2 = "busStops";
-        String column1ToFetch = sqlTable1+".busRouteID";
+        String column1ToFetch = "busRouteID";
+        String virtualColumn2 = "distanceFromHere";
 
         String column1ToInnerJoin = sqlTable1+".busStopID";
         String column2ToInnerJoin = sqlTable2+"._id";
@@ -144,10 +144,14 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column2ToOrderBy = sqlTable2+".longitude";
 
 
-            Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + " FROM " + sqlTable1 +
-                    " INNER JOIN " + sqlTable2 +
-                    " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
-                     " ORDER BY abs(" + column1ToOrderBy + " - " + currentLocation.getLatitude() + ") + abs(" + column2ToOrderBy + " - " + currentLocation.getLongitude() + ")",null);
+            Cursor c = db.rawQuery(
+                    "SELECT " + column1ToFetch + " FROM (" +
+                        "SELECT DISTINCT " + sqlTable1 + "." +column1ToFetch + ", " + "abs(" + column1ToOrderBy + " - " + currentLocation.getLatitude() + ") + abs(" + column2ToOrderBy + " - " + currentLocation.getLongitude() + ")" + " as " + virtualColumn2 +
+                        " FROM " + sqlTable1 +
+                        " INNER JOIN " + sqlTable2 +
+                        " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
+                        " ORDER BY " + virtualColumn2 + ")",null);
+
 
             c.moveToFirst();
             do  {
@@ -200,7 +204,7 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
                 " ORDER BY " + column2ToFetch +";",null);
 
-        tubeStations.add(new StationStop()); //add blank item to front of list
+
         c.moveToFirst();
         do  {
             tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
