@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="AddANewRouteTitleText">Add a new route</string>
+    <string name="AddANewStationTitleText">Add a new station</string>
+
     <string name="app_name">Custom London Transport</string>
     <string name="action_reset_route">Reset</string>
     <string name="action_clear_user_routes">Clear All</string>
-    <string name="AddANewRouteTitleText">Add a new route</string>
+
     <string name="TransportModeLabel">Transport mode</string>
+    <string name ="LocalFilterModeLabel">Local Mode</string>
     <string name="RouteLineLabel">Route/Line</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
@@ -13,6 +17,10 @@
     <string name="ConditionsLabel">Specify Conditions</string>
     <string name="AddButtonLabel">Add</string>
     <string name ="ConditionsTitleText">Set Conditions</string>
+
+    <string name ="stopCodeLabel">Enter Stop/Station Code</string>
+    <string name ="stopByLocationLabel">Select from list (nearest first)</string>
+
 
     <string-array name="transport_mode_array">
         <item></item>

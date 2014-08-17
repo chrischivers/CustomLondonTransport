@@ -34,7 +34,6 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + columnToOrderBy+ ";",null);
 
         c.moveToFirst();
-        busRoutes.add(new RouteLine()); //add empty item to the front of the list
         do  {
            busRoutes.add(new RouteLine(c.getString(0)));
         } while (c.moveToNext());
@@ -63,7 +62,6 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column1ToFetch + ";",null);
 
         c.moveToFirst();
-        busDirections.add(new Direction()); //add empty item to the front of the list
         do  {
             busDirections.add(new Direction(c.getString(0), c.getString(1)));
         } while (c.moveToNext());
@@ -129,8 +127,8 @@ public class MyDatabase extends SQLiteAssetHelper {
 */
     public List<RouteLine> getNearestBusRoutes( Location currentLocation) {
 
-        Set<String> busRoutesSet = new LinkedHashSet<String>();
         SQLiteDatabase db = getReadableDatabase();
+        List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
 
         String sqlTable1 = "busRoutes";
         String sqlTable2 = "busStops";
@@ -145,7 +143,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
 
             Cursor c = db.rawQuery(
-                    "SELECT " + column1ToFetch + " FROM (" +
+                    "SELECT DISTINCT " + column1ToFetch + " FROM (" +
                         "SELECT DISTINCT " + sqlTable1 + "." +column1ToFetch + ", " + "abs(" + column1ToOrderBy + " - " + currentLocation.getLatitude() + ") + abs(" + column2ToOrderBy + " - " + currentLocation.getLongitude() + ")" + " as " + virtualColumn2 +
                         " FROM " + sqlTable1 +
                         " INNER JOIN " + sqlTable2 +
@@ -155,13 +153,9 @@ public class MyDatabase extends SQLiteAssetHelper {
 
             c.moveToFirst();
             do  {
-                busRoutesSet.add(c.getString(0));
+                busRoutesList.add(new RouteLine(c.getString(0)));
             } while (c.moveToNext());
 
-        List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
-        for (String str: busRoutesSet) {
-            busRoutesList.add(new RouteLine(str));
-        }
         return busRoutesList;
     }
 
@@ -180,7 +174,6 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " ORDER BY " + column3ToFetch + ";",null);
 
         c.moveToFirst();
-        tubeLines.add(new RouteLine()); //add blank item to front of list
         do  {
             tubeLines.add(new RouteLine(c.getString(0), c.getString(1), c.getString(2)));
         } while (c.moveToNext());

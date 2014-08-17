@@ -2,9 +2,11 @@ package com.customlondontransport;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,8 +31,8 @@ import java.util.List;
 public class AddNewRoute extends Activity {
 
     // get UserRouteValues position if any (applies if UserRouteItem is being edited)
-    boolean inEditMode = false;
-    int positionToRestore = -1; //-1 as default if not in edit mode;
+    private boolean inEditMode = false;
+    private int positionToRestore = -1; //-1 as default if not in edit mode;
 
     private Spinner transportModeSpinner;
     private Spinner routeLineSpinner;
@@ -39,7 +41,7 @@ public class AddNewRoute extends Activity {
     private Spinner maxNumberSpinner;
 
     private ArrayAdapter<RouteLine> routeLineAdapter;
-    private ArrayAdapter startingStopAdapter;
+    private ArrayAdapter<StationStop> startingStopAdapter;
     private ArrayAdapter<Direction> directionAdapter;
 
     private TextView transportModeLabel;
@@ -68,6 +70,7 @@ public class AddNewRoute extends Activity {
     private boolean isStartingStopSet = false;
 
     private Location currentLocation;
+    private SharedPreferences prefs;
 
 
     @Override
@@ -76,7 +79,7 @@ public class AddNewRoute extends Activity {
         setContentView(R.layout.activity_add_new_route);
 
         getGPSLocation();
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (getIntent().hasExtra("Position")) {
             Bundle b = getIntent().getExtras();
@@ -93,6 +96,8 @@ public class AddNewRoute extends Activity {
         } else {
             addToOrUpdateUserListButton.setText("Update");
         }
+
+
         transportModeSpinner = (Spinner) findViewById(R.id.transportModeSpinner);
         routeLineSpinner = (Spinner) findViewById(R.id.RouteLineSpinner);
         directionSpinner = (Spinner) findViewById(R.id.DirectionSpinner);
@@ -111,8 +116,8 @@ public class AddNewRoute extends Activity {
 
         filterNearestToggleButton = (ToggleButton) findViewById(R.id.filterNearestToggleButton);
 
-        linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
-        linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
+        linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft1);
+        linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight1);
 
         // Populate transport mode adapter and Max Number Adapter as default first step
         ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
@@ -143,7 +148,6 @@ public class AddNewRoute extends Activity {
            maxNumberSpinner.setSelection(UserListView.userRouteValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
         }
 
-
         // Set conditions if in EDIT MODE
         if (inEditMode) {
             dtc = UserListView.userRouteValues.get(positionToRestore).getDayTimeConditions();
@@ -153,6 +157,9 @@ public class AddNewRoute extends Activity {
                 conditionsSwitch.setChecked(true);
             }
         }
+        // Set local toggle depending on if LOCAL MODE is on
+        filterNearestToggleButton.setChecked(prefs.getBoolean("Local_Mode", false));
+
 
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -219,9 +226,9 @@ public class AddNewRoute extends Activity {
         });
 
         filterNearestToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onTransportModeSpinnerChange();
 
             }
         });
@@ -268,21 +275,15 @@ public class AddNewRoute extends Activity {
         isDirectionSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            if (!filterNearestToggleButton.isChecked()) {
-                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLinesOrderByAlphabetical());
-            } else {
-                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLinesOrderByNearest());
-            }
+            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLines());
+            routeLineAdapter.insert(new RouteLine(),0); //insert empty to front
             routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             routeLineSpinner.setAdapter(routeLineAdapter);
             isTransportModeSet = true;
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            if (!filterNearestToggleButton.isChecked()) {
-                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutesOrderByAlphabetical());
-            } else {
-                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutesOrderByNearest());
-            }
+            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutes());
+            routeLineAdapter.insert(new RouteLine(),0); //insert empty to front
             routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             routeLineSpinner.setAdapter(routeLineAdapter);
             isTransportModeSet = true;
@@ -311,6 +312,7 @@ public class AddNewRoute extends Activity {
 
         if (transportModeSpinner.getSelectedItem().equals("Tube") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
             startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+            startingStopAdapter.insert(new StationStop(),0); //insert empty to front
             startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             startingStopSpinner.setAdapter(startingStopAdapter);
             isRouteLineSet = true;
@@ -319,7 +321,7 @@ public class AddNewRoute extends Activity {
             if (inEditMode) {
                 String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
                 for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
-                    if (((StationStop) startingStopAdapter.getItem(i)).getID().equals(startingStopID)) {
+                    if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
                         startingStopSpinner.setSelection(i, true);
                         break;
                     }
@@ -329,6 +331,7 @@ public class AddNewRoute extends Activity {
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
             directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+            directionAdapter.insert(new Direction(),0); //insert empty to front
             directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             directionSpinner.setAdapter(directionAdapter);
             isRouteLineSet = true;
@@ -353,6 +356,7 @@ public class AddNewRoute extends Activity {
     public void onStartingStopSpinnerChange() {
         if (transportModeSpinner.getSelectedItem().equals("Tube") && !((StationStop) startingStopSpinner.getSelectedItem()).getID().equals("")) {
             directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeDirectionsAndPlatforms(((RouteLine) routeLineSpinner.getSelectedItem()).getID(), ((StationStop) startingStopSpinner.getSelectedItem()).getID()));
+            directionAdapter.insert(new Direction(),0); //insert empty to front
             directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             directionSpinner.setAdapter(directionAdapter);
             isStartingStopSet = true;
@@ -377,6 +381,7 @@ public class AddNewRoute extends Activity {
     public void onDirectionSpinnerChange() {
         if (transportModeSpinner.getSelectedItem().equals("Bus") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("")) {
             startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
+            startingStopAdapter.insert(new StationStop(),0); //insert empty to front
             startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             startingStopSpinner.setAdapter(startingStopAdapter);
             isDirectionSet = true;
@@ -385,7 +390,7 @@ public class AddNewRoute extends Activity {
             if (inEditMode) {
                 String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
                 for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
-                    if (((StationStop) startingStopAdapter.getItem(i)).getID().equals(startingStopID)) {
+                    if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
                         startingStopSpinner.setSelection(i, true);
                         break;
                     }
@@ -497,12 +502,12 @@ public class AddNewRoute extends Activity {
         }
     }
 
-    private List<RouteLine> fetchBusRoutesOrderByAlphabetical() {
-        return db.getBusRoutesAlphabetical();
-    }
-
-    private List<RouteLine> fetchBusRoutesOrderByNearest() {
-        return db.getNearestBusRoutes(currentLocation);
+    private List<RouteLine> fetchBusRoutes() {
+       if (filterNearestToggleButton.isChecked()) {
+           return db.getNearestBusRoutes(currentLocation);
+       } else {
+           return db.getBusRoutesAlphabetical();
+       }
     }
 
     private List<Direction> fetchBusDirections(String busRoute) {
@@ -526,17 +531,7 @@ public class AddNewRoute extends Activity {
         }
     }
 
-    private List<StationStop> fetchTubeStationsOrderByNearest(String tubeLineID) {
-        //return db.getTubeStationsNearest(tubeLineID);
-        return db.getTubeStationsAlphabetical(tubeLineID);
-    }
-
-    private List<RouteLine> fetchTubeLinesOrderByAlphabetical() {
-        return db.getTubeLinesAlphabetical();
-    }
-
-    private List<RouteLine> fetchTubeLinesOrderByNearest() {
-        //return db.getTubeLinesNearest();
+    private List<RouteLine> fetchTubeLines() {
         return db.getTubeLinesAlphabetical();
     }
 
@@ -569,7 +564,7 @@ public class AddNewRoute extends Activity {
     public void addToOrUpdateAndReturnToUserListView(View view) {
         int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
         UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((RouteLine) routeLineSpinner.getSelectedItem()), ((Direction) directionSpinner.getSelectedItem()), ((StationStop) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
-
+        saveCustomSettingsToPrefs(); //Save custom prefs
         if (!inEditMode) {
             // If not in EDIT MODE then add to List
             UserListView.userRouteValues.add(userRouteItem);
@@ -653,5 +648,10 @@ public class AddNewRoute extends Activity {
 
     }
 
+    public void saveCustomSettingsToPrefs() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("Local_Mode", filterNearestToggleButton.isChecked());
+        editor.apply();
+    }
 
 }

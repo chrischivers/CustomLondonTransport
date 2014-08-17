@@ -10,14 +10,15 @@
 
     <TextView
         android:id="@+id/HeadingText"
-        android:text="@string/AddANewRouteTitleText"
+        android:text="@string/AddANewStationTitleText"
         android:textColor="@color/black_text"
         android:textSize="25sp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -30,46 +31,23 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/transportModeSpinner"
+            android:id="@+id/TransportModeSpinner"
             android:spinnerMode="dropdown"
+
             android:gravity="center_vertical|left" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:id="@+id/StopCodeEditText" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/RouteLineSpinner"
+            android:id="@+id/StationSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/StartingStopSpinner"
-            android:spinnerMode="dropdown"
-
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/DirectionSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/MaxNumberSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="58dp"
-            android:id="@+id/ConditionsSwitch"
-            android:gravity="center_vertical"
-            android:textOff="None"
-            android:textOn="Set" />
     </LinearLayout>
 
     <LinearLayout
@@ -95,8 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/RouteLineLabel"
-            android:id="@+id/RouteLineLabel"
+            android:text="@string/stopCodeLabel"
+            android:id="@+id/EnterStopCodeLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -104,38 +82,84 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/StartingStopLabel"
-            android:id="@+id/StartingStopLabel"
+            android:text="@string/stopByLocationLabel"
+            android:id="@+id/SelectStopLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/DirectionLabel"
-            android:id="@+id/DirectionLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutBusRoutes"
+        android:layout_below="@+id/linearLayoutRight1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/ConditionsPreviewText"
+        android:layout_alignEnd="@+id/ConditionsPreviewText">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="58dp"
+            android:layout_height="125dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/MaxNumberLabel"
-            android:id="@+id/MaxNumberLabel"
+            android:text="holding text"
+            android:id="@+id/textView2"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayoutBusRoutes"
+        android:id="@+id/linearLayoutLeft2"
+        android:layout_marginTop="5dp" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/ConditionsLabel"
-            android:id="@+id/ConditionsLabel"
+            android:id="@+id/textView6"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutRight2"
+        android:layout_alignTop="@+id/linearLayoutLeft2"
+        android:layout_toRightOf="@+id/linearLayoutLeft2" >
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="58dp"
+            android:id="@+id/switch1"
+            android:gravity="center_vertical"
+            android:textOff="None"
+            android:textOn="Set" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/ConditionsPreviewText"
+        android:layout_above="@+id/frameLayout"
+        android:layout_alignRight="@+id/frameLayout"
+        android:layout_alignEnd="@+id/frameLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="italic"
+        android:layout_below="@+id/linearLayoutLeft2" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -154,31 +178,6 @@
     </FrameLayout>
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/ConditionsPreviewText"
-        android:layout_above="@+id/frameLayout"
-        android:layout_alignRight="@+id/frameLayout"
-        android:layout_alignEnd="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textStyle="italic"
-        android:layout_below="@+id/linearLayoutRight1" />
-
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/filterNearestToggleButton"
-        android:layout_above="@+id/linearLayoutRight1"
-        android:layout_alignRight="@+id/linearLayoutRight1"
-        android:layout_alignEnd="@+id/linearLayoutRight1"
-        android:clickable="true"
-        android:singleLine="false"
-        android:layout_alignParentTop="true" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -186,7 +185,6 @@
         android:id="@+id/FilterLocationText"
         android:textSize="14dp"
         android:gravity="center_vertical|right"
-        android:layout_toStartOf="@+id/filterNearestToggleButton"
         android:layout_toEndOf="@+id/HeadingText"
         android:layout_alignBottom="@+id/HeadingText"
         android:layout_alignParentTop="true"
