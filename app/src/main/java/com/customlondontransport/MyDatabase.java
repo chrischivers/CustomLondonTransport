@@ -3,11 +3,14 @@ package com.customlondontransport;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MyDatabase extends SQLiteAssetHelper {
 
@@ -36,11 +39,6 @@ public class MyDatabase extends SQLiteAssetHelper {
            busRoutes.add(new RouteLine(c.getString(0)));
         } while (c.moveToNext());
         return busRoutes;
-    }
-
-    public List<RouteLine> getBusRoutesNearest() {
-        //TODO
-        return null;
     }
 
     public List<Direction> getBusDirections(String busRouteID) {
@@ -72,7 +70,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         return busDirections;
     }
 
-    public List<StationStop> getBusStopsAlphabetical(String busRouteID, int busDirection) {
+    public List<StationStop> getBusStopsForRouteAlphabetical(String busRouteID, int busDirection) {
 
         List<StationStop> busStops = new ArrayList<StationStop>();
 
@@ -103,11 +101,59 @@ public class MyDatabase extends SQLiteAssetHelper {
         } while (c.moveToNext());
         return busStops;
     }
+/*
+    public List<StationStop> getAllBusStopsOrderByLocation(Location currentLocation) {
 
-    public List<StationStop> getBusStopsNearest(String busRouteID, int busDirection) {
+        List<StationStop> busStops = new ArrayList<StationStop>();
 
-        //TODO
-        return null;
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "busStops";
+        String column1ToFetch = "_id";
+        String column2ToFetch= "busStopName";
+        String column3ToFetch= "longitude";
+        String column4ToFetch= "latitude";
+        String columnToOrderBy1 = "latitude";
+        String columnToOrderBy2 = "longitude";
+
+
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
+                " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")" +
+                " LIMIT 10",null);
+
+        c.moveToFirst();
+        do {
+            busStops.add(new StationStop(c.getString(0), c.getString(1), Float.parseFloat(c.getString(2)), Float.parseFloat(c.getString(3))));
+        } while (c.moveToNext());
+        return busStops;
+    }
+*/
+    public List<RouteLine> getNearestBusRoutes(List<StationStop> busStopsSortedInOrder) {
+
+        Set<String> busRoutesSet = new LinkedHashSet<String>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "busRoutes";
+        String column1ToFetch = "busRouteID";
+        String column1ToFilterBy = "busStopID";
+        String columnToOrderBy = "_id";
+
+        for (int i = 0; i < busStopsSortedInOrder.size(); i++) {
+
+            Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + " FROM " + sqlTable1 +
+                    " WHERE " + column1ToFilterBy + " = " + busStopsSortedInOrder.get(i).getID() +
+                    " ORDER BY " + columnToOrderBy+ ";",null);
+
+            c.moveToFirst();
+            do  {
+                busRoutesSet.add(c.getString(0));
+            } while (c.moveToNext());
+        }
+        List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
+        for (String str: busRoutesSet) {
+            busRoutesList.add(new RouteLine(str));
+        }
+        return busRoutesList;
     }
 
     public List<RouteLine> getTubeLinesAlphabetical() {
@@ -130,12 +176,6 @@ public class MyDatabase extends SQLiteAssetHelper {
             tubeLines.add(new RouteLine(c.getString(0), c.getString(1), c.getString(2)));
         } while (c.moveToNext());
         return tubeLines;
-    }
-
-    public List<RouteLine> getTubeLinesNearest() {
-
-       //TODO
-        return null;
     }
 
     public List<StationStop> getTubeStationsAlphabetical(String tubeLineID) {
@@ -161,11 +201,5 @@ public class MyDatabase extends SQLiteAssetHelper {
             tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
         } while (c.moveToNext());
         return tubeStations;
-    }
-
-    public List<StationStop> getTubeStationsNearest(String tubeLineID) {
-
-      //TODO
-        return null;
     }
 }

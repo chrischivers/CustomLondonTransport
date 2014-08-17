@@ -1,5 +1,7 @@
 package com.customlondontransport;
 
+import android.location.Location;
+
 import java.io.Serializable;
 
 public class StationStop implements Serializable{
@@ -32,8 +34,16 @@ public class StationStop implements Serializable{
 
     public float getLatitudeCoordinate() { return this.latitudeCoordinate; }
 
+    public Location getLocation() {
+        Location l = new Location("");
+        l.setLongitude(this.longitudeCoordinate);
+        l.setLatitude(this.latitudeCoordinate);
+        return l;
+    }
+
     @Override
     public String toString() {
             return label;
     }
+
 }
