@@ -23,28 +23,28 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutRight1"
-        android:layout_alignTop="@+id/linearLayoutLeft1"
-        android:layout_toRightOf="@+id/linearLayoutLeft1">
+        android:id="@+id/routeLinearLayoutRight1"
+        android:layout_alignTop="@+id/routeLinearLayoutLeft1"
+        android:layout_toRightOf="@+id/routeLinearLayoutLeft1">
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/transportModeSpinner"
+            android:id="@+id/routeTransportModeSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/RouteLineSpinner"
+            android:id="@+id/routeRouteLineSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/StartingStopSpinner"
+            android:id="@+id/routeStartingStopSpinner"
             android:spinnerMode="dropdown"
 
             android:gravity="center_vertical|left" />
@@ -52,21 +52,21 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/DirectionSpinner"
+            android:id="@+id/routeDirectionSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/MaxNumberSpinner"
+            android:id="@+id/routeMaxNumberSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:id="@+id/ConditionsSwitch"
+            android:id="@+id/routeConditionsSwitch"
             android:gravity="center_vertical"
             android:textOff="None"
             android:textOn="Set" />
@@ -79,7 +79,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/HeadingText"
-        android:id="@+id/linearLayoutLeft1"
+        android:id="@+id/routeLinearLayoutLeft1"
         android:layout_marginTop="5dp">
 
         <TextView
@@ -87,7 +87,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/TransportModeLabel"
-            android:id="@+id/TransportModeLabel"
+            android:id="@+id/routeTransportModeLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -96,7 +96,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/RouteLineLabel"
-            android:id="@+id/RouteLineLabel"
+            android:id="@+id/routeRouteLineLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -105,7 +105,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/StartingStopLabel"
-            android:id="@+id/StartingStopLabel"
+            android:id="@+id/routeStartingStopLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -114,7 +114,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/DirectionLabel"
-            android:id="@+id/DirectionLabel"
+            android:id="@+id/routeDirectionLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -123,7 +123,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/MaxNumberLabel"
-            android:id="@+id/MaxNumberLabel"
+            android:id="@+id/routeMaxNumberLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -132,7 +132,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/ConditionsLabel"
-            android:id="@+id/ConditionsLabel"
+            android:id="@+id/routeConditionsLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
     </LinearLayout>
@@ -148,7 +148,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/addToOrUpdateUserListButton"
+            android:id="@+id/routeAddToOrUpdateUserListButton"
             android:layout_gravity="center"
             android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
@@ -157,23 +157,23 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/ConditionsPreviewText"
+        android:id="@+id/routeConditionsPreviewText"
         android:layout_above="@+id/frameLayout"
         android:layout_alignRight="@+id/frameLayout"
         android:layout_alignEnd="@+id/frameLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="italic"
-        android:layout_below="@+id/linearLayoutRight1" />
+        android:layout_below="@+id/routeLinearLayoutRight1" />
 
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
         android:id="@+id/filterNearestToggleButton"
-        android:layout_above="@+id/linearLayoutRight1"
-        android:layout_alignRight="@+id/linearLayoutRight1"
-        android:layout_alignEnd="@+id/linearLayoutRight1"
+        android:layout_above="@+id/routeLinearLayoutRight1"
+        android:layout_alignRight="@+id/routeLinearLayoutRight1"
+        android:layout_alignEnd="@+id/routeLinearLayoutRight1"
         android:clickable="true"
         android:singleLine="false"
         android:layout_alignParentTop="true" />

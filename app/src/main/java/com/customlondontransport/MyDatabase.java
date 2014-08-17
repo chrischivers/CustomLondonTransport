@@ -98,8 +98,10 @@ public class MyDatabase extends SQLiteAssetHelper {
         } while (c.moveToNext());
         return busStops;
     }
-/*
-    public List<StationStop> getAllBusStopsOrderByLocation(Location currentLocation) {
+
+
+
+    public List<StationStop> getAllBusStopsOrderByNearest(Location currentLocation) {
 
         List<StationStop> busStops = new ArrayList<StationStop>();
 
@@ -114,9 +116,8 @@ public class MyDatabase extends SQLiteAssetHelper {
         String columnToOrderBy2 = "longitude";
 
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
-                " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")" +
-                " LIMIT 10",null);
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
+                " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")",null);
 
         c.moveToFirst();
         do {
@@ -124,7 +125,8 @@ public class MyDatabase extends SQLiteAssetHelper {
         } while (c.moveToNext());
         return busStops;
     }
-*/
+
+
     public List<RouteLine> getNearestBusRoutes( Location currentLocation) {
 
         SQLiteDatabase db = getReadableDatabase();
@@ -197,6 +199,30 @@ public class MyDatabase extends SQLiteAssetHelper {
                 " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
                 " ORDER BY " + column2ToFetch +";",null);
 
+
+        c.moveToFirst();
+        do  {
+            tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
+        } while (c.moveToNext());
+        return tubeStations;
+    }
+
+    public List<StationStop> getAllTubeStationsByNearest(Location currentLocation) {
+
+        List<StationStop> tubeStations = new ArrayList<StationStop>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "tubeStations";
+        String column1ToFetch = "tubeStationID";
+        String column2ToFetch= "tubeStationName";
+        String column3ToFetch = "longitude";
+        String column4ToFetch = "latitude";
+        String columnToOrderBy1 = "latitude";
+        String columnToOrderBy2 = "longitude";
+
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + ", " + column2ToFetch + ", " + column3ToFetch + ", " + column4ToFetch + " FROM " + sqlTable1 +
+                                " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")",null);
 
         c.moveToFirst();
         do  {

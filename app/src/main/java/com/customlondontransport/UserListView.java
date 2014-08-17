@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserListView extends Activity {
+
     private ListView userListView;
 
     public static List<UserRouteItem> userRouteValues;
@@ -40,6 +41,7 @@ public class UserListView extends Activity {
         userListView = (ListView) findViewById(R.id.userListView);
         registerForContextMenu(userListView);
         Button addNewRouteButton = (Button) findViewById(R.id.addNewRouteButton);
+        Button addNewStationButton = (Button) findViewById(R.id.addNewStationButton);
         Button runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
         // Assign adapter to ListView
@@ -63,6 +65,14 @@ public class UserListView extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddNewRoute.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        addNewStationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddNewStation.class);
                 startActivityForResult(intent, 1);
             }
         });

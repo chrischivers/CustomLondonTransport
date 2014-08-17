@@ -26,6 +26,11 @@
         />
 
         <activity
+            android:name=".AddNewStation"
+            android:label="Add New Station"
+            />
+
+        <activity
             android:name=".SetDayTimeConditions"
             android:label="Set Day and Time Conditions"
             />

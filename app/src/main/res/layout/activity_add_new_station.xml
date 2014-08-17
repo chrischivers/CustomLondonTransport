@@ -24,14 +24,14 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutRight1"
-        android:layout_alignTop="@+id/linearLayoutLeft1"
-        android:layout_toRightOf="@+id/linearLayoutLeft1">
+        android:id="@+id/stationLinearLayoutRight1"
+        android:layout_alignTop="@+id/stationLinearLayoutLeft1"
+        android:layout_toRightOf="@+id/stationLinearLayoutLeft1">
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/TransportModeSpinner"
+            android:id="@+id/stationTransportModeSpinner"
             android:spinnerMode="dropdown"
 
             android:gravity="center_vertical|left" />
@@ -39,12 +39,19 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/StopCodeEditText" />
+            android:id="@+id/stationStopCodeEditText" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/StationSpinner"
+            android:id="@+id/stationStationSpinner"
+            android:spinnerMode="dropdown"
+            android:gravity="center_vertical|left" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:id="@+id/stationMaxNumberSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
@@ -57,7 +64,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/HeadingText"
-        android:id="@+id/linearLayoutLeft1"
+        android:id="@+id/stationLinearLayoutLeft1"
         android:layout_marginTop="5dp">
 
         <TextView
@@ -65,7 +72,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/TransportModeLabel"
-            android:id="@+id/TransportModeLabel"
+            android:id="@+id/stationTransportModeLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -74,7 +81,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/stopCodeLabel"
-            android:id="@+id/EnterStopCodeLabel"
+            android:id="@+id/stationStopCodeLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
@@ -83,31 +90,48 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/stopByLocationLabel"
-            android:id="@+id/SelectStopLabel"
+            android:id="@+id/stationStationLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutBusRoutes"
-        android:layout_below="@+id/linearLayoutRight1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/ConditionsPreviewText"
-        android:layout_alignEnd="@+id/ConditionsPreviewText">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="holding text"
-            android:id="@+id/textView2"
+            android:text="@string/MaxNumberLabel"
+            android:id="@+id/stationMaxNumberLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutStations"
+        android:layout_below="@+id/stationLinearLayoutRight1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/stationConditionsPreviewText"
+        android:layout_alignEnd="@+id/stationConditionsPreviewText">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox"
+                android:text="Bus" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox2" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -117,8 +141,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayoutBusRoutes"
-        android:id="@+id/linearLayoutLeft2"
+        android:layout_below="@+id/linearLayoutStations"
+        android:id="@+id/stationLinearLayoutLeft2"
         android:layout_marginTop="5dp" >
 
         <TextView
@@ -126,7 +150,7 @@
             android:layout_height="58dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/ConditionsLabel"
-            android:id="@+id/textView6"
+            android:id="@+id/stationConditionsLabel"
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
     </LinearLayout>
@@ -135,14 +159,14 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutRight2"
-        android:layout_alignTop="@+id/linearLayoutLeft2"
-        android:layout_toRightOf="@+id/linearLayoutLeft2" >
+        android:id="@+id/stationLinearLayoutRight2"
+        android:layout_alignTop="@+id/stationLinearLayoutLeft2"
+        android:layout_toRightOf="@+id/stationLinearLayoutLeft2" >
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:id="@+id/switch1"
+            android:id="@+id/stationConditionsSwitch"
             android:gravity="center_vertical"
             android:textOff="None"
             android:textOn="Set" />
@@ -152,14 +176,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/ConditionsPreviewText"
+        android:id="@+id/stationConditionsPreviewText"
         android:layout_above="@+id/frameLayout"
         android:layout_alignRight="@+id/frameLayout"
         android:layout_alignEnd="@+id/frameLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="italic"
-        android:layout_below="@+id/linearLayoutLeft2" />
+        android:layout_below="@+id/stationLinearLayoutLeft2" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -172,23 +196,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/addToOrUpdateUserListButton"
+            android:id="@+id/stationAddToOrUpdateUserListButton"
             android:layout_gravity="center"
             android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/LocalFilterModeLabel"
-        android:id="@+id/FilterLocationText"
-        android:textSize="14dp"
-        android:gravity="center_vertical|right"
-        android:layout_toEndOf="@+id/HeadingText"
-        android:layout_alignBottom="@+id/HeadingText"
-        android:layout_alignParentTop="true"
-        android:textStyle="italic"
-        android:layout_alignParentRight="false" />
 
 </RelativeLayout>
