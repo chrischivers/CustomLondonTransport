@@ -128,27 +128,32 @@ public class MyDatabase extends SQLiteAssetHelper {
         return busStops;
     }
 */
-    public List<RouteLine> getNearestBusRoutes(List<StationStop> busStopsSortedInOrder) {
+    public List<RouteLine> getNearestBusRoutes( Location currentLocation) {
 
         Set<String> busRoutesSet = new LinkedHashSet<String>();
         SQLiteDatabase db = getReadableDatabase();
 
         String sqlTable1 = "busRoutes";
-        String column1ToFetch = "busRouteID";
-        String column1ToFilterBy = "busStopID";
-        String columnToOrderBy = "_id";
+        String sqlTable2 = "busStops";
+        String column1ToFetch = sqlTable1+".busRouteID";
 
-        for (int i = 0; i < busStopsSortedInOrder.size(); i++) {
+        String column1ToInnerJoin = sqlTable1+".busStopID";
+        String column2ToInnerJoin = sqlTable2+"._id";
+
+        String column1ToOrderBy = sqlTable2+".latitude";
+        String column2ToOrderBy = sqlTable2+".longitude";
+
 
             Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + " FROM " + sqlTable1 +
-                    " WHERE " + column1ToFilterBy + " = " + busStopsSortedInOrder.get(i).getID() +
-                    " ORDER BY " + columnToOrderBy+ ";",null);
+                    " INNER JOIN " + sqlTable2 +
+                    " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
+                     " ORDER BY abs(" + column1ToOrderBy + " - " + currentLocation.getLatitude() + ") + abs(" + column2ToOrderBy + " - " + currentLocation.getLongitude() + ")",null);
 
             c.moveToFirst();
             do  {
                 busRoutesSet.add(c.getString(0));
             } while (c.moveToNext());
-        }
+
         List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
         for (String str: busRoutesSet) {
             busRoutesList.add(new RouteLine(str));

@@ -494,7 +494,7 @@ public class AddNewRoute extends Activity {
     }
 
     private List<RouteLine> fetchBusRoutesOrderByNearest() {
-        return db.getNearestBusRoutes(db.getAllBusStopsOrderByLocation(currentLocation));
+        return db.getNearestBusRoutes(currentLocation);
     }
 
     private List<Direction> fetchBusDirections(String busRoute) {
