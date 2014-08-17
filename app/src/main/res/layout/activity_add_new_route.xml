@@ -167,4 +167,13 @@
         android:textStyle="italic"
         android:layout_below="@+id/linearLayoutRight" />
 
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/filterNearestToggleButton"
+        android:layout_above="@+id/linearLayoutRight"
+        android:layout_alignRight="@+id/linearLayoutRight"
+        android:layout_alignEnd="@+id/linearLayoutRight" />
+
 </RelativeLayout>

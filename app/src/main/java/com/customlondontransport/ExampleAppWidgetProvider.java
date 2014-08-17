@@ -31,21 +31,6 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     private Location currentLocation;
 
 
-    @Override
-    public void onEnabled(Context context) {
-
-        RemoteViews rv;
-
-        Intent refreshIntent = new Intent(context, getClass());
-        refreshIntent.setAction(REFRESH);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, 0);
-
-        rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
-
-        rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
-
-    }
-
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

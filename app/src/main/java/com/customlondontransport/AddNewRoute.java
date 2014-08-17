@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class AddNewRoute extends Activity {
 
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
+    private ToggleButton filterNearestToggleButton;
 
     private LinearLayout linearLayoutLeft;
     private LinearLayout linearLayoutRight;
@@ -99,6 +101,8 @@ public class AddNewRoute extends Activity {
 
         conditionsSwitch = (Switch) findViewById(R.id.ConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.ConditionsPreviewText);
+
+        filterNearestToggleButton = (ToggleButton) findViewById(R.id.filterNearestToggleButton);
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.linearLayoutLeft);
         linearLayoutRight = (LinearLayout) findViewById(R.id.linearLayoutRight);
@@ -249,14 +253,21 @@ public class AddNewRoute extends Activity {
         isDirectionSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLines());
+            if (!filterNearestToggleButton.isSelected()) {
+                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLinesOrderByAlphabetical());
+            } else {
+                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLinesOrderByNearest());
+            }
             routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             routeLineSpinner.setAdapter(routeLineAdapter);
             isTransportModeSet = true;
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            System.out.println("Here");
-            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutes());
+            if (!filterNearestToggleButton.isSelected()) {
+                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutesOrderByAlphabetical());
+            } else {
+                routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutesOrderByNearest());
+            }
             routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             routeLineSpinner.setAdapter(routeLineAdapter);
             isTransportModeSet = true;
@@ -284,7 +295,11 @@ public class AddNewRoute extends Activity {
         isDirectionSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
-            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+            if (!filterNearestToggleButton.isSelected()) {
+                startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsOrderByAlphabetical(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+            } else {
+                startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsOrderByNearest(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+            }
             startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             startingStopSpinner.setAdapter(startingStopAdapter);
             isRouteLineSet = true;
@@ -302,7 +317,7 @@ public class AddNewRoute extends Activity {
             }
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
-            directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
+                directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
             directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             directionSpinner.setAdapter(directionAdapter);
             isRouteLineSet = true;
@@ -350,7 +365,11 @@ public class AddNewRoute extends Activity {
 
     public void onDirectionSpinnerChange() {
         if (transportModeSpinner.getSelectedItem().equals("Bus") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("")) {
-            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
+            if (!filterNearestToggleButton.isSelected()) {
+                startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStopsOrderByAlphabetical(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
+            } else {
+                startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStopsOrderByNearest(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
+            }
             startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             startingStopSpinner.setAdapter(startingStopAdapter);
             isDirectionSet = true;
@@ -471,8 +490,12 @@ public class AddNewRoute extends Activity {
         }
     }
 
-    private List<RouteLine> fetchBusRoutes() {
-        return db.getBusRoutes();
+    private List<RouteLine> fetchBusRoutesOrderByAlphabetical() {
+        return db.getBusRoutesAlphabetical();
+    }
+
+    private List<RouteLine> fetchBusRoutesOrderByNearest() {
+        return db.getBusRoutesNearest();
     }
 
     private List<Direction> fetchBusDirections(String busRoute) {
@@ -480,16 +503,27 @@ public class AddNewRoute extends Activity {
     }
 
 
-    private List<StationStop> fetchBusStops(String busRoute, int busDirection) {
-        return db.getBusStops(busRoute, busDirection);
+    private List<StationStop> fetchBusStopsOrderByAlphabetical(String busRoute, int busDirection) {
+        return db.getBusStopsAlphabetical(busRoute, busDirection);
+    }
+    private List<StationStop> fetchBusStopsOrderByNearest(String busRoute, int busDirection) {
+        return db.getBusStopsNearest(busRoute, busDirection);
     }
 
-    private List<StationStop> fetchTubeStations(String tubeLineID) {
-        return db.getTubeStations(tubeLineID);
+    private List<StationStop> fetchTubeStationsOrderByAlphabetical(String tubeLineID) {
+        return db.getTubeStationsAlphabetical(tubeLineID);
     }
 
-    private List<RouteLine> fetchTubeLines() {
-        return db.getTubeLines();
+    private List<StationStop> fetchTubeStationsOrderByNearest(String tubeLineID) {
+        return db.getTubeStationsNearest(tubeLineID);
+    }
+
+    private List<RouteLine> fetchTubeLinesOrderByAlphabetical() {
+        return db.getTubeLinesAlphabetical();
+    }
+
+    private List<RouteLine> fetchTubeLinesOrderByNearest() {
+        return db.getTubeLinesNearest();
     }
 
     private synchronized List<Direction> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {

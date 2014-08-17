@@ -2,6 +2,7 @@ package com.customlondontransport;
 
 import android.location.Location;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -72,6 +73,9 @@ public class APIInterface   {
             }
 
         } catch(IOException ex){
+            ex.printStackTrace();
+        } catch(ArrayIndexOutOfBoundsException ex){
+            //TODO error handlers
             ex.printStackTrace();
         }
 

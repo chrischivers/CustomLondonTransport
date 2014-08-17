@@ -18,7 +18,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public List<RouteLine> getBusRoutes() {
+    public List<RouteLine> getBusRoutesAlphabetical() {
         List<RouteLine> busRoutes = new ArrayList<RouteLine>();
 
         SQLiteDatabase db = getReadableDatabase();
@@ -36,6 +36,11 @@ public class MyDatabase extends SQLiteAssetHelper {
            busRoutes.add(new RouteLine(c.getString(0)));
         } while (c.moveToNext());
         return busRoutes;
+    }
+
+    public List<RouteLine> getBusRoutesNearest() {
+        //TODO
+        return null;
     }
 
     public List<Direction> getBusDirections(String busRouteID) {
@@ -67,7 +72,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         return busDirections;
     }
 
-    public List<StationStop> getBusStops(String busRouteID, int busDirection) {
+    public List<StationStop> getBusStopsAlphabetical(String busRouteID, int busDirection) {
 
         List<StationStop> busStops = new ArrayList<StationStop>();
 
@@ -99,7 +104,13 @@ public class MyDatabase extends SQLiteAssetHelper {
         return busStops;
     }
 
-    public List<RouteLine> getTubeLines() {
+    public List<StationStop> getBusStopsNearest(String busRouteID, int busDirection) {
+
+        //TODO
+        return null;
+    }
+
+    public List<RouteLine> getTubeLinesAlphabetical() {
 
         List<RouteLine> tubeLines = new ArrayList<RouteLine>();
 
@@ -121,7 +132,13 @@ public class MyDatabase extends SQLiteAssetHelper {
         return tubeLines;
     }
 
-    public List<StationStop> getTubeStations(String tubeLineID) {
+    public List<RouteLine> getTubeLinesNearest() {
+
+       //TODO
+        return null;
+    }
+
+    public List<StationStop> getTubeStationsAlphabetical(String tubeLineID) {
 
         List<StationStop> tubeStations = new ArrayList<StationStop>();
 
@@ -144,5 +161,11 @@ public class MyDatabase extends SQLiteAssetHelper {
             tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
         } while (c.moveToNext());
         return tubeStations;
+    }
+
+    public List<StationStop> getTubeStationsNearest(String tubeLineID) {
+
+      //TODO
+        return null;
     }
 }
