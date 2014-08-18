@@ -53,7 +53,7 @@ public class AddNewRoute extends Activity {
 
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
-    private ToggleButton filterNearestToggleButton;
+    private ToggleButton localModeToggleButton;
 
     private LinearLayout linearLayoutLeft;
     private LinearLayout linearLayoutRight;
@@ -114,7 +114,7 @@ public class AddNewRoute extends Activity {
         conditionsSwitch = (Switch) findViewById(R.id.routeConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.routeConditionsPreviewText);
 
-        filterNearestToggleButton = (ToggleButton) findViewById(R.id.filterNearestToggleButton);
+        localModeToggleButton = (ToggleButton) findViewById(R.id.routeLocalModeButton);
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.routeLinearLayoutLeft1);
         linearLayoutRight = (LinearLayout) findViewById(R.id.routeLinearLayoutRight1);
@@ -158,7 +158,7 @@ public class AddNewRoute extends Activity {
             }
         }
         // Set local toggle depending on if LOCAL MODE is on
-        filterNearestToggleButton.setChecked(prefs.getBoolean("Local_Mode", false));
+        localModeToggleButton.setChecked(prefs.getBoolean("Local_Mode", false));
 
 
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -203,7 +203,7 @@ public class AddNewRoute extends Activity {
         directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-               onDirectionSpinnerChange();
+                onDirectionSpinnerChange();
             }
 
             @Override
@@ -225,7 +225,7 @@ public class AddNewRoute extends Activity {
             }
         });
 
-        filterNearestToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
+        localModeToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 onTransportModeSpinnerChange();
@@ -503,7 +503,7 @@ public class AddNewRoute extends Activity {
     }
 
     private List<RouteLine> fetchBusRoutes() {
-       if (filterNearestToggleButton.isChecked()) {
+       if (localModeToggleButton.isChecked()) {
            return db.getNearestBusRoutes(currentLocation);
        } else {
            return db.getBusRoutesAlphabetical();
@@ -516,7 +516,7 @@ public class AddNewRoute extends Activity {
 
 
     private List<StationStop> fetchBusStops(String busRoute, int busDirection) {
-        if (filterNearestToggleButton.isChecked()) {
+        if (localModeToggleButton.isChecked()) {
             return sortStationsByNearest(db.getBusStopsForRouteAlphabetical(busRoute, busDirection));
         } else {
             return db.getBusStopsForRouteAlphabetical(busRoute, busDirection);
@@ -524,7 +524,7 @@ public class AddNewRoute extends Activity {
     }
 
     private List<StationStop> fetchTubeStations(String tubeLineID) {
-        if (filterNearestToggleButton.isChecked()) {
+        if (localModeToggleButton.isChecked()) {
             return sortStationsByNearest(db.getTubeStationsAlphabetical(tubeLineID));
         } else {
             return db.getTubeStationsAlphabetical(tubeLineID);
@@ -650,7 +650,7 @@ public class AddNewRoute extends Activity {
 
     public void saveCustomSettingsToPrefs() {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("Local_Mode", filterNearestToggleButton.isChecked());
+        editor.putBoolean("Local_Mode", localModeToggleButton.isChecked());
         editor.apply();
     }
 

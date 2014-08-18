@@ -17,8 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -36,7 +35,7 @@
 
             android:gravity="center_vertical|left" />
 
-        <EditText
+        <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:id="@+id/stationStopCodeEditText" />
@@ -45,13 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:id="@+id/stationStationSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/stationMaxNumberSpinner"
             android:spinnerMode="dropdown"
             android:gravity="center_vertical|left" />
 
@@ -94,22 +86,13 @@
             android:textSize="@dimen/menuTextSize"
             android:gravity="center_vertical|left" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/MaxNumberLabel"
-            android:id="@+id/stationMaxNumberLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayoutStations"
+        android:id="@+id/stationLinearLayoutRouteGrid"
         android:layout_below="@+id/stationLinearLayoutRight1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -119,7 +102,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:id="@+id/stationLinearLayoutRouteGridColumns">
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -141,9 +125,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayoutStations"
+        android:layout_below="@+id/stationLinearLayoutRouteGrid"
         android:id="@+id/stationLinearLayoutLeft2"
         android:layout_marginTop="5dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/MaxNumberLabel"
+            android:id="@+id/stationMaxNumberLabel"
+            android:textSize="@dimen/menuTextSize"
+            android:gravity="center_vertical|left" />
 
         <TextView
             android:layout_width="match_parent"
@@ -162,6 +155,13 @@
         android:id="@+id/stationLinearLayoutRight2"
         android:layout_alignTop="@+id/stationLinearLayoutLeft2"
         android:layout_toRightOf="@+id/stationLinearLayoutLeft2" >
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:id="@+id/stationMaxNumberSpinner"
+            android:spinnerMode="dropdown"
+            android:gravity="center_vertical|left" />
 
         <Switch
             android:layout_width="wrap_content"
@@ -200,5 +200,31 @@
             android:layout_gravity="center"
             android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/stationLocalModeButton"
+        android:clickable="true"
+        android:singleLine="false"
+        android:layout_above="@+id/stationLinearLayoutRight1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/LocalFilterModeLabel"
+        android:id="@+id/stationLocalModeLabel"
+        android:textSize="14dp"
+        android:gravity="center_vertical|right"
+        android:layout_toStartOf="@+id/stationLocalModeButton"
+        android:layout_toEndOf="@+id/HeadingText"
+        android:layout_alignBottom="@+id/HeadingText"
+        android:layout_alignParentTop="true"
+        android:textStyle="italic"
+        android:layout_toLeftOf="@+id/stationLocalModeButton" />
 
 </RelativeLayout>

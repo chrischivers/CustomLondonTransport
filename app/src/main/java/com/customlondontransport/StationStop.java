@@ -22,6 +22,11 @@ public class StationStop implements Serializable{
         this.label = "";
     }
 
+    public StationStop(String id, String label) {
+        this.id = id;
+        this.label = label;
+    }
+
     public String getID() {
         return this.id;
     }

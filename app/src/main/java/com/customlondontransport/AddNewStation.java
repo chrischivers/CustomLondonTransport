@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,7 +43,7 @@ public class AddNewStation extends Activity {
     private Spinner transportModeSpinner;
 
     private TextView stopCodeLabel;
-    private EditText stopCodeEditText;
+    private AutoCompleteTextView stopCodeEditText;
 
     private TextView stationLabel;
     private Spinner stationSpinner;
@@ -52,6 +54,7 @@ public class AddNewStation extends Activity {
     private TextView conditionsLabel;
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
+    private ToggleButton localModeToggleButton;
 
     private ArrayAdapter<StationStop> stationAdapter;
 
@@ -60,6 +63,7 @@ public class AddNewStation extends Activity {
     private LinearLayout linearLayoutRight1;
     private LinearLayout linearLayoutLeft2;
     private LinearLayout linearLayoutRight2;
+    private LinearLayout linearLayoutRouteGrid;
 
 
     private Button addToOrUpdateUserListButton;
@@ -68,7 +72,7 @@ public class AddNewStation extends Activity {
 
     private boolean isTransportModeSet = false;
     private boolean isStationSet = false;
-    private boolean isStopsSet = false;
+    private boolean isRoutesSet = false;
 
     private DayTimeConditions dtc;
 
@@ -103,7 +107,7 @@ public class AddNewStation extends Activity {
         transportModeSpinner = (Spinner) findViewById(R.id.stationTransportModeSpinner);
         stationSpinner = (Spinner) findViewById(R.id.stationStationSpinner);
         maxNumberSpinner = (Spinner) findViewById(R.id.stationMaxNumberSpinner);
-        stopCodeEditText = (EditText) findViewById(R.id.stationStopCodeEditText);
+        stopCodeEditText = (AutoCompleteTextView) findViewById(R.id.stationStopCodeEditText);
 
         transportModeLabel = (TextView) findViewById(R.id.stationTransportModeLabel);
         stationLabel = (TextView) findViewById(R.id.stationStationLabel);
@@ -114,10 +118,13 @@ public class AddNewStation extends Activity {
         conditionsSwitch = (Switch) findViewById(R.id.stationConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.stationConditionsPreviewText);
 
+        localModeToggleButton = (ToggleButton) findViewById(R.id.stationLocalModeButton);
+
         linearLayoutLeft1 = (LinearLayout) findViewById(R.id.stationLinearLayoutLeft1);
         linearLayoutRight1 = (LinearLayout) findViewById(R.id.stationLinearLayoutRight1);
         linearLayoutLeft2 = (LinearLayout) findViewById(R.id.stationLinearLayoutLeft2);
         linearLayoutRight2 = (LinearLayout) findViewById(R.id.stationLinearLayoutRight2);
+        linearLayoutRouteGrid = (LinearLayout) findViewById(R.id.stationLinearLayoutRouteGrid);
 
         // Populate transport mode adapter and Max Number Adapter as default first step
         ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
@@ -128,8 +135,7 @@ public class AddNewStation extends Activity {
         linearLayoutLeft1.addView(transportModeLabel);
         linearLayoutRight1.addView(transportModeSpinner);
 
-        //TODO
-        //setLayout();
+        setLayout();
 
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
@@ -169,7 +175,7 @@ public class AddNewStation extends Activity {
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 isTransportModeSet = false;
-               // setLayout();
+               setLayout();
             }
         });
 
@@ -182,7 +188,7 @@ public class AddNewStation extends Activity {
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
                 isStationSet = false;
-                //setLayout();
+                setLayout();
             }
         });
         stopCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
@@ -234,7 +240,7 @@ public class AddNewStation extends Activity {
         int id = item.getItemId();
         if (id == R.id.reset_station) {
             isTransportModeSet = false;
-           // setLayout();
+            setLayout();
             conditionsSwitch.setChecked(false);
             conditionsPreviewText.setText("");
             transportModeSpinner.setSelection(0);
@@ -250,20 +256,30 @@ public class AddNewStation extends Activity {
 
     public void onTransportModeSpinnerChange() {
         isStationSet = false;
-        isStopsSet = false;
+        isRoutesSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsOrderByNearest());
-            stationAdapter.insert(new StationStop(),0);//insert empty to front
-            stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            stationSpinner.setAdapter(stationAdapter);
+            if (localModeToggleButton.isChecked()) {
+                stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsOrderByNearest());
+                stationAdapter.insert(new StationStop(), 0);//insert empty to front
+                stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                stationSpinner.setAdapter(stationAdapter);
+            } else {
+                stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_list_item_1, fetchTubeStationsOrderByAlphabetical());
+                stopCodeEditText.setAdapter(stationAdapter);
+            }
             isTransportModeSet = true;
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStopsOrderByNearest());
-            stationAdapter.insert(new StationStop(),0);//insert empty to front
-            stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            stationSpinner.setAdapter(stationAdapter);
+            if (localModeToggleButton.isChecked()) {
+                stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStopsOrderByNearest());
+                stationAdapter.insert(new StationStop(), 0);//insert empty to front
+                stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                stationSpinner.setAdapter(stationAdapter);
+            } else {
+                stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_list_item_1, fetchBusStopsOrderByAlphabetical());
+                stopCodeEditText.setAdapter(stationAdapter);
+            }
             isTransportModeSet = true;
 
         } else {
@@ -281,7 +297,7 @@ public class AddNewStation extends Activity {
             }
             onRouteLineSpinnerChange();
         }*/
-       // setLayout();
+        setLayout();
     }
 /*
     public void onRouteLineSpinnerChange() {
@@ -379,25 +395,36 @@ public class AddNewStation extends Activity {
             isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("");
         setLayout();
     }
-
+*/
     private void setLayout() {
 
         if (!isTransportModeSet) {
-            linearLayoutLeft.removeAllViewsInLayout();
-            linearLayoutRight.removeAllViewsInLayout();
-            linearLayoutLeft.addView(transportModeLabel);
-            linearLayoutRight.addView(transportModeSpinner);
+            linearLayoutLeft1.removeAllViewsInLayout();
+            linearLayoutRight1.removeAllViewsInLayout();
+            linearLayoutLeft2.removeAllViewsInLayout();
+            linearLayoutRight2.removeAllViewsInLayout();
+            linearLayoutRouteGrid.removeAllViewsInLayout();
+            linearLayoutLeft1.addView(transportModeLabel);
+            linearLayoutRight1.addView(transportModeSpinner);
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-        } else if (!isRouteLineSet) {
-            linearLayoutLeft.removeAllViewsInLayout();
-            linearLayoutRight.removeAllViewsInLayout();
-            linearLayoutLeft.addView(transportModeLabel);
-            linearLayoutRight.addView(transportModeSpinner);
-            linearLayoutLeft.addView(routeLineLabel);
-            linearLayoutRight.addView(routeLineSpinner);
+        } else if (!isStationSet) {
+            linearLayoutLeft1.removeAllViewsInLayout();
+            linearLayoutRight1.removeAllViewsInLayout();
+            linearLayoutLeft2.removeAllViewsInLayout();
+            linearLayoutRight2.removeAllViewsInLayout();
+            linearLayoutRouteGrid.removeAllViewsInLayout();
+            linearLayoutLeft1.addView(transportModeLabel);
+            linearLayoutRight1.addView(transportModeSpinner);
+            if (localModeToggleButton.isChecked()) {
+                linearLayoutLeft1.addView(stationLabel);
+                linearLayoutRight1.addView(stationSpinner);
+            } else {
+                linearLayoutLeft1.addView(stopCodeLabel);
+                linearLayoutRight1.addView(stopCodeEditText);
+            }
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
 
-        } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
+        } /*else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
             if (!isDirectionSet) {
                 linearLayoutLeft.removeAllViewsInLayout();
                 linearLayoutRight.removeAllViewsInLayout();
@@ -477,15 +504,23 @@ public class AddNewStation extends Activity {
                 linearLayoutRight.addView(maxNumberSpinner);
                 addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
             }
-        }
-    }*/
+        }*/
+    }
 
     private List<StationStop> fetchBusStopsOrderByNearest() {
         return db.getAllBusStopsOrderByNearest(currentLocation);
     }
 
+    private List<StationStop> fetchBusStopsOrderByAlphabetical() {
+        return db.getAllDistinctBusStopsOrderByAlphabetical();
+    }
+
     private List<StationStop> fetchTubeStationsOrderByNearest() {
         return db.getAllTubeStationsByNearest(currentLocation);
+    }
+
+    private List<StationStop> fetchTubeStationsOrderByAlphabetical() {
+        return db.getDistinctTubeStationsAlphabetical();
     }
 
     public List<StationStop> sortStationsByNearest(List<StationStop> list) {
