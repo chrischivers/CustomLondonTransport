@@ -78,15 +78,16 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable2 = "busStops";
         String column1ToFetch = sqlTable1+".busStopID";
         String column2ToFetch= sqlTable2+".busStopName";
-        String column3ToFetch= sqlTable2+".longitude";
-        String column4ToFetch= sqlTable2+".latitude";
+        String column3ToFetch= sqlTable2+".busStopLetterCode";
+        String column4ToFetch= sqlTable2+".longitude";
+        String column5ToFetch= sqlTable2+".latitude";
         String column1ToInnerJoin = sqlTable1+".busStopID";
         String column2ToInnerJoin = sqlTable2+"._id";
         String column1ToFilterBy = sqlTable1+".busRouteID";
         String column2ToFilterBy = sqlTable1+".busRouteDirection";
         String columnToOrderBy = sqlTable1+"._id";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch + ", " + column5ToFetch + " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
                 " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
@@ -94,7 +95,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), Float.parseFloat(c.getString(2)), Float.parseFloat(c.getString(3))));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4)));
         } while (c.moveToNext());
         return busStops;
     }
@@ -110,18 +111,19 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable1 = "busStops";
         String column1ToFetch = "_id";
         String column2ToFetch= "busStopName";
-        String column3ToFetch= "longitude";
-        String column4ToFetch= "latitude";
+        String column3ToFetch = "busStopLetterCode";
+        String column4ToFetch= "longitude";
+        String column5ToFetch= "latitude";
         String columnToOrderBy1 = "latitude";
         String columnToOrderBy2 = "longitude";
 
 
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +   " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +", "+column5ToFetch +    " FROM " + sqlTable1 +
                 " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")",null);
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), Float.parseFloat(c.getString(2)), Float.parseFloat(c.getString(3))));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4)));
         } while (c.moveToNext());
         return busStops;
     }
@@ -135,9 +137,6 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable1 = "busStops";
         String column1ToFetch = "_id";
         String column2ToFetch= "busStopName";
-        String column3ToFetch= "longitude";
-        String column4ToFetch= "latitude";
-
 
         Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  " FROM " + sqlTable1,null);
 
@@ -240,7 +239,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column2ToFetch= "tubeStationName";
 
 
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + ", " + column2ToFetch + ", " + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + ", " + column2ToFetch + " FROM " + sqlTable1 +
                 " ORDER BY " + column2ToFetch +";",null);
 
 
