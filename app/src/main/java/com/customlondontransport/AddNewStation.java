@@ -3,6 +3,7 @@ package com.customlondontransport;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -327,7 +329,28 @@ public class AddNewStation extends Activity {
             }*/
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((StationStop) stationSpinner.getSelectedItem()).getID().equals("")) {
-            //TODO
+            linearLayoutRouteGrid.removeAllViewsInLayout();
+            List<RouteLine> busRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID());
+            int numberBusRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID()).size();
+            int numberColumns = 3;
+            int maxRoutesPerColumn = (numberBusRoutes/numberColumns)+1;
+            int recordNumber = 0;
+
+            for (int i = 0; i < numberColumns; i++) {
+                int columnCounter = 0;
+                LinearLayout column = new LinearLayout(getApplicationContext());
+                column.setOrientation(LinearLayout.VERTICAL);
+                column.setMinimumWidth(linearLayoutRouteGrid.getWidth()/3);
+                while (columnCounter < maxRoutesPerColumn && recordNumber < numberBusRoutes) {
+                    CheckBox cb = new CheckBox(getApplicationContext());
+                    cb.setText(busRoutes.get(recordNumber).getID());
+                    cb.setTextColor(Color.BLACK);
+                    column.addView(cb);
+                    columnCounter++;
+                    recordNumber++;
+                }
+                linearLayoutRouteGrid.addView(column);
+            }
             isStationSet = true;
 /*
             // IF IN EDIT MODE
@@ -403,7 +426,6 @@ public class AddNewStation extends Activity {
             linearLayoutRight1.removeAllViewsInLayout();
             linearLayoutLeft2.removeAllViewsInLayout();
             linearLayoutRight2.removeAllViewsInLayout();
-            linearLayoutRouteGrid.removeAllViewsInLayout();
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
@@ -412,7 +434,6 @@ public class AddNewStation extends Activity {
             linearLayoutRight1.removeAllViewsInLayout();
             linearLayoutLeft2.removeAllViewsInLayout();
             linearLayoutRight2.removeAllViewsInLayout();
-            linearLayoutRouteGrid.removeAllViewsInLayout();
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
             if (localModeToggleButton.isChecked()) {
@@ -423,88 +444,24 @@ public class AddNewStation extends Activity {
                 linearLayoutRight1.addView(stopCodeEditText);
             }
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
+        }  else if (!isRoutesSet) {
+            linearLayoutLeft1.removeAllViewsInLayout();
+            linearLayoutRight1.removeAllViewsInLayout();
+            linearLayoutLeft2.removeAllViewsInLayout();
+            linearLayoutRight2.removeAllViewsInLayout();
+            linearLayoutLeft1.addView(transportModeLabel);
+            linearLayoutRight1.addView(transportModeSpinner);
+            if (localModeToggleButton.isChecked()) {
+                linearLayoutLeft1.addView(stationLabel);
+                linearLayoutRight1.addView(stationSpinner);
+            } else {
+                linearLayoutLeft1.addView(stopCodeLabel);
+                linearLayoutRight1.addView(stopCodeEditText);
+            }
 
-        } /*else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            if (!isDirectionSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else if (!isStartingStopSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(conditionsLabel);
-                linearLayoutRight.addView(conditionsSwitch);
-                linearLayoutLeft.addView(maxNumberLabel);
-                linearLayoutRight.addView(maxNumberSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
-            }
-        } else if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            if (!isStartingStopSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else if (!isDirectionSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(conditionsLabel);
-                linearLayoutRight.addView(conditionsSwitch);
-                linearLayoutLeft.addView(maxNumberLabel);
-                linearLayoutRight.addView(maxNumberSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
-            }
-        }*/
+            addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private List<StationStop> fetchBusStopsOrderByNearest() {
@@ -523,8 +480,12 @@ public class AddNewStation extends Activity {
         return db.getDistinctTubeStationsAlphabetical();
     }
 
+    private List<RouteLine> fetchBusRouteByStop(String busStopID) {
+        return db.getBusRoutesForAStop(busStopID);
+    }
+
     public List<StationStop> sortStationsByNearest(List<StationStop> list) {
-        Collections.sort(list, new Comparator<StationStop>(){
+        Collections.sort(list, new Comparator<StationStop>() {
 
             @Override
             public int compare(StationStop lhs, StationStop rhs) {

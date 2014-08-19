@@ -148,7 +148,7 @@ public class MyDatabase extends SQLiteAssetHelper {
     }
 
 
-    public List<RouteLine> getNearestBusRoutes( Location currentLocation) {
+    public List<RouteLine> getNearestBusRoutes(Location currentLocation) {
 
         SQLiteDatabase db = getReadableDatabase();
         List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
@@ -178,6 +178,30 @@ public class MyDatabase extends SQLiteAssetHelper {
             do  {
                 busRoutesList.add(new RouteLine(c.getString(0)));
             } while (c.moveToNext());
+
+        return busRoutesList;
+    }
+
+    public List<RouteLine> getBusRoutesForAStop(String busStopID) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
+
+        String sqlTable1 = "busRoutes";
+        String column1ToFetch = "busRouteID";
+        String column1ToFilterBy = "busStopID";
+
+        Cursor c = db.rawQuery(
+                "SELECT " + column1ToFetch +
+                " FROM " + sqlTable1 +
+                " WHERE " + column1ToFilterBy + "='" + busStopID + "'" +
+                " ORDER BY " + column1ToFetch,null);
+
+
+        c.moveToFirst();
+        do  {
+            busRoutesList.add(new RouteLine(c.getString(0)));
+        } while (c.moveToNext());
 
         return busRoutesList;
     }

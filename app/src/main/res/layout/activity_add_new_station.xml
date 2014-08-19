@@ -97,25 +97,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/stationConditionsPreviewText"
-        android:layout_alignEnd="@+id/stationConditionsPreviewText">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/stationLinearLayoutRouteGridColumns">
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
-                android:text="Bus" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox2" />
-        </LinearLayout>
+        android:layout_alignEnd="@+id/stationConditionsPreviewText"
+        android:layout_marginTop="5dp">
 
     </LinearLayout>
 
