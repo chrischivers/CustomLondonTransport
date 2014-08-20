@@ -342,17 +342,15 @@ public class AddNewStation extends Activity {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
-                                dynamicCheckBoxesTubeArray.add(new Direction(cb.getId(),tubeDirectionsStations.get(finalRecordNumber).getLabel(),tubeDirectionsStations.get(finalRecordNumber).getLine()));
+                                dynamicCheckBoxesTubeArray.add(new Direction(cb.getId(), tubeDirectionsStations.get(finalRecordNumber).getLabel(), tubeDirectionsStations.get(finalRecordNumber).getLine()));
                             } else {
-                                for (Direction direction : dynamicCheckBoxesTubeArray) {
-                                    if (direction.getID() == cb.getId()) {
-                                        dynamicCheckBoxesTubeArray.remove(direction);
+                                for (int i = 0; i < dynamicCheckBoxesTubeArray.size(); i++) {
+                                    if (dynamicCheckBoxesTubeArray.get(i).getID() == cb.getId()) {
+                                        dynamicCheckBoxesTubeArray.remove(i);
                                     }
                                 }
                             }
-                            for (Direction direction: dynamicCheckBoxesTubeArray) {
-                                System.out.println(direction.getLabel() +" " + direction.getLine());
-                            }
+                            onCheckBoxesGreaterThanOne();
                         }
                     });
                     column.addView(cb);
@@ -405,6 +403,7 @@ public class AddNewStation extends Activity {
                             } else {
                                 dynamicCheckBoxesBusRouteArray.remove(dynamicCheckBoxesBusRouteArray.indexOf(cb.getText()));
                             }
+                            onCheckBoxesGreaterThanOne();
                         }
                     });
                     column.addView(cb);
@@ -431,56 +430,37 @@ public class AddNewStation extends Activity {
         }
         setLayout();
     }
-    /*
-        public void onStartingStopSpinnerChange() {
-            if (transportModeSpinner.getSelectedItem().equals("Tube") && !((StationStop) startingStopSpinner.getSelectedItem()).getID().equals("")) {
-                directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeDirectionsAndPlatforms(((RouteLine) routeLineSpinner.getSelectedItem()).getID(), ((StationStop) startingStopSpinner.getSelectedItem()).getID()));
-                directionAdapter.insert(new Direction(),0); //insert empty to front
-                directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                directionSpinner.setAdapter(directionAdapter);
-                isStartingStopSet = true;
 
-                // IF IN EDIT MODE
+        public void onCheckBoxesGreaterThanOne() {
+            if (transportModeSpinner.getSelectedItem().equals("Bus") && !((StationStop) stationSpinner.getSelectedItem()).getID().equals("")) {
+                if (dynamicCheckBoxesBusRouteArray.size() > 0) {
+                    isRoutesSet = true;
+                } else {
+                    isRoutesSet = false;
+                }
+            } else if (transportModeSpinner.getSelectedItem().equals("Tube") && !((StationStop) stationSpinner.getSelectedItem()).getID().equals("")) {
+                if (dynamicCheckBoxesTubeArray.size() > 0) {
+                    isRoutesSet = true;
+                } else {
+                    isRoutesSet = false;
+                }
+            }
+            setLayout();
+
+                /*// IF IN EDIT MODE
                 if (inEditMode) {
                     String directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
-                    for(int i=0 ; i<directionAdapter.getCount() ; i++){
+                    for (int i = 0; i < directionAdapter.getCount(); i++) {
                         if (directionAdapter.getItem(i).getID().equals(directionID)) {
                             directionSpinner.setSelection(i, true);
                             break;
                         }
                     }
                     onDirectionSpinnerChange();
-                }
+                }*/
+            }
 
-            } else
-                isStartingStopSet = transportModeSpinner.getSelectedItem().equals("Bus") && !((StationStop) startingStopSpinner.getSelectedItem()).getID().equals("");
-            setLayout();
-        }
 
-        public void onDirectionSpinnerChange() {
-            if (transportModeSpinner.getSelectedItem().equals("Bus") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("")) {
-                startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
-                startingStopAdapter.insert(new StationStop(),0); //insert empty to front
-                startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                startingStopSpinner.setAdapter(startingStopAdapter);
-                isDirectionSet = true;
-
-                // IF IN EDIT MODE
-                if (inEditMode) {
-                    String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
-                    for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
-                        if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
-                            startingStopSpinner.setSelection(i, true);
-                            break;
-                        }
-                    }
-                    onStartingStopSpinnerChange();
-                }
-            } else
-                isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("");
-            setLayout();
-        }
-    */
     private void setLayout() {
 
         if (!isTransportModeSet) {
@@ -491,7 +471,7 @@ public class AddNewStation extends Activity {
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-        } else if (!isStationSet) {
+        } else if (!isStationSet || !isRoutesSet) {
             linearLayoutLeft1.removeAllViewsInLayout();
             linearLayoutRight1.removeAllViewsInLayout();
             linearLayoutLeft2.removeAllViewsInLayout();
@@ -506,7 +486,7 @@ public class AddNewStation extends Activity {
                 linearLayoutRight1.addView(stopCodeEditText);
             }
             addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-        }  else if (!isRoutesSet) {
+        } else {
             linearLayoutLeft1.removeAllViewsInLayout();
             linearLayoutRight1.removeAllViewsInLayout();
             linearLayoutLeft2.removeAllViewsInLayout();
@@ -520,8 +500,11 @@ public class AddNewStation extends Activity {
                 linearLayoutLeft1.addView(stopCodeLabel);
                 linearLayoutRight1.addView(stopCodeEditText);
             }
-
-            addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
+            linearLayoutLeft2.addView(maxNumberLabel);
+            linearLayoutRight2.addView(maxNumberSpinner);
+            linearLayoutLeft2.addView(conditionsLabel);
+            linearLayoutRight2.addView(conditionsSwitch);
+            addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
         }
 
     }
