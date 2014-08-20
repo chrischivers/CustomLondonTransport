@@ -338,9 +338,9 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                String directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                int directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
                 for(int i=0 ; i<directionAdapter.getCount() ; i++){
-                    if (directionAdapter.getItem(i).getID().equals(directionID)) {
+                    if (directionAdapter.getItem(i).getID() == directionID) {
                         directionSpinner.setSelection(i, true);
                         break;
                     }
@@ -363,9 +363,9 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                String directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                int directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
                 for(int i=0 ; i<directionAdapter.getCount() ; i++){
-                    if (directionAdapter.getItem(i).getID().equals(directionID)) {
+                    if (directionAdapter.getItem(i).getID() == directionID) {
                         directionSpinner.setSelection(i, true);
                         break;
                     }
@@ -379,8 +379,8 @@ public class AddNewRoute extends Activity {
     }
 
     public void onDirectionSpinnerChange() {
-        if (transportModeSpinner.getSelectedItem().equals("Bus") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("")) {
-            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), Integer.parseInt(((Direction) directionSpinner.getSelectedItem()).getID())));
+        if (transportModeSpinner.getSelectedItem().equals("Bus") && ((Direction) directionSpinner.getSelectedItem()).getID() != 0) {
+            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), ((Direction) directionSpinner.getSelectedItem()).getID()));
             startingStopAdapter.insert(new StationStop(),0); //insert empty to front
             startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             startingStopSpinner.setAdapter(startingStopAdapter);
@@ -398,7 +398,7 @@ public class AddNewRoute extends Activity {
                 onStartingStopSpinnerChange();
             }
         } else
-            isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && !((Direction) directionSpinner.getSelectedItem()).getID().equals("");
+            isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && ((Direction) directionSpinner.getSelectedItem()).getID() != 0;
         setLayout();
     }
 

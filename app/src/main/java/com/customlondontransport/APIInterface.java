@@ -26,6 +26,7 @@ public class APIInterface   {
 
             URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLineID + "/" + tubeStationID);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            System.out.println(url);
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));

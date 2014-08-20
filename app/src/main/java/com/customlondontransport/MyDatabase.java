@@ -63,7 +63,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do  {
-            busDirections.add(new Direction(c.getString(0), c.getString(1)));
+            busDirections.add(new Direction(c.getInt(0), c.getString(1)));
         } while (c.moveToNext());
         return busDirections;
     }
@@ -223,6 +223,32 @@ public class MyDatabase extends SQLiteAssetHelper {
         c.moveToFirst();
         do  {
             tubeLines.add(new RouteLine(c.getString(0), c.getString(1), c.getString(2)));
+        } while (c.moveToNext());
+        return tubeLines;
+    }
+
+    public List<RouteLine> getTubeLinesByStation(String tubeStationID) {
+
+        List<RouteLine> tubeLines = new ArrayList<RouteLine>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "tubeStations";
+        String sqlTable2 = "tubeLines";
+        String column1ToFetch = sqlTable1+".tubeLineID";
+        String column2ToFetch = sqlTable2+".tubeLineAbrvName";
+        String column1ToJoinOn = sqlTable2+"._id";
+        String column1ToFilterBy = sqlTable1+".tubeStationID";
+
+            Cursor c = db.rawQuery("SELECT " + column1ToFetch + ", " + column2ToFetch +
+                                    " FROM " + sqlTable1 +
+                                    " INNER JOIN " + sqlTable2+
+                                    " ON " + column1ToFetch + "=" + column1ToJoinOn +
+                                    " WHERE " + column1ToFilterBy + " = '" + tubeStationID + "';" ,null);
+
+        c.moveToFirst();
+        do  {
+            tubeLines.add(new RouteLine(c.getString(0), c.getString(1), ""));
         } while (c.moveToNext());
         return tubeLines;
     }

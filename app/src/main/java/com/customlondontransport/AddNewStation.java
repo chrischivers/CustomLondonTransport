@@ -21,7 +21,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -59,6 +59,8 @@ public class AddNewStation extends Activity {
     private ToggleButton localModeToggleButton;
 
     private ArrayAdapter<StationStop> stationAdapter;
+    private List<Direction> dynamicCheckBoxesTubeArray;
+    private List<String> dynamicCheckBoxesBusRouteArray;
 
 
     private LinearLayout linearLayoutLeft1;
@@ -95,6 +97,9 @@ public class AddNewStation extends Activity {
             positionToRestore = b.getInt("Position");
             inEditMode = true;
         }
+
+        dynamicCheckBoxesTubeArray = new ArrayList<Direction>();
+        dynamicCheckBoxesBusRouteArray = new ArrayList<String>();
 
         // pull in the database
         new Thread(new LoadDatabase()).run();
@@ -312,7 +317,50 @@ public class AddNewStation extends Activity {
         isRoutesSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube") && !((StationStop) stationSpinner.getSelectedItem()).getID().equals("")) {
-            //TODO
+            linearLayoutRouteGrid.removeAllViewsInLayout();
+            final List<Direction> tubeDirectionsStations = fetchTubeLinesDirectionsPlatformsByStation(((StationStop) stationSpinner.getSelectedItem()).getID());
+            int numberTubeDirectionsStations = tubeDirectionsStations.size();
+            int numberColumns = 2;
+            int maxRoutesPerColumn = (numberTubeDirectionsStations/numberColumns)+1;
+            int recordNumber = 0;
+
+            for (int i = 0; i < numberColumns; i++) {
+                int columnCounter = 0;
+                LinearLayout column = new LinearLayout(getApplicationContext());
+                column.setOrientation(LinearLayout.VERTICAL);
+                column.setMinimumWidth(linearLayoutRouteGrid.getWidth()/numberColumns);
+                while (columnCounter < maxRoutesPerColumn && recordNumber < numberTubeDirectionsStations) {
+                    final CheckBox cb = new CheckBox(getApplicationContext());
+                    cb.setText("(" + tubeDirectionsStations.get(recordNumber).getLine() + ") " + tubeDirectionsStations.get(recordNumber).getLabel());
+                    cb.setTextColor(Color.BLACK);
+                    cb.setId(recordNumber);
+                    cb.setMaxWidth(linearLayoutRouteGrid.getWidth()/numberColumns);
+                    final int finalRecordNumber = recordNumber;
+
+                    // Set check box listener to update dynamicCheckBoxesBusRouteArray
+                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                dynamicCheckBoxesTubeArray.add(new Direction(cb.getId(),tubeDirectionsStations.get(finalRecordNumber).getLabel(),tubeDirectionsStations.get(finalRecordNumber).getLine()));
+                            } else {
+                                for (Direction direction : dynamicCheckBoxesTubeArray) {
+                                    if (direction.getID() == cb.getId()) {
+                                        dynamicCheckBoxesTubeArray.remove(direction);
+                                    }
+                                }
+                            }
+                            for (Direction direction: dynamicCheckBoxesTubeArray) {
+                                System.out.println(direction.getLabel() +" " + direction.getLine());
+                            }
+                        }
+                    });
+                    column.addView(cb);
+                    columnCounter++;
+                    recordNumber++;
+                }
+                linearLayoutRouteGrid.addView(column);
+            }
             isStationSet = true;
 
             /*
@@ -330,8 +378,8 @@ public class AddNewStation extends Activity {
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((StationStop) stationSpinner.getSelectedItem()).getID().equals("")) {
             linearLayoutRouteGrid.removeAllViewsInLayout();
-            List<RouteLine> busRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID());
-            int numberBusRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID()).size();
+            final List<RouteLine> busRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID());
+            int numberBusRoutes = busRoutes.size();
             int numberColumns = 3;
             int maxRoutesPerColumn = (numberBusRoutes/numberColumns)+1;
             int recordNumber = 0;
@@ -340,11 +388,25 @@ public class AddNewStation extends Activity {
                 int columnCounter = 0;
                 LinearLayout column = new LinearLayout(getApplicationContext());
                 column.setOrientation(LinearLayout.VERTICAL);
-                column.setMinimumWidth(linearLayoutRouteGrid.getWidth()/3);
+                column.setMinimumWidth(linearLayoutRouteGrid.getWidth()/numberColumns);
                 while (columnCounter < maxRoutesPerColumn && recordNumber < numberBusRoutes) {
-                    CheckBox cb = new CheckBox(getApplicationContext());
+                    final CheckBox cb = new CheckBox(getApplicationContext());
                     cb.setText(busRoutes.get(recordNumber).getID());
                     cb.setTextColor(Color.BLACK);
+                    cb.setMaxWidth(linearLayoutRouteGrid.getWidth()/numberColumns);
+                    final int finalRecordNumber = recordNumber;
+
+                    // Set check box listener to update dynamicCheckBoxesBusRouteArray
+                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                dynamicCheckBoxesBusRouteArray.add((busRoutes.get(finalRecordNumber).getID()));
+                            } else {
+                                dynamicCheckBoxesBusRouteArray.remove(dynamicCheckBoxesBusRouteArray.indexOf(cb.getText()));
+                            }
+                        }
+                    });
                     column.addView(cb);
                     columnCounter++;
                     recordNumber++;
@@ -474,6 +536,20 @@ public class AddNewStation extends Activity {
 
     private List<StationStop> fetchTubeStationsOrderByNearest() {
         return db.getAllTubeStationsByNearest(currentLocation);
+    }
+
+    private List<Direction> fetchTubeLinesDirectionsPlatformsByStation(String tubeStationID){
+        List<Direction> tubeDirectionsPlatformsLineList = new ArrayList<Direction>();
+        for (RouteLine tubeLine : db.getTubeLinesByStation(tubeStationID)) {
+            List<Direction> tubeDirectionsAndPlatformList;
+            APIFetcher apifetcher = new APIFetcher();
+            apifetcher.execute(tubeLine.getID(), tubeStationID);
+            tubeDirectionsAndPlatformList = apifetcher.getTubeDirectionsAndPlatformList();
+            for (Direction direction : tubeDirectionsAndPlatformList) {
+                tubeDirectionsPlatformsLineList.add(new Direction(0, direction.getLabel(), tubeLine.getAbrvName()));
+            }
+        }
+        return tubeDirectionsPlatformsLineList;
     }
 
     private List<StationStop> fetchTubeStationsOrderByAlphabetical() {
