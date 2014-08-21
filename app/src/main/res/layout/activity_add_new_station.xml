@@ -38,7 +38,11 @@
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:id="@+id/stationStopCodeEditText" />
+            android:id="@+id/stationStopCodeEditText"
+            android:inputType="textNoSuggestions"
+            android:dropDownHorizontalOffset="-125dp"
+            android:ellipsize="end"
+            android:dropDownWidth="fill_parent" />
 
         <Spinner
             android:layout_width="match_parent"

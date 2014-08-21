@@ -35,6 +35,12 @@ public class StationStop implements Serializable{
         this.label = label;
     }
 
+    public StationStop(String id, String label, String busStopLetterCode) {
+        this.id = id;
+        this.label = label;
+        this.busStopLetterCode = busStopLetterCode;
+    }
+
     public String getID() {
         return this.id;
     }

@@ -137,12 +137,13 @@ public class MyDatabase extends SQLiteAssetHelper {
         String sqlTable1 = "busStops";
         String column1ToFetch = "_id";
         String column2ToFetch= "busStopName";
+        String column3ToFetch = "busStopLetterCode";
 
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  " FROM " + sqlTable1,null);
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  ", " + column3ToFetch + " FROM " + sqlTable1,null);
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1)));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2)));
         } while (c.moveToNext());
         return busStops;
     }
