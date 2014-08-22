@@ -11,12 +11,10 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -61,8 +59,7 @@ public class AddNewStation extends Activity {
     private ToggleButton localModeToggleButton;
 
     private ArrayAdapter<StationStop> stationAdapter;
-    private List<Direction> dynamicCheckBoxesTubeArray;
-    private List<String> dynamicCheckBoxesBusRouteArray;
+    private List<? extends Object> dynamicCheckBoxesArray;
 
 
     private LinearLayout linearLayoutLeft1;
@@ -99,9 +96,6 @@ public class AddNewStation extends Activity {
             positionToRestore = b.getInt("Position");
             inEditMode = true;
         }
-
-        dynamicCheckBoxesTubeArray = new ArrayList<Direction>();
-        dynamicCheckBoxesBusRouteArray = new ArrayList<String>();
 
         // pull in the database
         new Thread(new LoadDatabase()).run();
@@ -154,19 +148,19 @@ public class AddNewStation extends Activity {
 
         // Adjust transport spinner if in EDIT MODE
         if (inEditMode) {
-            String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
+            String transportMode = UserListView.userValues.get(positionToRestore).getTransportForm();
             int adapterPosition = transportModeAdapter.getPosition(transportMode);
             transportModeSpinner.setSelection(adapterPosition);
             onTransportModeSpinnerChange();
         }
         // Set MaxNumber if in EDIT MODE
         if (inEditMode) {
-           maxNumberSpinner.setSelection(UserListView.userRouteValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
+           maxNumberSpinner.setSelection(UserListView.userValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
         }
 
         // Set conditions if in EDIT MODE
         if (inEditMode) {
-            dtc = UserListView.userRouteValues.get(positionToRestore).getDayTimeConditions();
+            dtc = UserListView.userValues.get(positionToRestore).getDayTimeConditions();
             if (dtc == null) {
                 conditionsSwitch.setChecked(false);
             } else {
@@ -324,7 +318,7 @@ public class AddNewStation extends Activity {
 
         /*/ IF IN EDIT MODE
         if (inEditMode) {
-            String routeLineID = UserListView.userRouteValues.get(positionToRestore).getRouteLine().getID();
+            String routeLineID = UserListView.userValues.get(positionToRestore).getRouteLine().getID();
             for (int i = 0; i < routeLineAdapter.getCount(); i++) {
                 if (routeLineAdapter.getItem(i).getID().equals(routeLineID)) {
                     routeLineSpinner.setSelection(i, true);
@@ -372,11 +366,12 @@ public class AddNewStation extends Activity {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
-                                dynamicCheckBoxesTubeArray.add(new Direction(cb.getId(), tubeDirectionsStations.get(finalRecordNumber).getLabel(), tubeDirectionsStations.get(finalRecordNumber).getLine()));
+                                dynamicCheckBoxesArray = new ArrayList<Direction>();
+                                dynamicCheckBoxesArray.add(new Direction(cb.getId(), tubeDirectionsStations.get(finalRecordNumber).getLabel(), tubeDirectionsStations.get(finalRecordNumber).getLine()));
                             } else {
-                                for (int i = 0; i < dynamicCheckBoxesTubeArray.size(); i++) {
-                                    if (dynamicCheckBoxesTubeArray.get(i).getID() == cb.getId()) {
-                                        dynamicCheckBoxesTubeArray.remove(i);
+                                for (int i = 0; i < dynamicCheckBoxesArray.size(); i++) {
+                                    if (dynamicCheckBoxesArray.get(i).getID() == cb.getId()) {
+                                        dynamicCheckBoxesArray.remove(i);
                                     }
                                 }
                             }
@@ -394,7 +389,7 @@ public class AddNewStation extends Activity {
             /*
             // IF IN EDIT MODE
             if (inEditMode) {
-                String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
+                String startingStopID = UserListView.userValues.get(positionToRestore).getStartingStop().getID();
                 for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
                     if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
                         startingStopSpinner.setSelection(i, true);
@@ -451,7 +446,7 @@ public class AddNewStation extends Activity {
 /*
             // IF IN EDIT MODE
             if (inEditMode) {
-                String directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                String directionID = UserListView.userValues.get(positionToRestore).getDirection().getID();
                 for(int i=0 ; i<directionAdapter.getCount() ; i++){
                     if (directionAdapter.getItem(i).getID().equals(directionID)) {
                         directionSpinner.setSelection(i, true);
@@ -499,7 +494,7 @@ public class AddNewStation extends Activity {
 
             /*// IF IN EDIT MODE
             if (inEditMode) {
-                String directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                String directionID = UserListView.userValues.get(positionToRestore).getDirection().getID();
                 for (int i = 0; i < directionAdapter.getCount(); i++) {
                     if (directionAdapter.getItem(i).getID().equals(directionID)) {
                         directionSpinner.setSelection(i, true);
@@ -629,24 +624,30 @@ public class AddNewStation extends Activity {
         return list;
     }
 
-/*
+
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
         int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((RouteLine) routeLineSpinner.getSelectedItem()), ((Direction) directionSpinner.getSelectedItem()), ((StationStop) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
+        StationStop stationStop;
+        if (localModeToggleButton.isChecked()) {
+            stationStop = ((StationStop) stationSpinner.getSelectedItem());
+        } else {
+            stationStop = stationStopSelectedInEditTextVar;
+        }
+        UserStationItem userStationItem = new UserStationItem(transportModeSpinner.getSelectedItem().toString(), stationStop, ((Direction) directionSpinner.getSelectedItem()), ((StationStop) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
         saveCustomSettingsToPrefs(); //Save custom prefs
         if (!inEditMode) {
             // If not in EDIT MODE then add to List
-            UserListView.userRouteValues.add(userRouteItem);
+            UserListView.userValues.add(userRouteItem);
         } else {
             // Replace at position
-            UserListView.userRouteValues.set(positionToRestore, userRouteItem);
+            UserListView.userValues.set(positionToRestore, userRouteItem);
         }
 
         setResult(RESULT_OK, null);
         finish();
     }
-*/
+
 
     public class LoadDatabase implements Runnable {
         @Override

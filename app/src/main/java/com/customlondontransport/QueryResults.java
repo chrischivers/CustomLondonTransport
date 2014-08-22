@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,7 +65,7 @@ public class QueryResults extends Activity  {
     }
 
     public void refreshAndPopulate() {
-        List<ResultRowItem> resultRows = new APIInterface().runQueryAndSort(UserListView.userRouteValues, currentLocation);
+        List<ResultRowItem> resultRows = new APIInterface().runQueryAndSort(UserListView.userValues, currentLocation);
 
 
         //Populate table

@@ -2,13 +2,11 @@ package com.customlondontransport;
 
 import java.io.Serializable;
 
-public class UserRouteItem implements Serializable {
-    String transportForm;
+public class UserRouteItem extends UserItem implements Serializable {
     RouteLine routeLine;
     Direction direction;
-    StationStop startingStop;
-    DayTimeConditions dayTimeConditions;
-    int maxNumberToShow;
+
+
 
     public UserRouteItem(String transportForm, RouteLine routeLine, Direction direction, StationStop startingStop, DayTimeConditions dayTimeConditions, int maxNumberToShow) {
         this.transportForm = transportForm;
@@ -19,28 +17,12 @@ public class UserRouteItem implements Serializable {
         this.maxNumberToShow = maxNumberToShow;
     }
 
-    public String getTransportForm() {
-        return transportForm;
-    }
-
     public RouteLine getRouteLine() {
         return routeLine;
     }
 
     public Direction getDirection() {
         return direction;
-    }
-
-    public StationStop getStartingStop() {
-        return startingStop;
-    }
-
-    public DayTimeConditions getDayTimeConditions() {
-        return dayTimeConditions;
-    }
-
-    public int getMaxNumberToShow() {
-        return maxNumberToShow;
     }
 
     // For UserList View - returns first line

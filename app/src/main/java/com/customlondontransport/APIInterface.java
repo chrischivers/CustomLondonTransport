@@ -119,7 +119,7 @@ public class APIInterface   {
         return tubeDataList;
     }
 
-    public List<ResultRowItem> runQueryAndSort(List<UserRouteItem> userRouteList, Location currentLocation) {
+    public List<ResultRowItem> runQueryAndSort(List<UserItem> userList, Location currentLocation) {
         List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
         //clearOutputListTable();
 
@@ -128,19 +128,19 @@ public class APIInterface   {
         int currentDayOfTheWeek = c.get(Calendar.DAY_OF_WEEK);
 
         // Iterate through each line of the table adding to resultRows List
-        for (UserRouteItem userRouteItem: userRouteList) {
+        for (UserItem userItem: userList) {
             boolean processThisRow = false;
 
             // if condition does not equal null
-            if (userRouteItem.getDayTimeConditions() != null) {
+            if (userItem.getDayTimeConditions() != null) {
                 // if condition contain currents day of the week process this row
-                if (userRouteItem.getDayTimeConditions().getSelectedDays()[currentDayOfTheWeek - 1]) {
+                if (userItem.getDayTimeConditions().getSelectedDays()[currentDayOfTheWeek - 1]) {
 
                     // if time or date is null (i.e. any time) process the row
-                    if (userRouteItem.getDayTimeConditions().getFromTime() == null || userRouteItem.getDayTimeConditions().getToTime() == null) {
+                    if (userItem.getDayTimeConditions().getFromTime() == null || userItem.getDayTimeConditions().getToTime() == null) {
                         processThisRow = true;
                         // if current time is within to/from time range
-                    } else if (userRouteItem.getDayTimeConditions().isCurrentTimeWithinRange()) {
+                    } else if (userItem.getDayTimeConditions().isCurrentTimeWithinRange()) {
                         processThisRow = true;
                     }
                 }
@@ -150,12 +150,12 @@ public class APIInterface   {
 
                 if (currentLocation != null) {
                     Location startingStopLocation = new Location("");
-                    startingStopLocation.setLongitude(userRouteItem.getStartingStop().getLongitudeCoordinate());
-                    startingStopLocation.setLatitude(userRouteItem.getStartingStop().getLatitudeCoordinate());
+                    startingStopLocation.setLongitude(userItem.getStartingStop().getLongitudeCoordinate());
+                    startingStopLocation.setLatitude(userItem.getStartingStop().getLatitudeCoordinate());
 
                     // Set processThisRow to false if the distance is greater than the given radius
-                    if (userRouteItem.getDayTimeConditions().getRadiusFromStartingStop() != -1) {
-                        if (currentLocation.distanceTo(startingStopLocation) > userRouteItem.getDayTimeConditions().getRadiusFromStartingStop()) {
+                    if (userItem.getDayTimeConditions().getRadiusFromStartingStop() != -1) {
+                        if (currentLocation.distanceTo(startingStopLocation) > userItem.getDayTimeConditions().getRadiusFromStartingStop()) {
                             processThisRow = false;
                         }
                     }
@@ -172,28 +172,32 @@ public class APIInterface   {
 
             // start processing row if processThisRow set to true
             if (processThisRow) {
-
-                int numberToObtain = userRouteItem.getMaxNumberToShow(); // 0 = all
-                try {
-                    if (userRouteItem.getTransportForm().equals("Bus")) {
-                        int j = 0;
-                        for (ResultRowItem result : fetchRowData("Bus", userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
-                            if (j < numberToObtain || numberToObtain == 0) {
-                                resultRows.add(result);
-                                j++;
+                if (userItem instanceof UserRouteItem) {
+                    int numberToObtain = userItem.getMaxNumberToShow(); // 0 = all
+                    try {
+                        if (userItem.getTransportForm().equals("Bus")) {
+                            int j = 0;
+                            for (ResultRowItem result : fetchRowData("Bus", ((UserRouteItem) userItem).getRouteLine(), userItem.getStartingStop(), ((UserRouteItem) userItem).getDirection())) {
+                                if (j < numberToObtain || numberToObtain == 0) {
+                                    resultRows.add(result);
+                                    j++;
+                                }
+                            }
+                        } else if (userItem.getTransportForm().equals("Tube")) {
+                            int j = 0;
+                            for (ResultRowItem result : fetchRowData("Tube", ((UserRouteItem) userItem).getRouteLine(), userItem.getStartingStop(), ((UserRouteItem) userItem).getDirection())) {
+                                if (j < numberToObtain || numberToObtain == 0) {
+                                    resultRows.add(result);
+                                    j++;
+                                }
                             }
                         }
-                    } else if (userRouteItem.getTransportForm().equals("Tube")) {
-                        int j = 0;
-                        for (ResultRowItem result : fetchRowData("Tube", userRouteItem.getRouteLine(), userRouteItem.getStartingStop(), userRouteItem.getDirection())) {
-                            if (j < numberToObtain || numberToObtain == 0) {
-                                resultRows.add(result);
-                                j++;
-                            }
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else if (userItem instanceof UserStationItem) {
+                   //TODO
+
                 }
             }
         }

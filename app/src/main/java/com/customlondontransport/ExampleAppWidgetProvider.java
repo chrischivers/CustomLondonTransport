@@ -26,7 +26,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     public static String LOADSETTINGS = "Load Settings";
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
-    public static List<UserRouteItem> userRouteValues;
+    public static List<UserItem> userValues;
     private GPSTracker gps;
     private Location currentLocation;
 
@@ -51,7 +51,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
         restoreListFromPrefs(context);
 
-        resultRows = new APIInterface().runQueryAndSort(userRouteValues, currentLocation);
+        resultRows = new APIInterface().runQueryAndSort(userValues, currentLocation);
 
         for (int appWidgetID : appWidgetIds) {
             Intent intent = new Intent(context, getClass());
@@ -106,7 +106,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
             rv= new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
-            resultRows = new APIInterface().runQueryAndSort(userRouteValues, currentLocation);
+            resultRows = new APIInterface().runQueryAndSort(userValues, currentLocation);
             rv = updateWidgetQuery(context, rv);
 
             appWidgetManager.updateAppWidget(watchWidget, rv);
@@ -141,11 +141,11 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
     @SuppressWarnings("unchecked")
     public void restoreListFromPrefs(Context context) {
 
-        userRouteValues = new ArrayList<UserRouteItem>();
+        userValues = new ArrayList<UserItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         try {
-            userRouteValues = (ArrayList<UserRouteItem>) deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
+            userValues = (ArrayList<UserItem>) deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserItem>())));
         } catch (IOException e) {
             e.printStackTrace();
         }

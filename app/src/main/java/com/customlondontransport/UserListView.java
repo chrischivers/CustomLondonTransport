@@ -26,7 +26,7 @@ public class UserListView extends Activity {
 
     private ListView userListView;
 
-    public static List<UserRouteItem> userRouteValues;
+    public static List<UserItem> userValues;
 
 
     @Override
@@ -45,7 +45,7 @@ public class UserListView extends Activity {
         Button runQueryButton = (Button) findViewById(R.id.RunQueryButton);
 
         // Assign adapter to ListView
-        if (userRouteValues.size() > 0) {
+        if (userValues.size() > 0) {
             userListView.setAdapter(setUpNewArrayAdapter());
         }
 
@@ -133,7 +133,7 @@ public class UserListView extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.clear_user_routes) {
-            userRouteValues.clear();
+            userValues.clear();
             // Show Alert
             Toast.makeText(getApplicationContext(),"List Cleared", Toast.LENGTH_LONG).show();
             saveListToPrefs();
@@ -149,7 +149,7 @@ public class UserListView extends Activity {
 
 
     public void deleteItem(int position) {
-        userRouteValues.remove(position);
+        userValues.remove(position);
         // Show Alert
         Toast.makeText(getApplicationContext(),"Item Deleted", Toast.LENGTH_LONG).show();
         saveListToPrefs();
@@ -165,21 +165,21 @@ public class UserListView extends Activity {
         startActivityForResult(intent, 1);
     }
 
-    public ArrayAdapter<UserRouteItem> setUpNewArrayAdapter() {
-        return new CustomList<UserRouteItem>(this, userRouteValues);
+    public ArrayAdapter<UserItem> setUpNewArrayAdapter() {
+        return new CustomList<UserItem>(this, userValues);
     }
 
     @SuppressWarnings("unchecked")
     public void restoreListFromPrefs() {
 
-        if (null == userRouteValues) {
-            userRouteValues = new ArrayList<UserRouteItem>();
+        if (null == userValues) {
+            userValues = new ArrayList<UserItem>();
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
-            userRouteValues = (ArrayList<UserRouteItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserRouteItem>())));
+            userValues = (ArrayList<UserItem>) ObjectSerializer.deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserItem>())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,7 +190,7 @@ public class UserListView extends Activity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         try {
-            editor.putString("User_Route_Values", ObjectSerializer.serialize((java.io.Serializable) userRouteValues));
+            editor.putString("User_Route_Values", ObjectSerializer.serialize((java.io.Serializable) userValues));
         } catch (IOException e) {
             e.printStackTrace();
         }

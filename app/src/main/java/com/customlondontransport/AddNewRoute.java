@@ -138,19 +138,19 @@ public class AddNewRoute extends Activity {
 
         // Adjust transport spinner if in EDIT MODE
         if (inEditMode) {
-            String transportMode = UserListView.userRouteValues.get(positionToRestore).getTransportForm();
+            String transportMode = UserListView.userValues.get(positionToRestore).getTransportForm();
             int adapterPosition = transportModeAdapter.getPosition(transportMode);
             transportModeSpinner.setSelection(adapterPosition);
             onTransportModeSpinnerChange();
         }
         // Set MaxNumber if in EDIT MODE
         if (inEditMode) {
-           maxNumberSpinner.setSelection(UserListView.userRouteValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
+           maxNumberSpinner.setSelection(UserListView.userValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
         }
 
         // Set conditions if in EDIT MODE
         if (inEditMode) {
-            dtc = UserListView.userRouteValues.get(positionToRestore).getDayTimeConditions();
+            dtc = UserListView.userValues.get(positionToRestore).getDayTimeConditions();
             if (dtc == null) {
                 conditionsSwitch.setChecked(false);
             } else {
@@ -294,7 +294,7 @@ public class AddNewRoute extends Activity {
 
         // IF IN EDIT MODE
         if (inEditMode) {
-            String routeLineID = UserListView.userRouteValues.get(positionToRestore).getRouteLine().getID();
+            String routeLineID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getRouteLine().getID();
             for (int i = 0; i < routeLineAdapter.getCount(); i++) {
                 if (routeLineAdapter.getItem(i).getID().equals(routeLineID)) {
                     routeLineSpinner.setSelection(i, true);
@@ -319,7 +319,7 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
+                String startingStopID = UserListView.userValues.get(positionToRestore).getStartingStop().getID();
                 for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
                     if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
                         startingStopSpinner.setSelection(i, true);
@@ -338,7 +338,7 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                int directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                int directionID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection().getID();
                 for(int i=0 ; i<directionAdapter.getCount() ; i++){
                     if (directionAdapter.getItem(i).getID() == directionID) {
                         directionSpinner.setSelection(i, true);
@@ -363,7 +363,7 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                int directionID = UserListView.userRouteValues.get(positionToRestore).getDirection().getID();
+                int directionID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection().getID();
                 for(int i=0 ; i<directionAdapter.getCount() ; i++){
                     if (directionAdapter.getItem(i).getID() == directionID) {
                         directionSpinner.setSelection(i, true);
@@ -388,7 +388,7 @@ public class AddNewRoute extends Activity {
 
             // IF IN EDIT MODE
             if (inEditMode) {
-                String startingStopID = UserListView.userRouteValues.get(positionToRestore).getStartingStop().getID();
+                String startingStopID = UserListView.userValues.get(positionToRestore).getStartingStop().getID();
                 for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
                     if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
                         startingStopSpinner.setSelection(i, true);
@@ -567,10 +567,10 @@ public class AddNewRoute extends Activity {
         saveCustomSettingsToPrefs(); //Save custom prefs
         if (!inEditMode) {
             // If not in EDIT MODE then add to List
-            UserListView.userRouteValues.add(userRouteItem);
+            UserListView.userValues.add(userRouteItem);
         } else {
             // Replace at position
-            UserListView.userRouteValues.set(positionToRestore, userRouteItem);
+            UserListView.userValues.set(positionToRestore, userRouteItem);
         }
 
         setResult(RESULT_OK, null);
