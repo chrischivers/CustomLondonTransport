@@ -27,7 +27,7 @@
 
         <activity
             android:name=".AddNewStation"
-            android:label="Add New Station"
+            android:label="Add A New Station"
             />
 
         <activity

@@ -5,4 +5,10 @@
         android:title="@string/action_reset_route"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
+
+    <item android:id="@+id/enable_local_mode"
+        android:icon="@drawable/ic_action_location_found"
+        android:title="@string/action_enable_local_mode"
+        android:showAsAction="ifRoom"  />
+
 </menu>

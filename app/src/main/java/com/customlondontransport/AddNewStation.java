@@ -56,7 +56,6 @@ public class AddNewStation extends Activity {
     private TextView conditionsLabel;
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
-    private ToggleButton localModeToggleButton;
 
     private ArrayAdapter<StationStop> stationAdapter;
     private List<Direction> dynamicCheckBoxesTubeArray;
@@ -83,6 +82,8 @@ public class AddNewStation extends Activity {
     private Location currentLocation;
     private SharedPreferences prefs;
     private StationStop stationStopSelectedInEditTextVar; //keep track!
+
+    private boolean localModeOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +125,6 @@ public class AddNewStation extends Activity {
 
         conditionsSwitch = (Switch) findViewById(R.id.stationConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.stationConditionsPreviewText);
-
-        localModeToggleButton = (ToggleButton) findViewById(R.id.stationLocalModeButton);
 
         linearLayoutLeft1 = (LinearLayout) findViewById(R.id.stationLinearLayoutLeft1);
         linearLayoutRight1 = (LinearLayout) findViewById(R.id.stationLinearLayoutRight1);
@@ -172,13 +171,6 @@ public class AddNewStation extends Activity {
             }
         }
 
-        localModeToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onTransportModeSpinnerChange();
-
-            }
-        });
 
 
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -289,7 +281,7 @@ public class AddNewStation extends Activity {
         isRoutesSet = false;
 
         if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsOrderByNearest());
                 stationAdapter.insert(new StationStop(), 0);//insert empty to front
                 stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -303,7 +295,7 @@ public class AddNewStation extends Activity {
             isTransportModeSet = true;
 
         } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 stationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStopsOrderByNearest());
                 stationAdapter.insert(new StationStop(), 0);//insert empty to front
                 stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -342,7 +334,7 @@ public class AddNewStation extends Activity {
         if (transportModeSpinner.getSelectedItem().equals("Tube")) {
             linearLayoutRouteGrid.removeAllViewsInLayout();
             final List<Direction> tubeDirectionsStations;
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 tubeDirectionsStations = fetchTubeLinesDirectionsPlatformsByStation(((StationStop) stationSpinner.getSelectedItem()).getID());
             } else {
                 tubeDirectionsStations = fetchTubeLinesDirectionsPlatformsByStation(stationStopSelectedInEditTextVar.getID());
@@ -405,7 +397,7 @@ public class AddNewStation extends Activity {
         } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
             linearLayoutRouteGrid.removeAllViewsInLayout();
             final List<RouteLine> busRoutes;
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 busRoutes = fetchBusRouteByStop(((StationStop) stationSpinner.getSelectedItem()).getID());
             } else {
                 busRoutes = fetchBusRouteByStop(stationStopSelectedInEditTextVar.getID());
@@ -528,7 +520,7 @@ public class AddNewStation extends Activity {
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
             linearLayoutRouteGrid.removeAllViewsInLayout();
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 linearLayoutLeft1.addView(stationLabel);
                 linearLayoutRight1.addView(stationSpinner);
             } else {
@@ -545,7 +537,7 @@ public class AddNewStation extends Activity {
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
             //linearLayoutRouteGrid.removeAllViewsInLayout();
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 linearLayoutLeft1.addView(stationLabel);
                 linearLayoutRight1.addView(stationSpinner);
             } else {
@@ -560,7 +552,7 @@ public class AddNewStation extends Activity {
             linearLayoutRight2.removeAllViewsInLayout();
             linearLayoutLeft1.addView(transportModeLabel);
             linearLayoutRight1.addView(transportModeSpinner);
-            if (localModeToggleButton.isChecked()) {
+            if (localModeOn) {
                 linearLayoutLeft1.addView(stationLabel);
                 linearLayoutRight1.addView(stationSpinner);
             } else {
@@ -633,7 +625,7 @@ public class AddNewStation extends Activity {
         UserStationItem userStationItem = null;
         int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
         StationStop stationStop;
-        if (localModeToggleButton.isChecked()) {
+        if (localModeOn) {
             stationStop = ((StationStop) stationSpinner.getSelectedItem());
         } else {
             stationStop = stationStopSelectedInEditTextVar;

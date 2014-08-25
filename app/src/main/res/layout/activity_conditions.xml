@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/HeadingText"
         android:text="@string/ConditionsTitleText"
-        android:textColor="@color/black_text"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="From:   "
                             android:id="@+id/SelectTimeFromLabel"
-                            android:textColor="@color/black_text"
+                            android:textColor="@color/black"
                             android:textStyle="bold" />
 
                         <TimePicker
@@ -113,7 +113,7 @@
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="To:   "
                             android:id="@+id/SelectTimeToLabel"
-                            android:textColor="@color/black_text"
+                            android:textColor="@color/black"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="10dp"
                             android:textStyle="bold" />
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:text="Select Day(s)"
                         android:layout_gravity="center"
-                        android:textColor="@color/black_text"
+                        android:textColor="@color/black"
                         android:id="@+id/SelectDaysLabel"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:layout_alignParentTop="true"
