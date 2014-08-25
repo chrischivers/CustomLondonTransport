@@ -19,124 +19,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/routeLinearLayoutRight1"
-        android:layout_alignTop="@+id/routeLinearLayoutLeft1"
-        android:layout_toRightOf="@+id/routeLinearLayoutLeft1">
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/routeTransportModeSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/routeRouteLineSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/routeStartingStopSpinner"
-            android:spinnerMode="dropdown"
-
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/routeDirectionSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:id="@+id/routeMaxNumberSpinner"
-            android:spinnerMode="dropdown"
-            android:gravity="center_vertical|left" />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="58dp"
-            android:id="@+id/routeConditionsSwitch"
-            android:gravity="center_vertical"
-            android:textOff="None"
-            android:textOn="Set" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/HeadingText"
-        android:id="@+id/routeLinearLayoutLeft1"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/TransportModeLabel"
-            android:id="@+id/routeTransportModeLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/RouteLineLabel"
-            android:id="@+id/routeRouteLineLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/StartingStopLabel"
-            android:id="@+id/routeStartingStopLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/DirectionLabel"
-            android:id="@+id/routeDirectionLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/MaxNumberLabel"
-            android:id="@+id/routeMaxNumberLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/ConditionsLabel"
-            android:id="@+id/routeConditionsLabel"
-            android:textSize="@dimen/menuTextSize"
-            android:gravity="center_vertical|left" />
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -153,30 +35,16 @@
             android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/routeConditionsPreviewText"
-        android:layout_above="@+id/frameLayout"
-        android:layout_alignRight="@+id/frameLayout"
-        android:layout_alignEnd="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textStyle="italic"
-        android:layout_below="@+id/routeLinearLayoutRight1" />
-
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
         android:id="@+id/routeLocalModeButton"
-        android:layout_above="@+id/routeLinearLayoutRight1"
-        android:layout_alignRight="@+id/routeLinearLayoutRight1"
-        android:layout_alignEnd="@+id/routeLinearLayoutRight1"
         android:clickable="true"
         android:singleLine="false"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="match_parent"
@@ -188,9 +56,152 @@
         android:gravity="center_vertical|right"
         android:layout_toStartOf="@+id/routeLocalModeButton"
         android:layout_toEndOf="@+id/HeadingText"
-        android:layout_alignBottom="@+id/HeadingText"
-        android:layout_alignParentTop="true"
         android:textStyle="italic"
-        android:layout_alignParentRight="false" />
+        android:layout_above="@+id/scrollView"
+        android:layout_toLeftOf="@+id/routeLocalModeButton" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/routeLocalModeButton"
+        android:layout_above="@+id/frameLayout">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/routeLinearLayoutRight1"
+                android:layout_alignTop="@+id/routeLinearLayoutLeft1"
+                android:layout_toRightOf="@+id/routeLinearLayoutLeft1">
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeTransportModeSpinner"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical|left" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeRouteLineSpinner"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical|left" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeStartingStopSpinner"
+                    android:spinnerMode="dropdown"
+
+                    android:gravity="center_vertical|left" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeDirectionSpinner"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical|left" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeMaxNumberSpinner"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical|left" />
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeConditionsSwitch"
+                    android:gravity="center_vertical"
+                    android:textOff="None"
+                    android:textOn="Set" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/HeadingText"
+                android:id="@+id/routeLinearLayoutLeft1"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/TransportModeLabel"
+                    android:id="@+id/routeTransportModeLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/RouteLineLabel"
+                    android:id="@+id/routeRouteLineLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/StartingStopLabel"
+                    android:id="@+id/routeStartingStopLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/DirectionLabel"
+                    android:id="@+id/routeDirectionLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/MaxNumberLabel"
+                    android:id="@+id/routeMaxNumberLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/ConditionsLabel"
+                    android:id="@+id/routeConditionsLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/routeConditionsPreviewText"
+                android:layout_above="@+id/frameLayout"
+                android:layout_alignRight="@+id/frameLayout"
+                android:layout_alignEnd="@+id/frameLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textStyle="italic"
+                android:layout_below="@+id/routeLinearLayoutRight1" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
