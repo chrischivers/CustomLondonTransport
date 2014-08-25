@@ -180,7 +180,7 @@ public class APIInterface   {
 
                 while ((inputLine = reader.readLine()) != null) {
                     for (Object direction : directionPlatformLine) {
-                        if (inputLine.matches("\\s+<P N=\"" + ((Direction) direction).getID() + ".*")) {
+                        if (inputLine.matches("\\s+<P N=\"" + ((Direction) direction).getLabel() + ".*")) {
                             try {
                                 inputLine = reader.readLine();
                                 while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
@@ -283,7 +283,6 @@ public class APIInterface   {
                         e.printStackTrace();
                     }
                 } else if (userItem instanceof UserStationItem) {
-                   //TODO
                     int numberToObtain = userItem.getMaxNumberToShow(); // 0 = all
                     try {
                         if (userItem.getTransportForm().equals("Bus")) {
@@ -295,16 +294,14 @@ public class APIInterface   {
                                 }
                             }
                         } else if (userItem.getTransportForm().equals("Tube")) {
-                        //TODO
+                        System.out.println("Here");
                             int j = 0;
-                            for (Object direction : ((UserStationItem) userItem).getRouteLineList()) {
-                                for (ResultRowItem result : fetchStationRowData("Tube", userItem.getStartingStop(), ((UserStationItem) userItem).getRouteLineList())) {
-                                    if (j < numberToObtain || numberToObtain == 0) {
-                                        resultRows.add(result);
-                                        j++;
-                                    }
+                            for (ResultRowItem result : fetchStationRowData("Tube", userItem.getStartingStop(), ((UserStationItem) userItem).getRouteLineList())) {
+                                if (j < numberToObtain || numberToObtain == 0) {
+                                    resultRows.add(result);
+                                    j++;
                                 }
-                            }
+                             }
 
                         }
                     } catch (Exception e) {
