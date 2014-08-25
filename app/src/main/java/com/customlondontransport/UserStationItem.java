@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UserStationItem extends UserItem implements Serializable {
 
-    List<?> routeLineList;
+    List<?> routeLineList; // for Tube this is a List of Directions, for Bus this is a list of RouteLines
 
 
 

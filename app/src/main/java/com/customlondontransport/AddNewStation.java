@@ -59,7 +59,8 @@ public class AddNewStation extends Activity {
     private ToggleButton localModeToggleButton;
 
     private ArrayAdapter<StationStop> stationAdapter;
-    private List<? extends Object> dynamicCheckBoxesArray;
+    private List<Direction> dynamicCheckBoxesTubeArray;
+    private List<String> dynamicCheckBoxesBusRouteArray;
 
 
     private LinearLayout linearLayoutLeft1;
@@ -96,6 +97,9 @@ public class AddNewStation extends Activity {
             positionToRestore = b.getInt("Position");
             inEditMode = true;
         }
+
+        dynamicCheckBoxesTubeArray = new ArrayList<Direction>();
+        dynamicCheckBoxesBusRouteArray = new ArrayList<String>();
 
         // pull in the database
         new Thread(new LoadDatabase()).run();
@@ -366,12 +370,11 @@ public class AddNewStation extends Activity {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked) {
-                                dynamicCheckBoxesArray = new ArrayList<Direction>();
-                                dynamicCheckBoxesArray.add(new Direction(cb.getId(), tubeDirectionsStations.get(finalRecordNumber).getLabel(), tubeDirectionsStations.get(finalRecordNumber).getLine()));
+                                dynamicCheckBoxesTubeArray.add(new Direction(cb.getId(), tubeDirectionsStations.get(finalRecordNumber).getLabel(), tubeDirectionsStations.get(finalRecordNumber).getLine()));
                             } else {
-                                for (int i = 0; i < dynamicCheckBoxesArray.size(); i++) {
-                                    if (dynamicCheckBoxesArray.get(i).getID() == cb.getId()) {
-                                        dynamicCheckBoxesArray.remove(i);
+                                for (int i = 0; i < dynamicCheckBoxesTubeArray.size(); i++) {
+                                    if (dynamicCheckBoxesTubeArray.get(i).getID() == cb.getId()) {
+                                        dynamicCheckBoxesTubeArray.remove(i);
                                     }
                                 }
                             }
@@ -593,7 +596,7 @@ public class AddNewStation extends Activity {
             apifetcher.execute(tubeLine.getID(), tubeStationID);
             tubeDirectionsAndPlatformList = apifetcher.getTubeDirectionsAndPlatformList();
             for (Direction direction : tubeDirectionsAndPlatformList) {
-                tubeDirectionsPlatformsLineList.add(new Direction(0, direction.getLabel(), tubeLine.getAbrvName()));
+                tubeDirectionsPlatformsLineList.add(new Direction(0, direction.getLabel(), tubeLine));
             }
         }
         return tubeDirectionsPlatformsLineList;
@@ -627,6 +630,7 @@ public class AddNewStation extends Activity {
 
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
+        UserStationItem userStationItem = null;
         int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
         StationStop stationStop;
         if (localModeToggleButton.isChecked()) {
@@ -634,14 +638,19 @@ public class AddNewStation extends Activity {
         } else {
             stationStop = stationStopSelectedInEditTextVar;
         }
-        UserStationItem userStationItem = new UserStationItem(transportModeSpinner.getSelectedItem().toString(), stationStop, ((Direction) directionSpinner.getSelectedItem()), ((StationStop) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
-        saveCustomSettingsToPrefs(); //Save custom prefs
+        if (transportModeSpinner.getSelectedItem().toString().equals("Bus")) {
+            userStationItem = new UserStationItem(transportModeSpinner.getSelectedItem().toString(), stationStop, dynamicCheckBoxesBusRouteArray, dtc, maxNumberToFetch);
+        } else if (transportModeSpinner.getSelectedItem().toString().equals("Tube")) {
+            userStationItem = new UserStationItem(transportModeSpinner.getSelectedItem().toString(), stationStop, dynamicCheckBoxesTubeArray, dtc, maxNumberToFetch);
+        }
+        //TODO // saveCustomSettingsToPrefs(); //Save custom prefs
+
         if (!inEditMode) {
             // If not in EDIT MODE then add to List
-            UserListView.userValues.add(userRouteItem);
+            UserListView.userValues.add(userStationItem);
         } else {
             // Replace at position
-            UserListView.userValues.set(positionToRestore, userRouteItem);
+            UserListView.userValues.set(positionToRestore, userStationItem);
         }
 
         setResult(RESULT_OK, null);

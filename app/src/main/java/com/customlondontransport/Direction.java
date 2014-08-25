@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class Direction implements Serializable{
     private int id;
     private String label;
-    private String line;
+    private RouteLine line;
 
-    public Direction(int id, String label, String line) {
+    public Direction(int id, String label, RouteLine line) {
         this.id = id;
         this.label = label;
         this.line = line;
@@ -32,7 +32,7 @@ public class Direction implements Serializable{
     public String getLabel() {
         return this.label;
     }
-    public String getLine() {
+    public RouteLine getLine() {
         return this.line;
     }
 

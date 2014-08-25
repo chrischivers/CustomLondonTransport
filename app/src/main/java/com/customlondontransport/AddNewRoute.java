@@ -398,7 +398,7 @@ public class AddNewRoute extends Activity {
                 onStartingStopSpinnerChange();
             }
         } else
-            isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && ((Direction) directionSpinner.getSelectedItem()).getID() != 0;
+            isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && directionSpinner.getSelectedItemPosition() != 0;
         setLayout();
     }
 
