@@ -10,4 +10,7 @@
     <color name="text_shadow_black">#000000</color>
     <color name="text_shadow_white">#FFFFFF</color>
 
+    <color name="user_list_item_route">#fff899</color>
+    <color name="user_list_item_station">#c4df9b</color>
+
 </resources>

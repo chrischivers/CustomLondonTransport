@@ -38,7 +38,7 @@ public class UserRouteItem extends UserItem implements Serializable {
         } else {
             conditions = "Conditions: " + dayTimeConditions;
         }
-        
+
         if (this.transportForm.equals("Bus")) {
             line1 = "From: " + startingStop.toString();
             line2 = "Direction: " + direction;
