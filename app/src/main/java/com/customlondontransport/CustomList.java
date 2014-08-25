@@ -1,7 +1,6 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
             rowView = inflater.inflate(R.layout.list_of_user_routes, parent, false);
 
             holder = new ViewHolder();
-            holder.itemText = (TextView) rowView.findViewById(R.id.txt1);
+            holder.itemText1 = (TextView) rowView.findViewById(R.id.txt1);
+            holder.itemText2 = (TextView) rowView.findViewById(R.id.txt2);
             holder.transportIcon = (ImageView) rowView.findViewById(R.id.img);
 
             rowView.setTag(holder);
@@ -39,7 +39,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
 
 
         if (itemList.get(position) instanceof UserRouteItem) {
-            holder.itemText.setText(((com.customlondontransport.UserRouteItem) itemList.get(position)).getItemText());
+            holder.itemText1.setText(((com.customlondontransport.UserRouteItem) itemList.get(position)).getItemText1());
+            holder.itemText2.setText(((com.customlondontransport.UserRouteItem) itemList.get(position)).getItemText2());
             rowView.setBackgroundColor(context.getResources().getColor(R.color.user_list_item_route));
             if (((UserRouteItem) itemList.get(position)).getTransportForm().equals("Bus")) {
                 holder.transportIcon.setImageResource(R.drawable.bus_icon);
@@ -47,7 +48,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
                 holder.transportIcon.setImageResource(R.drawable.underground_logo);
             }
         } else if (itemList.get(position) instanceof UserStationItem) {
-            holder.itemText.setText(((com.customlondontransport.UserStationItem) itemList.get(position)).getItemText());
+            holder.itemText1.setText(((com.customlondontransport.UserStationItem) itemList.get(position)).getItemText1());
+            holder.itemText2.setText(((com.customlondontransport.UserStationItem) itemList.get(position)).getItemText2());
             rowView.setBackgroundColor(context.getResources().getColor(R.color.user_list_item_station));
             if (((UserStationItem) itemList.get(position)).getTransportForm().equals("Bus")) {
                 holder.transportIcon.setImageResource(R.drawable.bus_icon);
@@ -60,7 +62,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
     }
 
     private static class ViewHolder {
-        public TextView itemText;
+        public TextView itemText1;
+        public TextView itemText2;
         public ImageView transportIcon;
     }
 }

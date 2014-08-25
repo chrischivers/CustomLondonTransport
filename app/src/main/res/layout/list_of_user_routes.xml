@@ -18,17 +18,23 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/txt1"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_column="1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toLeftOf="@+id/img"
-            android:layout_alignTop="@+id/img"
-            android:layout_marginLeft="5dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="5dp">
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp" />
+
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:textStyle="italic" />
+        </LinearLayout>
 
     </TableRow>
 

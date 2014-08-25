@@ -39,14 +39,16 @@
             android:layout_height="wrap_content"
             android:text="Add New Route"
             android:id="@+id/addNewRouteButton"
-            android:layout_gravity="right|center_vertical" />
+            android:layout_gravity="right|center_vertical"
+            android:background="@color/user_list_item_route" />
 
         <Button
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="Add New Station"
             android:id="@+id/addNewStationButton"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:background="@color/user_list_item_station" />
     </FrameLayout>
 
 </RelativeLayout>

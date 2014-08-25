@@ -16,22 +16,14 @@ public class UserStationItem extends UserItem implements Serializable {
     }
 
     public List<?> getRouteLineList() {
-        return  routeLineList;
+        return routeLineList;
     }
 
     // For UserList View - returns first line
-    public String getItemText() {
+    public String getItemText1() {
         String line1 = "";
         String line2 = "";
-        String line3 = "";
         int MAX_NUMBER_CHARACTERS_ON_LINE = 40;
-
-        String conditions = "";
-        if (dayTimeConditions == null) {
-            conditions = "No conditions set";
-        } else {
-            conditions = "Conditions: " + dayTimeConditions;
-        }
 
         // Format towards string
         String towards = "";
@@ -41,34 +33,45 @@ public class UserStationItem extends UserItem implements Serializable {
             }
         }
         // Format RouteLineList (Remove brackets at the beginning and end of the List.toString())
-        String routeLineListFormatted = routeLineList.toString().substring(1,routeLineList.toString().length()-1);
+        String routeLineListFormatted = routeLineList.toString().substring(1, routeLineList.toString().length() - 1);
 
 
         if (this.transportForm.equals("Bus")) {
             line1 = startingStop.toString() + towards;
-            line2 = "Route(s): " + routeLineListFormatted ;
-            line3 = conditions;
+            line2 = "Route(s): " + routeLineListFormatted;
 
         } else if (this.transportForm.equals("Tube")) {
             line1 = startingStop.toString();
             line2 = "Platforms: " + routeLineListFormatted;
-            line3 = conditions;
 
         } else {
             throw new IllegalStateException("Unexpected transport form or null");
         }
 
         if (line1.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line1 = line1.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+            line1 = line1.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
         }
         if (line2.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line2 = line2.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+            line2 = line2.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
         }
-        if (line3.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line3 = line3.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
-        }
-        return line1 +"\n" + line2 + "\n" + line3;
+
+        return line1 + "\n" + line2;
 
     }
 
+    public String getItemText2() {
+        String line3 = "";
+        int MAX_NUMBER_CHARACTERS_ON_LINE = 40;
+
+        if (dayTimeConditions == null) {
+            line3 = "No conditions set";
+        } else {
+            line3 = "Conditions: " + dayTimeConditions;
+        }
+
+        if (line3.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
+            line3 = line3.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        }
+        return line3;
+    }
 }
