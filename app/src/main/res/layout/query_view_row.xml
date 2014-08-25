@@ -11,7 +11,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:lines="1"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp" />
 
     <TextView
         android:id="@+id/routeLineQueryResult"
@@ -19,7 +21,9 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp" />
 
     <TextView
         android:id="@+id/startingStopQueryResult"
@@ -27,7 +31,9 @@
         android:layout_height="wrap_content"
         android:lines="1"
         android:layout_width="130dp"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp" />
 
     <TextView
         android:id="@+id/directionQueryResult"
@@ -35,7 +41,9 @@
         android:layout_height="wrap_content"
         android:lines="1"
         android:layout_width="125dp"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp" />
 
     <TextView
         android:id="@+id/timeQueryResult"
@@ -43,5 +51,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:lines="1"
-        android:ellipsize="end" />
+        android:ellipsize="end"
+        android:paddingRight="2dp"
+        android:paddingLeft="2dp" />
 </LinearLayout>

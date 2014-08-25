@@ -7,8 +7,6 @@ public class UserStationItem extends UserItem implements Serializable {
 
     List<?> routeLineList; // for Tube this is a List of Directions, for Bus this is a list of RouteLines
 
-
-
     public UserStationItem(String transportForm, StationStop startingStop, List<?> routeLineList, DayTimeConditions dayTimeConditions, int maxNumberToShow) {
         this.transportForm = transportForm;
         this.routeLineList = routeLineList;
@@ -22,16 +20,55 @@ public class UserStationItem extends UserItem implements Serializable {
     }
 
     // For UserList View - returns first line
-    public String getLine1() {
+    public String getItemText() {
+        String line1 = "";
+        String line2 = "";
+        String line3 = "";
+        int MAX_NUMBER_CHARACTERS_ON_LINE = 40;
 
-        String conditions;
+        String conditions = "";
         if (dayTimeConditions == null) {
-            conditions = "\nNo conditions set";
+            conditions = "No conditions set";
         } else {
-            conditions = "\nConditions: " + dayTimeConditions;
+            conditions = "Conditions: " + dayTimeConditions;
         }
 
-        return "Stop: " + startingStop + "\nBus Routes: " + routeLineList + ". " + conditions;
+        // Format towards string
+        String towards = "";
+        if (startingStop.getTowards() != null) {
+            if (!startingStop.getTowards().equals("")) {
+                towards = " towards " + startingStop.getTowards() + ".";
+            }
+        }
+        // Format RouteLineList (Remove brackets at the beginning and end of the List.toString())
+        String routeLineListFormatted = routeLineList.toString().substring(1,routeLineList.toString().length()-1);
+
+
+        if (this.transportForm.equals("Bus")) {
+            line1 = startingStop.toString() + towards;
+            line2 = "Route(s): " + routeLineListFormatted ;
+            line3 = conditions;
+
+        } else if (this.transportForm.equals("Tube")) {
+            line1 = startingStop.toString();
+            line2 = "Platforms: " + routeLineListFormatted;
+            line3 = conditions;
+
+        } else {
+            throw new IllegalStateException("Unexpected transport form or null");
+        }
+
+        if (line1.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
+            line1 = line1.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        }
+        if (line2.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
+            line2 = line2.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        }
+        if (line3.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
+            line3 = line3.substring(0,MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        }
+        return line1 +"\n" + line2 + "\n" + line3;
+
     }
 
 }

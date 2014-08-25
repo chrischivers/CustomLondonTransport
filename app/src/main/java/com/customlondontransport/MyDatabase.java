@@ -8,9 +8,7 @@ import android.location.Location;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class MyDatabase extends SQLiteAssetHelper {
 
@@ -81,13 +79,14 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column3ToFetch= sqlTable2+".busStopLetterCode";
         String column4ToFetch= sqlTable2+".longitude";
         String column5ToFetch= sqlTable2+".latitude";
+        String column6ToFetch = sqlTable2+".towards";
         String column1ToInnerJoin = sqlTable1+".busStopID";
         String column2ToInnerJoin = sqlTable2+"._id";
         String column1ToFilterBy = sqlTable1+".busRouteID";
         String column2ToFilterBy = sqlTable1+".busRouteDirection";
         String columnToOrderBy = sqlTable1+"._id";
 
-        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch + ", " + column5ToFetch + " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch + ", " + column5ToFetch + ", " + column6ToFetch + " FROM " + sqlTable1 +
                 " INNER JOIN " + sqlTable2 +
                 " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
                 " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
@@ -95,7 +94,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4)));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
         } while (c.moveToNext());
         return busStops;
     }
@@ -114,16 +113,17 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column3ToFetch = "busStopLetterCode";
         String column4ToFetch= "longitude";
         String column5ToFetch= "latitude";
+        String column6ToFetch= "towards";
         String columnToOrderBy1 = "latitude";
         String columnToOrderBy2 = "longitude";
 
 
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch +", "+column5ToFetch +    " FROM " + sqlTable1 +
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch + ", "+column4ToFetch + ", "+column5ToFetch + ", "+ column6ToFetch + " FROM " + sqlTable1 +
                 " ORDER BY abs(" + columnToOrderBy1 + " - " + currentLocation.getLatitude() + ") + abs(" + columnToOrderBy2 + " - " + currentLocation.getLongitude() + ")",null);
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4)));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
         } while (c.moveToNext());
         return busStops;
     }
@@ -138,12 +138,15 @@ public class MyDatabase extends SQLiteAssetHelper {
         String column1ToFetch = "_id";
         String column2ToFetch= "busStopName";
         String column3ToFetch = "busStopLetterCode";
+        String column4ToFetch= "longitude";
+        String column5ToFetch= "latitude";
+        String column6ToFetch= "towards";
 
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  ", " + column3ToFetch + " FROM " + sqlTable1,null);
+        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  ", " + column3ToFetch +  ", " + column4ToFetch +  ", " + column5ToFetch +  ", " + column6ToFetch + " FROM " + sqlTable1,null);
 
         c.moveToFirst();
         do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2)));
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
         } while (c.moveToNext());
         return busStops;
     }

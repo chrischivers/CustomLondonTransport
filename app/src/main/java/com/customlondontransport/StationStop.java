@@ -10,13 +10,15 @@ public class StationStop implements Serializable{
     private String busStopLetterCode;
     private float longitudeCoordinate;
     private float latitudeCoordinate;
+    private String towards;
 
-    public StationStop(String id, String label, String busStopLetterCode, float longitudeCoordinate, float latitudeCoordinate) {
+    public StationStop(String id, String label, String busStopLetterCode, float longitudeCoordinate, float latitudeCoordinate, String towards) {
         this.id = id;
         this.label = label;
         this.busStopLetterCode = busStopLetterCode;
         this.longitudeCoordinate = longitudeCoordinate;
         this.latitudeCoordinate = latitudeCoordinate;
+        this.towards = towards;
     }
     public StationStop(String id, String label, float longitudeCoordinate, float latitudeCoordinate) {
         this.id = id;
@@ -58,6 +60,10 @@ public class StationStop implements Serializable{
         l.setLongitude(this.longitudeCoordinate);
         l.setLatitude(this.latitudeCoordinate);
         return l;
+    }
+
+    public String getTowards() {
+        return this.towards;
     }
 
     @Override

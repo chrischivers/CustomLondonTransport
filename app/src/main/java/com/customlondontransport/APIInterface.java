@@ -340,7 +340,7 @@ class APIFetcher extends AsyncTask<Object, Void, Void> {
         if (objects[0].equals("Route")) {
             if (objects[1].equals("Tube")) {
                 rowData = (new APIInterface().fetchTubeRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
-            } else if (objects[0].equals("Bus")) {
+            } else if (objects[1].equals("Bus")) {
                 rowData = (new APIInterface().fetchBusRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
             } else {
                 throw new IllegalArgumentException("Invalid transport type");
