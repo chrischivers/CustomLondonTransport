@@ -12,7 +12,7 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:id="@+id/relativeLayout"
+        android:id="@+id/widgetQueryRelativeLayout"
         android:layout_above="@+id/settingsImageButton">
 
         <LinearLayout

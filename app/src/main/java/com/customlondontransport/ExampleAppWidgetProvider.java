@@ -60,7 +60,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
             rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
-            rv.setOnClickPendingIntent(R.id.widgetQueryLinearLayout, pendingIntent);
+            rv.setOnClickPendingIntent(R.id.widgetQueryRelativeLayout, pendingIntent);
 
             rv = updateWidgetQuery(context, rv);
 
