@@ -9,17 +9,6 @@
     tools:context=".SetParameters"
     android:background="@color/user_list_item_route">
 
-    <TextView
-        android:id="@+id/HeadingText"
-        android:text="@string/AddANewRouteTitleText"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,39 +25,14 @@
             android:onClick="addToOrUpdateAndReturnToUserListView" />
     </FrameLayout>
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/routeLocalModeButton"
-        android:clickable="true"
-        android:singleLine="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/LocalFilterModeLabel"
-        android:id="@+id/routeLocalModeLabel"
-        android:textSize="14dp"
-        android:gravity="center_vertical|right"
-        android:layout_toStartOf="@+id/routeLocalModeButton"
-        android:layout_toEndOf="@+id/HeadingText"
-        android:textStyle="italic"
-        android:layout_above="@+id/scrollView"
-        android:layout_toLeftOf="@+id/routeLocalModeButton" />
-
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
-        android:layout_below="@+id/routeLocalModeButton"
         android:layout_above="@+id/frameLayout"
         android:background="@color/white"
-        android:padding="3dp">
+        android:padding="3dp"
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="fill_parent"

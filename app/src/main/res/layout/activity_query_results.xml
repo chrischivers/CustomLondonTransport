@@ -7,67 +7,6 @@
     android:id="@+id/queryRelativeLayout">
 
 
-
-    <LinearLayout
-        android:id="@+id/queryResultsLayout"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/routeHeader"
-                android:text="Route"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:lines="1"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-
-            <TextView
-                android:id="@+id/startingStopHeader"
-                android:text="Starting"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_height="wrap_content"
-
-                android:textStyle="bold"
-                android:lines="1"
-                android:layout_width="130dp"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-
-            <TextView
-                android:id="@+id/destinationHeader"
-                android:text="Destination"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:lines="1"
-                android:layout_width="125dp"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-
-            <TextView
-                android:id="@+id/timeHeader"
-                android:text="Time"
-                android:textAppearance="@android:style/TextAppearance.Small"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:lines="1"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,5 +23,73 @@
             android:layout_gravity="center"
             android:layout_column="2" />
     </FrameLayout>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_above="@+id/frameLayout"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:id="@+id/queryResultsLayout"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/routeHeader"
+                    android:text="Route"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:lines="1"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp" />
+
+                <TextView
+                    android:id="@+id/startingStopHeader"
+                    android:text="Starting"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:layout_height="wrap_content"
+
+                    android:textStyle="bold"
+                    android:lines="1"
+                    android:layout_width="130dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp" />
+
+                <TextView
+                    android:id="@+id/destinationHeader"
+                    android:text="Destination"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:lines="1"
+                    android:layout_width="125dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp" />
+
+                <TextView
+                    android:id="@+id/timeHeader"
+                    android:text="Time"
+                    android:textAppearance="@android:style/TextAppearance.Small"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:lines="1"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

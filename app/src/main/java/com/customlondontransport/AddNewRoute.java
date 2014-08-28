@@ -34,6 +34,8 @@ public class AddNewRoute extends Activity {
     private boolean inEditMode = false;
     private int positionToRestore = -1; //-1 as default if not in edit mode;
 
+    private Menu menu;
+
     private Spinner transportModeSpinner;
     private Spinner routeLineSpinner;
     private Spinner directionSpinner;
@@ -53,7 +55,6 @@ public class AddNewRoute extends Activity {
 
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
-    private ToggleButton localModeToggleButton;
 
     private LinearLayout linearLayoutLeft;
     private LinearLayout linearLayoutRight;
@@ -72,6 +73,7 @@ public class AddNewRoute extends Activity {
     private Location currentLocation;
     private SharedPreferences prefs;
 
+    private boolean localModeOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,9 @@ public class AddNewRoute extends Activity {
 
         getGPSLocation();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Set LOCAL MODE from prefs
+        localModeOn = (prefs.getBoolean("Local_Mode", false));
 
         if (getIntent().hasExtra("Position")) {
             Bundle b = getIntent().getExtras();
@@ -113,8 +118,6 @@ public class AddNewRoute extends Activity {
 
         conditionsSwitch = (Switch) findViewById(R.id.routeConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.routeConditionsPreviewText);
-
-        localModeToggleButton = (ToggleButton) findViewById(R.id.routeLocalModeButton);
 
         linearLayoutLeft = (LinearLayout) findViewById(R.id.routeLinearLayoutLeft1);
         linearLayoutRight = (LinearLayout) findViewById(R.id.routeLinearLayoutRight1);
@@ -157,8 +160,6 @@ public class AddNewRoute extends Activity {
                 conditionsSwitch.setChecked(true);
             }
         }
-        // Set local toggle depending on if LOCAL MODE is on
-        localModeToggleButton.setChecked(prefs.getBoolean("Local_Mode", false));
 
 
         transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -225,14 +226,6 @@ public class AddNewRoute extends Activity {
             }
         });
 
-        localModeToggleButton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onTransportModeSpinnerChange();
-
-            }
-        });
-
     }
 
     @Override
@@ -245,8 +238,16 @@ public class AddNewRoute extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_new_route_menu, menu);
+        // Set initial local mode icon
+        if (localModeOn) {
+            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_found));
+        } else {
+            menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_off));
+        }
+
         return true;
     }
 
@@ -260,6 +261,20 @@ public class AddNewRoute extends Activity {
             conditionsPreviewText.setText("");
             transportModeSpinner.setSelection(0);
             return true;
+        } else if (id == R.id.local_mode_toggle) {
+            if (localModeOn) {
+                localModeOn = false;
+                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_off));
+
+                onTransportModeSpinnerChange();
+            } else {
+                localModeOn = true;
+                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_found));
+
+                onTransportModeSpinnerChange();
+            }
+            return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -503,7 +518,7 @@ public class AddNewRoute extends Activity {
     }
 
     private List<RouteLine> fetchBusRoutes() {
-       if (localModeToggleButton.isChecked()) {
+       if (localModeOn) {
            return db.getNearestBusRoutes(currentLocation);
        } else {
            return db.getBusRoutesAlphabetical();
@@ -516,7 +531,7 @@ public class AddNewRoute extends Activity {
 
 
     private List<StationStop> fetchBusStops(String busRoute, int busDirection) {
-        if (localModeToggleButton.isChecked()) {
+        if (localModeOn) {
             return sortStationsByNearest(db.getBusStopsForRouteAlphabetical(busRoute, busDirection));
         } else {
             return db.getBusStopsForRouteAlphabetical(busRoute, busDirection);
@@ -524,7 +539,7 @@ public class AddNewRoute extends Activity {
     }
 
     private List<StationStop> fetchTubeStations(String tubeLineID) {
-        if (localModeToggleButton.isChecked()) {
+        if (localModeOn) {
             return sortStationsByNearest(db.getTubeStationsAlphabetical(tubeLineID));
         } else {
             return db.getTubeStationsAlphabetical(tubeLineID);
@@ -604,7 +619,7 @@ public class AddNewRoute extends Activity {
 
     public void saveCustomSettingsToPrefs() {
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("Local_Mode", localModeToggleButton.isChecked());
+        editor.putBoolean("Local_Mode", localModeOn);
         editor.apply();
     }
 
