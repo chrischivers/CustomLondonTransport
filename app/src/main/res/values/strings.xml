@@ -7,7 +7,7 @@
     <string name="app_name">Custom London Transport</string>
     <string name="action_reset_route">Reset</string>
     <string name="action_clear_user_routes">Clear All</string>
-    <string name="action_enable_local_mode">Enable Local Mode</string>
+    <string name="action_local_mode_toggle">Enable Local Mode</string>
 
     <string name="TransportModeLabel">Transport mode</string>
     <string name ="LocalFilterModeLabel">Local Mode</string>

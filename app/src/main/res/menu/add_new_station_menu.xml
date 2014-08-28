@@ -6,9 +6,9 @@
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/enable_local_mode"
-        android:icon="@drawable/ic_action_location_found"
-        android:title="@string/action_enable_local_mode"
+    <item android:id="@+id/local_mode_toggle"
+        android:icon="@drawable/ic_action_location_off"
+        android:title="@string/action_local_mode_toggle"
         android:showAsAction="ifRoom"  />
 
 </menu>

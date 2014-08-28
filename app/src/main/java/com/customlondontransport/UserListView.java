@@ -158,7 +158,12 @@ public class UserListView extends Activity {
     }
 
     public void editItem(int position) {
-        Intent intent = new Intent(getApplicationContext(), AddNewRoute.class);
+        Intent intent = null;
+        if (userValues.get(position) instanceof  UserRouteItem) {
+            intent = new Intent(getApplicationContext(), AddNewRoute.class);
+        } else if (userValues.get(position) instanceof  UserStationItem) {
+            intent = new Intent(getApplicationContext(), AddNewStation.class);
+        }
         Bundle b = new Bundle();
         b.putInt("Position", position);
         intent.putExtras(b);

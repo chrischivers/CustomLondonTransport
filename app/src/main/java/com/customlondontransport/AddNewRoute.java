@@ -602,6 +602,12 @@ public class AddNewRoute extends Activity {
         }
     }
 
+    public void saveCustomSettingsToPrefs() {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("Local_Mode", localModeToggleButton.isChecked());
+        editor.apply();
+    }
+
     public void getGPSLocation() {
         GPSTracker gps = new GPSTracker(AddNewRoute.this);
 
@@ -646,12 +652,6 @@ public class AddNewRoute extends Activity {
             return tubeDirectionsAndPlatformList;
         }
 
-    }
-
-    public void saveCustomSettingsToPrefs() {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("Local_Mode", localModeToggleButton.isChecked());
-        editor.apply();
     }
 
 }
