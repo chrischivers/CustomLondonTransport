@@ -376,9 +376,10 @@ public class AddNewStation extends Activity {
                 onStationSpinnerChange();
             } else {
 
-                System.out.println(stationStopSelectedInEditTextVar);
                 stopCodeEditText.setText(stationStopSelectedInEditTextVar.toString());
-                stopCodeEditText.callOnClick();
+                isStationStopSelectedInEditTextVarValid = true;
+                onStopCodeEditTextChange();
+
                 onStationChange();
             }
 
