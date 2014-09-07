@@ -21,10 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -32,6 +29,8 @@ public class AddNewRoute extends Activity {
 
     // get UserRouteValues position if any (applies if UserRouteItem is being edited)
     private boolean inEditMode = false;
+    private boolean restoreInProgress = false;
+    private boolean switchingMode = false;
     private int positionToRestore = -1; //-1 as default if not in edit mode;
 
     private Menu menu;
@@ -42,9 +41,12 @@ public class AddNewRoute extends Activity {
     private Spinner startingStopSpinner;
     private Spinner maxNumberSpinner;
 
-    private ArrayAdapter<RouteLine> routeLineAdapter;
+    private ArrayAdapter<RouteLine> tubeLineAdapter;
+    private ArrayAdapter<RouteLine> busRouteAdapter;
     private ArrayAdapter<StationStop> startingStopAdapter;
     private ArrayAdapter<Direction> directionAdapter;
+    private ArrayAdapter<CharSequence> transportModeAdapter;
+    private ArrayAdapter<CharSequence> maxNumberAdapter;
 
     private TextView transportModeLabel;
     private TextView routeLineLabel;
@@ -56,21 +58,26 @@ public class AddNewRoute extends Activity {
     private Switch conditionsSwitch;
     private TextView conditionsPreviewText;
 
-    private LinearLayout linearLayoutLeft;
-    private LinearLayout linearLayoutRight;
+    private LinearLayout linearLayoutLeft1;
+    private LinearLayout linearLayoutRight1;
+    private LinearLayout linearLayoutLeft2;
+    private LinearLayout linearLayoutRight2;
 
     private Button addToOrUpdateUserListButton;
 
-    private MyDatabase db;
+    private String transportModeSelected = "";
+    private RouteLine routeLineSelected;
+    private Direction directionSelected;
+    private StationStop startingStopSelected;
+    private DayTimeConditions dayTimeConditionsSelected;
+    private int maxNumberSelected;
 
-    private DayTimeConditions dtc;
+    private boolean allFieldsValid;
 
-    private boolean isTransportModeSet = false;
-    private boolean isRouteLineSet = false;
-    private boolean isDirectionSet = false;
-    private boolean isStartingStopSet = false;
+    TubeLinesAndBusRoutesDatabaseFetcher fetchTubeStationsAndBusStopsByNearest;
 
     private Location currentLocation;
+    private MyDatabase db;
     private SharedPreferences prefs;
 
     private boolean localModeOn;
@@ -82,6 +89,7 @@ public class AddNewRoute extends Activity {
 
         getGPSLocation();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        db = new MyDatabase(this);
 
         // Set LOCAL MODE from prefs
         localModeOn = (prefs.getBoolean("Local_Mode", false));
@@ -90,10 +98,8 @@ public class AddNewRoute extends Activity {
             Bundle b = getIntent().getExtras();
             positionToRestore = b.getInt("Position");
             inEditMode = true;
+            restoreInProgress = true;
         }
-
-        // pull in the database
-        new Thread(new LoadDatabase()).run();
 
         addToOrUpdateUserListButton = (Button) findViewById(R.id.routeAddToOrUpdateUserListButton);
         if (!inEditMode) {
@@ -119,113 +125,38 @@ public class AddNewRoute extends Activity {
         conditionsSwitch = (Switch) findViewById(R.id.routeConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.routeConditionsPreviewText);
 
-        linearLayoutLeft = (LinearLayout) findViewById(R.id.routeLinearLayoutLeft1);
-        linearLayoutRight = (LinearLayout) findViewById(R.id.routeLinearLayoutRight1);
+        linearLayoutLeft1 = (LinearLayout) findViewById(R.id.routeLinearLayoutLeft1);
+        linearLayoutRight1 = (LinearLayout) findViewById(R.id.routeLinearLayoutRight1);
+        linearLayoutLeft2 = (LinearLayout) findViewById(R.id.routeLinearLayoutLeft2);
+        linearLayoutRight2 = (LinearLayout) findViewById(R.id.routeLinearLayoutRight2);
 
         // Populate transport mode adapter and Max Number Adapter as default first step
-        ArrayAdapter<CharSequence> transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
-
-        linearLayoutLeft.removeAllViewsInLayout();
-        linearLayoutRight.removeAllViewsInLayout();
-        linearLayoutLeft.addView(transportModeLabel);
-        linearLayoutRight.addView(transportModeSpinner);
-
-        setLayout();
-
+        transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
-
+        maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
         maxNumberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         maxNumberSpinner.setAdapter(maxNumberAdapter);
 
-        // Adjust transport spinner if in EDIT MODE
-        if (inEditMode) {
-            String transportMode = UserListView.userValues.get(positionToRestore).getTransportForm();
-            int adapterPosition = transportModeAdapter.getPosition(transportMode);
-            transportModeSpinner.setSelection(adapterPosition);
-            onTransportModeSpinnerChange();
-        }
-        // Set MaxNumber if in EDIT MODE
-        if (inEditMode) {
-           maxNumberSpinner.setSelection(UserListView.userValues.get(positionToRestore).getMaxNumberToShow()); //add 1 to translate into spinner values
-        }
+        // Start fetching lists on a separate thread
+        fetchTubeStationsAndBusStopsByNearest = new TubeLinesAndBusRoutesDatabaseFetcher();
+        fetchTubeStationsAndBusStopsByNearest.execute();
 
-        // Set conditions if in EDIT MODE
-        if (inEditMode) {
-            dtc = UserListView.userValues.get(positionToRestore).getDayTimeConditions();
-            if (dtc == null) {
+        // Restore variables if restoreInProgress
+        if (restoreInProgress) {
+            transportModeSelected = UserListView.userValues.get(positionToRestore).getTransportForm();
+            startingStopSelected = UserListView.userValues.get(positionToRestore).getStartingStop();
+            directionSelected = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection();
+            maxNumberSelected = UserListView.userValues.get(positionToRestore).getMaxNumberToShow();
+            dayTimeConditionsSelected = UserListView.userValues.get(positionToRestore).getDayTimeConditions();
+            if (dayTimeConditionsSelected == null) {
                 conditionsSwitch.setChecked(false);
             } else {
                 conditionsSwitch.setChecked(true);
             }
+            maxNumberSpinner.setSelection(maxNumberSelected, false);
         }
-
-
-        transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                onTransportModeSpinnerChange();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                isTransportModeSet = false;
-                setLayout();
-            }
-        });
-
-        routeLineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                onRouteLineSpinnerChange();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                isRouteLineSet = false;
-                setLayout();
-            }
-        });
-
-        startingStopSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                onStartingStopSpinnerChange();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                isStartingStopSet = false;
-                setLayout();
-            }
-        });
-
-        directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                onDirectionSpinnerChange();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                isDirectionSet = false;
-                setLayout();
-            }
-        });
-
-        conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    loadSetDayTimeConditions();
-                } else {
-                    dtc = null;
-                    conditionsPreviewText.setText("");
-                }
-            }
-        });
-
+        updateLayout();
     }
 
     @Override
@@ -247,36 +178,297 @@ public class AddNewRoute extends Activity {
         } else {
             menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_off));
         }
-
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.reset_route) {
-            isTransportModeSet = false;
-            setLayout();
-            conditionsSwitch.setChecked(false);
-            conditionsPreviewText.setText("");
-            transportModeSpinner.setSelection(0);
-            return true;
-        } else if (id == R.id.local_mode_toggle) {
-            if (localModeOn) {
-                localModeOn = false;
-                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_off));
+    public void updateLayout() {
+        System.out.println("Update layour called");
+        linearLayoutRight1.removeAllViewsInLayout();
+        linearLayoutLeft1.removeAllViewsInLayout();
 
-                onTransportModeSpinnerChange();
-            } else {
-                localModeOn = true;
-                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_found));
+        routeLineSpinner.setOnItemSelectedListener(null);
+        startingStopSpinner.setOnItemSelectedListener(null);
+        directionSpinner.setOnItemSelectedListener(null);
 
-                onTransportModeSpinnerChange();
-            }
-            return true;
+        // Add Transport Mode Spinner
+        linearLayoutLeft1.addView(transportModeLabel);
+        linearLayoutRight1.addView(transportModeSpinner);
 
+        if (restoreInProgress) {
+            int adapterPosition = transportModeAdapter.getPosition(transportModeSelected);
+            transportModeSpinner.setSelection(adapterPosition, false);
         }
-        return super.onOptionsItemSelected(item);
+
+        if (transportModeSelected.equals("Tube")) {
+
+            // With tube lines there is no local mode difference - always in alphabetical order
+            if (restoreInProgress || switchingMode || tubeLineAdapter == null) {
+                tubeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchTubeLinesOrderByAlphabetical());
+                tubeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            }
+            linearLayoutLeft1.addView(routeLineLabel);
+            linearLayoutRight1.addView(routeLineSpinner);
+            routeLineSpinner.setAdapter(tubeLineAdapter);
+            if (routeLineSelected != null) {
+                String routeLineID = routeLineSelected.getID();
+                for (int i = 0; i < tubeLineAdapter.getCount(); i++) {
+                    if (tubeLineAdapter.getItem(i).getID().equals(routeLineID)) {
+                        routeLineSpinner.setSelection(i, false);
+                        break;
+                    }
+                }
+            }
+        } else if (transportModeSelected.equals("Bus")) {
+            if (restoreInProgress || switchingMode || busRouteAdapter == null) {
+                if (localModeOn) {
+                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.busRoutesOrderByNearest);
+                } else {
+                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.busRoutesOrderByAlphabetical);
+                }
+                busRouteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            }
+            linearLayoutLeft1.addView(routeLineLabel);
+            linearLayoutRight1.addView(routeLineSpinner);
+            routeLineSpinner.setAdapter(busRouteAdapter);
+
+            if (routeLineSelected != null) {
+
+                String routeLineID = routeLineSelected.getID();
+                for (int i = 0; i < busRouteAdapter.getCount(); i++) {
+                    if (busRouteAdapter.getItem(i).getID().equals(routeLineID)) {
+                        routeLineSpinner.setSelection(i, false);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (routeLineSelected != null) {
+            if (!routeLineSelected.getID().equals("")) {
+                if (transportModeSelected.equals("Tube")) {
+                    List<StationStop> tubeStartingStops;
+
+                    //Start fetching Tube Starting Stops
+                    TubeLinesStartingStopsFetcher fetchTubeStartingStops = new TubeLinesStartingStopsFetcher();
+                    fetchTubeStartingStops.execute(routeLineSelected.getID());
+                    if (localModeOn) {
+                        tubeStartingStops = fetchTubeStartingStops.fetchTubeStartingStopsByNearest();
+                    } else {
+                        tubeStartingStops = fetchTubeStartingStops.fetchTubeStartingStopsByAlphabetical();
+                    }
+                    linearLayoutLeft1.addView(startingStopLabel);
+                    linearLayoutRight1.addView(startingStopSpinner);
+                    startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, tubeStartingStops);
+                    startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    startingStopSpinner.setAdapter(startingStopAdapter);
+
+                    if (startingStopSelected != null) {
+
+                        String startingStopID = startingStopSelected.getID();
+                        for (int i = 0; i < startingStopAdapter.getCount(); i++) {
+                            if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
+                                startingStopSpinner.setSelection(i, false);
+                                break;
+                            }
+                        }
+                    }
+                    if (startingStopSelected != null) {
+                        if (!startingStopSelected.getID().equals("")) {
+                            List<Direction> tubeDirectionsAndPlatforms;
+
+                            // Start fetching Tube Directions
+                            TubeDirectionFetcher fetchTubeDirectionsAndPlatforms = new TubeDirectionFetcher();
+                            fetchTubeDirectionsAndPlatforms.execute(routeLineSelected.getID(), startingStopSelected.getID());
+                            tubeDirectionsAndPlatforms = fetchTubeDirectionsAndPlatforms.getTubeDirectionsAndPlatformList();
+
+                            linearLayoutLeft1.addView(directionLabel);
+                            linearLayoutRight1.addView(directionSpinner);
+                            directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, tubeDirectionsAndPlatforms);
+                            directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            directionSpinner.setAdapter(directionAdapter);
+
+                            if (directionSelected != null) {
+                                int directionID = directionSelected.getID();
+                                for (int i = 0; i < directionAdapter.getCount(); i++) {
+                                    if (directionAdapter.getItem(i).getID() == directionID) {
+                                        directionSpinner.setSelection(i, false);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (transportModeSelected.equals("Bus")) {
+                    List<Direction> busRouteDirections;
+
+                    //Start fetching Bus Directions
+                    BusDirectionFetcher fetchBusDirections = new BusDirectionFetcher();
+                    fetchBusDirections.execute(routeLineSelected.getID());
+                    busRouteDirections = fetchBusDirections.fetchBusDirection();
+
+                    linearLayoutLeft1.addView(directionLabel);
+                    linearLayoutRight1.addView(directionSpinner);
+                    directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, busRouteDirections);
+                    directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    directionSpinner.setAdapter(directionAdapter);
+
+                    if (directionSelected != null) {
+
+                        int directionID = directionSelected.getID();
+                        System.out.println("DirectionID: " + directionID);
+                        for (int i = 0; i < directionAdapter.getCount(); i++) {
+                            if (directionAdapter.getItem(i).getID() == directionID) {
+                                directionSpinner.setSelection(i, false);
+                                break;
+                            }
+                        }
+                    }
+                    if (directionSelected != null) {
+                        if (directionSelected.getID() != 0) {
+
+                            List<StationStop> busStartingStops;
+
+                            //Start fetching Tube Starting Stops
+                            BusRouteStartingStopsFetcher fetchBusStartingStops = new BusRouteStartingStopsFetcher();
+                            fetchBusStartingStops.execute(routeLineSelected.getID(), Integer.toString(directionSelected.getID()));
+                            if (localModeOn) {
+                                busStartingStops = fetchBusStartingStops.fetchBusStartingStopsByNearest();
+                            } else {
+                                busStartingStops = fetchBusStartingStops.fetchBusStartingStopsByAlphabetical();
+                            }
+                            linearLayoutLeft1.addView(startingStopLabel);
+                            linearLayoutRight1.addView(startingStopSpinner);
+                            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, busStartingStops);
+                            startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            startingStopSpinner.setAdapter(startingStopAdapter);
+
+                            if (startingStopSelected != null) {
+
+                                String startingStopID = startingStopSelected.getID();
+                                for (int i = 0; i < startingStopAdapter.getCount(); i++) {
+                                    if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
+                                        startingStopSpinner.setSelection(i, false);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        updateLayoutWithMaxNumberAndConditions();
+        setListeners();
+        restoreInProgress = false;
+        switchingMode = false;
+    }
+
+    private void updateLayoutWithMaxNumberAndConditions() {
+        linearLayoutLeft2.removeAllViewsInLayout();
+        linearLayoutRight2.removeAllViewsInLayout();
+        if (transportModeSelected.equals("Tube") && directionSelected != null) {
+            if (directionSelected.getID() != 0) {
+                linearLayoutLeft2.addView(maxNumberLabel);
+                linearLayoutRight2.addView(maxNumberSpinner);
+                linearLayoutLeft2.addView(conditionsLabel);
+                linearLayoutRight2.addView(conditionsSwitch);
+                allFieldsValid = true;
+            }
+        } else if (transportModeSelected.equals("Bus") && startingStopSelected != null) {
+            if (!startingStopSelected.getID().equals("")) {
+                linearLayoutLeft2.addView(maxNumberLabel);
+                linearLayoutRight2.addView(maxNumberSpinner);
+                linearLayoutLeft2.addView(conditionsLabel);
+                linearLayoutRight2.addView(conditionsSwitch);
+                allFieldsValid = true;
+            }
+        }
+        else {
+            linearLayoutLeft2.removeAllViewsInLayout();
+            linearLayoutRight2.removeAllViewsInLayout();
+            allFieldsValid = false;
+        }
+        linearLayoutLeft2.postInvalidate();
+        linearLayoutRight2.postInvalidate();
+    }
+
+    public void setListeners() {
+        transportModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                transportModeSelected = ((String) adapterView.getItemAtPosition(i));
+                routeLineSelected = null;
+                updateLayout();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+
+        routeLineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                routeLineSelected = ((RouteLine) adapterView.getItemAtPosition(i));
+                directionSelected = null;
+                startingStopSelected = null;
+                updateLayout();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+
+        startingStopSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                startingStopSelected = ((StationStop) adapterView.getItemAtPosition(i));
+                updateLayout();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+
+        directionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                directionSelected = ((Direction) adapterView.getItemAtPosition(i));
+                updateLayout();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+
+        conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    loadSetDayTimeConditions();
+                } else {
+                    dayTimeConditionsSelected = null;
+                    conditionsPreviewText.setText("");
+                }
+            }
+        });
+
+        maxNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                maxNumberSelected = parent.getSelectedItemPosition()-1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                maxNumberSelected = -1;
+            }
+        });
+
     }
 
     public void loadSetDayTimeConditions() {
@@ -284,321 +476,60 @@ public class AddNewRoute extends Activity {
         startActivityForResult(intent, 1);
     }
 
-    public void onTransportModeSpinnerChange() {
-        isRouteLineSet = false;
-        isStartingStopSet = false;
-        isDirectionSet = false;
-
-        if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeLines());
-            routeLineAdapter.insert(new RouteLine(),0); //insert empty to front
-            routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            routeLineSpinner.setAdapter(routeLineAdapter);
-            isTransportModeSet = true;
-
-        } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            routeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusRoutes());
-            routeLineAdapter.insert(new RouteLine(),0); //insert empty to front
-            routeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            routeLineSpinner.setAdapter(routeLineAdapter);
-            isTransportModeSet = true;
-
-        } else {
-            isTransportModeSet = false;
-        }
-
-        // IF IN EDIT MODE
-        if (inEditMode) {
-            String routeLineID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getRouteLine().getID();
-            for (int i = 0; i < routeLineAdapter.getCount(); i++) {
-                if (routeLineAdapter.getItem(i).getID().equals(routeLineID)) {
-                    routeLineSpinner.setSelection(i, true);
-                    break;
-                }
-            }
-            onRouteLineSpinnerChange();
-        }
-        setLayout();
-    }
-
-    public void onRouteLineSpinnerChange() {
-        isStartingStopSet = false;
-        isDirectionSet = false;
-
-        if (transportModeSpinner.getSelectedItem().equals("Tube") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
-            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStations(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
-            startingStopAdapter.insert(new StationStop(),0); //insert empty to front
-            startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            startingStopSpinner.setAdapter(startingStopAdapter);
-            isRouteLineSet = true;
-
-            // IF IN EDIT MODE
-            if (inEditMode) {
-                String startingStopID = UserListView.userValues.get(positionToRestore).getStartingStop().getID();
-                for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
-                    if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
-                        startingStopSpinner.setSelection(i, true);
-                        break;
-                    }
-                }
-                onStartingStopSpinnerChange();
-            }
-
-        } else if (transportModeSpinner.getSelectedItem().equals("Bus") && !((RouteLine) routeLineSpinner.getSelectedItem()).getID().equals("")) {
-            directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusDirections(((RouteLine) routeLineSpinner.getSelectedItem()).getID()));
-            directionAdapter.insert(new Direction(),0); //insert empty to front
-            directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            directionSpinner.setAdapter(directionAdapter);
-            isRouteLineSet = true;
-
-            // IF IN EDIT MODE
-            if (inEditMode) {
-                int directionID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection().getID();
-                for(int i=0 ; i<directionAdapter.getCount() ; i++){
-                    if (directionAdapter.getItem(i).getID() == directionID) {
-                        directionSpinner.setSelection(i, true);
-                        break;
-                    }
-                }
-                onDirectionSpinnerChange();
-            }
-        } else {
-            isRouteLineSet = false;
-        }
-        setLayout();
-    }
-
-    public void onStartingStopSpinnerChange() {
-        if (transportModeSpinner.getSelectedItem().equals("Tube") && !((StationStop) startingStopSpinner.getSelectedItem()).getID().equals("")) {
-            directionAdapter = new ArrayAdapter<Direction>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeDirectionsAndPlatforms(((RouteLine) routeLineSpinner.getSelectedItem()).getID(), ((StationStop) startingStopSpinner.getSelectedItem()).getID()));
-            directionAdapter.insert(new Direction(),0); //insert empty to front
-            directionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            directionSpinner.setAdapter(directionAdapter);
-            isStartingStopSet = true;
-
-            // IF IN EDIT MODE
-            if (inEditMode) {
-                int directionID = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection().getID();
-                for(int i=0 ; i<directionAdapter.getCount() ; i++){
-                    if (directionAdapter.getItem(i).getID() == directionID) {
-                        directionSpinner.setSelection(i, true);
-                        break;
-                    }
-                }
-                onDirectionSpinnerChange();
-            }
-
-        } else
-            isStartingStopSet = transportModeSpinner.getSelectedItem().equals("Bus") && !((StationStop) startingStopSpinner.getSelectedItem()).getID().equals("");
-        setLayout();
-    }
-
-    public void onDirectionSpinnerChange() {
-        if (transportModeSpinner.getSelectedItem().equals("Bus") && ((Direction) directionSpinner.getSelectedItem()).getID() != 0) {
-            startingStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchBusStops(routeLineSpinner.getSelectedItem().toString(), ((Direction) directionSpinner.getSelectedItem()).getID()));
-            startingStopAdapter.insert(new StationStop(),0); //insert empty to front
-            startingStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            startingStopSpinner.setAdapter(startingStopAdapter);
-            isDirectionSet = true;
-
-            // IF IN EDIT MODE
-            if (inEditMode) {
-                String startingStopID = UserListView.userValues.get(positionToRestore).getStartingStop().getID();
-                for(int i=0 ; i<startingStopAdapter.getCount() ; i++){
-                    if (startingStopAdapter.getItem(i).getID().equals(startingStopID)) {
-                        startingStopSpinner.setSelection(i, true);
-                        break;
-                    }
-                }
-                onStartingStopSpinnerChange();
-            }
-        } else
-            isDirectionSet = transportModeSpinner.getSelectedItem().equals("Tube") && directionSpinner.getSelectedItemPosition() != 0;
-        setLayout();
-    }
-
-    private void setLayout() {
-
-        if (!isTransportModeSet) {
-            linearLayoutLeft.removeAllViewsInLayout();
-            linearLayoutRight.removeAllViewsInLayout();
-            linearLayoutLeft.addView(transportModeLabel);
-            linearLayoutRight.addView(transportModeSpinner);
-            addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-        } else if (!isRouteLineSet) {
-            linearLayoutLeft.removeAllViewsInLayout();
-            linearLayoutRight.removeAllViewsInLayout();
-            linearLayoutLeft.addView(transportModeLabel);
-            linearLayoutRight.addView(transportModeSpinner);
-            linearLayoutLeft.addView(routeLineLabel);
-            linearLayoutRight.addView(routeLineSpinner);
-            addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-
-        } else if (transportModeSpinner.getSelectedItem().equals("Bus")) {
-            if (!isDirectionSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else if (!isStartingStopSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(conditionsLabel);
-                linearLayoutRight.addView(conditionsSwitch);
-                linearLayoutLeft.addView(maxNumberLabel);
-                linearLayoutRight.addView(maxNumberSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
-            }
-        } else if (transportModeSpinner.getSelectedItem().equals("Tube")) {
-            if (!isStartingStopSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else if (!isDirectionSet) {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.INVISIBLE);
-            } else {
-                linearLayoutLeft.removeAllViewsInLayout();
-                linearLayoutRight.removeAllViewsInLayout();
-                linearLayoutLeft.addView(transportModeLabel);
-                linearLayoutRight.addView(transportModeSpinner);
-                linearLayoutLeft.addView(routeLineLabel);
-                linearLayoutRight.addView(routeLineSpinner);
-                linearLayoutLeft.addView(startingStopLabel);
-                linearLayoutRight.addView(startingStopSpinner);
-                linearLayoutLeft.addView(directionLabel);
-                linearLayoutRight.addView(directionSpinner);
-                linearLayoutLeft.addView(conditionsLabel);
-                linearLayoutRight.addView(conditionsSwitch);
-                linearLayoutLeft.addView(maxNumberLabel);
-                linearLayoutRight.addView(maxNumberSpinner);
-                addToOrUpdateUserListButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private List<RouteLine> fetchBusRoutes() {
-       if (localModeOn) {
-           return db.getNearestBusRoutes(currentLocation);
-       } else {
-           return db.getBusRoutesAlphabetical();
-       }
-    }
-
-    private List<Direction> fetchBusDirections(String busRoute) {
-        return db.getBusDirections(busRoute);
-    }
-
-
-    private List<StationStop> fetchBusStops(String busRoute, int busDirection) {
-        if (localModeOn) {
-            return sortStationsByNearest(db.getBusStopsForRouteAlphabetical(busRoute, busDirection));
-        } else {
-            return db.getBusStopsForRouteAlphabetical(busRoute, busDirection);
-        }
-    }
-
-    private List<StationStop> fetchTubeStations(String tubeLineID) {
-        if (localModeOn) {
-            return sortStationsByNearest(db.getTubeStationsAlphabetical(tubeLineID));
-        } else {
-            return db.getTubeStationsAlphabetical(tubeLineID);
-        }
-    }
-
-    private List<RouteLine> fetchTubeLines() {
-        return db.getTubeLinesAlphabetical();
-    }
-
-    private synchronized List<Direction> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
-        APIFetcher apifetcher = new APIFetcher();
-        apifetcher.execute(tubeLineID, tubeStationID);
-        return apifetcher.getTubeDirectionsAndPlatformList();
-
-    }
-
-    public List<StationStop> sortStationsByNearest(List<StationStop> list) {
-        Collections.sort(list, new Comparator<StationStop>(){
-
-            @Override
-            public int compare(StationStop lhs, StationStop rhs) {
-                if (lhs.getLocation().distanceTo(currentLocation) > rhs.getLocation().distanceTo(currentLocation)) {
-                    return 1;
-                } else if (lhs.getLocation().distanceTo(currentLocation) < rhs.getLocation().distanceTo(currentLocation)) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-        return list;
-    }
-
-
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
-        int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
-        UserRouteItem userRouteItem = new UserRouteItem(transportModeSpinner.getSelectedItem().toString(), ((RouteLine) routeLineSpinner.getSelectedItem()), ((Direction) directionSpinner.getSelectedItem()), ((StationStop) startingStopSpinner.getSelectedItem()), dtc, maxNumberToFetch);
-        saveCustomSettingsToPrefs(); //Save custom prefs
-        if (!inEditMode) {
-            // If not in EDIT MODE then add to List
-            UserListView.userValues.add(userRouteItem);
-        } else {
-            // Replace at position
-            UserListView.userValues.set(positionToRestore, userRouteItem);
-        }
+        if (allFieldsValid) {
+            UserRouteItem userRouteItem = null;
+            int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
+            userRouteItem = new UserRouteItem(transportModeSelected, routeLineSelected, directionSelected, startingStopSelected, dayTimeConditionsSelected, maxNumberToFetch);
+            saveCustomSettingsToPrefs(); //Save custom prefs
+            if (!inEditMode) {
+                // If not in EDIT MODE then add to List
+                UserListView.userValues.add(userRouteItem);
+            } else {
+                // Replace at position
+                UserListView.userValues.set(positionToRestore, userRouteItem);
+            }
 
-        setResult(RESULT_OK, null);
-        finish();
+            setResult(RESULT_OK, null);
+            finish();
+        } else {
+            Toast.makeText(this, "Please select a valid stop or station from the drop down list", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
-    public class LoadDatabase implements Runnable {
-        @Override
-        public void run() {
-            db = new MyDatabase(getApplicationContext());
-            System.out.println("Database Loaded");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.reset_route) {
+            transportModeSpinner.setSelection(0,false);
+            transportModeSelected = "";
+            transportModeSpinner.setSelection(0);
+            routeLineSelected = null;
+            directionSelected = null;
+            startingStopSelected = null;
+            conditionsSwitch.setChecked(false);
+            conditionsPreviewText.setText("");
+            maxNumberSpinner.setSelection(0);
+            maxNumberSelected = 0;
+            updateLayout();
+            return true;
+        } else if (id == R.id.local_mode_toggle) {
+            switchingMode = true;
+            if (localModeOn) {
+                localModeOn = false;
+                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_off));
+                updateLayout();
+            } else {
+                localModeOn = true;
+                menu.getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_action_location_found));
+                updateLayout();
+            }
+            return true;
+
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //Return from conditions method
@@ -606,9 +537,9 @@ public class AddNewRoute extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            dtc = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
+            dayTimeConditionsSelected = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
             Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
-            conditionsPreviewText.setText(dtc.toString());
+            conditionsPreviewText.setText(dayTimeConditionsSelected.toString());
         } else {
             Toast.makeText(this, "No conditions set", Toast.LENGTH_SHORT).show();
             conditionsSwitch.setChecked(false);
@@ -644,15 +575,18 @@ public class AddNewRoute extends Activity {
         currentLocation.setLongitude(-0.29280117154);
     }
 
-    class APIFetcher extends AsyncTask<String, Void, Void> {
 
+
+
+    class TubeDirectionFetcher extends AsyncTask<String, Void, Void> {
+    //strings[0] is TubeLineID, strings[1] is TubeStationID
         List<Direction> tubeDirectionsAndPlatformList;
 
         @Override
         protected synchronized Void doInBackground(String... strings) {
             tubeDirectionsAndPlatformList = null;
             tubeDirectionsAndPlatformList = (new APIInterface().fetchTubeDirectionsAndPlatforms(strings[0], strings[1]));
-            notifyAll();
+            notify();
             return null;
         }
 
@@ -667,6 +601,186 @@ public class AddNewRoute extends Activity {
             return tubeDirectionsAndPlatformList;
         }
 
+    }
+
+    class TubeLinesAndBusRoutesDatabaseFetcher extends AsyncTask<String, Void, Void> {
+
+        private List<RouteLine> tubeLines;
+        private List<RouteLine> busRoutesOrderByNearest;
+        private List<RouteLine> busRoutesOrderByAlphabetical;
+
+        @Override
+        protected synchronized Void doInBackground(String... strings) {
+
+            tubeLines = null;
+            tubeLines = db.getTubeLinesAlphabetical();
+            tubeLines.add(0, new RouteLine());//insert empty to front
+            notify();
+
+            busRoutesOrderByAlphabetical = null;
+            busRoutesOrderByAlphabetical = db.getBusRoutesAlphabetical();
+            busRoutesOrderByAlphabetical.add(0, new RouteLine());//insert empty to front)
+            notify();
+
+            busRoutesOrderByNearest = null;
+            busRoutesOrderByNearest = db.getNearestBusRoutes(currentLocation);
+            busRoutesOrderByNearest.add(0, new RouteLine());//insert empty to front)
+            notify();
+
+            return null;
+        }
+
+        public synchronized List<RouteLine> fetchTubeLinesOrderByAlphabetical() {
+            while (tubeLines == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tubeLines;
+        }
+
+
+        public synchronized List<RouteLine> fetchBusRoutesOrderByNearest() {
+            while (busRoutesOrderByNearest == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return busRoutesOrderByNearest;
+        }
+
+        public synchronized List<RouteLine> fetchBusRoutesOrderByAlphabetical() {
+            while (busRoutesOrderByAlphabetical == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return busRoutesOrderByAlphabetical;
+        }
+
+
+    }
+
+    class TubeLinesStartingStopsFetcher extends AsyncTask<String, Void, Void> {
+
+        private List<StationStop> tubeStartingStopsAlphabetical;
+        private List<StationStop> tubeStartingStopsNearest;
+
+        @Override
+        protected synchronized Void doInBackground(String... strings) {
+
+            tubeStartingStopsAlphabetical = null;
+            tubeStartingStopsAlphabetical = db.getTubeStationsAlphabetical(strings[0]);
+            tubeStartingStopsAlphabetical.add(0, new StationStop());//insert empty to front
+            notify();
+
+            tubeStartingStopsNearest = null;
+            tubeStartingStopsNearest = db.getTubeStationsbyNearest(currentLocation,strings[0]);
+            tubeStartingStopsNearest.add(0, new StationStop());//insert empty to front
+            notify();
+
+            return null;
+        }
+
+        public synchronized List<StationStop> fetchTubeStartingStopsByAlphabetical() {
+            while (tubeStartingStopsAlphabetical == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tubeStartingStopsAlphabetical;
+        }
+
+
+        public synchronized List<StationStop> fetchTubeStartingStopsByNearest() {
+            while (tubeStartingStopsNearest == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return tubeStartingStopsNearest;
+        }
+    }
+
+    class BusDirectionFetcher extends AsyncTask<String, Void, Void> {
+
+        private List<Direction> busDirections;
+
+        @Override
+        protected synchronized Void doInBackground(String... strings) {
+            busDirections = null;
+            busDirections = db.getBusDirections(strings[0]);
+            busDirections.add(0, new Direction());//insert empty to front
+            notify();
+
+            return null;
+        }
+
+        public synchronized List<Direction> fetchBusDirection() {
+            while (busDirections == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return busDirections;
+        }
+    }
+
+    class BusRouteStartingStopsFetcher extends AsyncTask<String, Void, Void> {
+
+        private List<StationStop> busStartingStopsAlphabetical;
+        private List<StationStop> busStartingStopsNearest;
+
+        @Override
+        protected synchronized Void doInBackground(String... strings) {
+            //strings[0] is busRoute ID, strings[1] is busDirection ID
+            busStartingStopsAlphabetical = null;
+            busStartingStopsAlphabetical = db.getBusStopsForRouteAlphabetical(strings[0], Integer.parseInt(strings[1]));
+            busStartingStopsAlphabetical.add(0, new StationStop());//insert empty to front
+            notify();
+
+            busStartingStopsNearest = null;
+            busStartingStopsNearest = db.getBusStopsForRouteNearest(strings[0],Integer.parseInt(strings[1]),currentLocation);
+            busStartingStopsNearest.add(0, new StationStop());//insert empty to front
+            notify();
+
+            return null;
+        }
+
+        public synchronized List<StationStop> fetchBusStartingStopsByAlphabetical() {
+            while (busStartingStopsAlphabetical == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return busStartingStopsAlphabetical;
+        }
+
+
+        public synchronized List<StationStop> fetchBusStartingStopsByNearest() {
+            while (busStartingStopsNearest == null) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return busStartingStopsNearest;
+        }
     }
 
 }

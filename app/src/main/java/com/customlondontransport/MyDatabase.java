@@ -8,6 +8,8 @@ import android.location.Location;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MyDatabase extends SQLiteAssetHelper {
@@ -96,6 +98,53 @@ public class MyDatabase extends SQLiteAssetHelper {
         do {
             busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
         } while (c.moveToNext());
+        return busStops;
+    }
+
+    public List<StationStop> getBusStopsForRouteNearest(String busRouteID, int busDirection, final Location currentLocation) {
+
+        List<StationStop> busStops = new ArrayList<StationStop>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "busRoutes";
+        String sqlTable2 = "busStops";
+        String column1ToFetch = sqlTable1+".busStopID";
+        String column2ToFetch= sqlTable2+".busStopName";
+        String column3ToFetch= sqlTable2+".busStopLetterCode";
+        String column4ToFetch= sqlTable2+".longitude";
+        String column5ToFetch= sqlTable2+".latitude";
+        String column6ToFetch = sqlTable2+".towards";
+        String column1ToInnerJoin = sqlTable1+".busStopID";
+        String column2ToInnerJoin = sqlTable2+"._id";
+        String column1ToFilterBy = sqlTable1+".busRouteID";
+        String column2ToFilterBy = sqlTable1+".busRouteDirection";
+        String columnToOrderBy = sqlTable1+"._id";
+
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch +", " +column2ToFetch +", " + column3ToFetch +", "+column4ToFetch + ", " + column5ToFetch + ", " + column6ToFetch + " FROM " + sqlTable1 +
+                " INNER JOIN " + sqlTable2 +
+                " ON " +  column1ToInnerJoin + "=" + column2ToInnerJoin +
+                " WHERE " + column1ToFilterBy + " = '" + busRouteID + "' AND " + column2ToFilterBy + " = " + busDirection +
+                " ORDER BY " + columnToOrderBy +";",null);
+
+        c.moveToFirst();
+        do {
+            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
+        } while (c.moveToNext());
+
+        Collections.sort(busStops, new Comparator<StationStop>() {
+
+            @Override
+            public int compare(StationStop lhs, StationStop rhs) {
+                if (lhs.getLocation().distanceTo(currentLocation) > rhs.getLocation().distanceTo(currentLocation)) {
+                    return 1;
+                } else if (lhs.getLocation().distanceTo(currentLocation) < rhs.getLocation().distanceTo(currentLocation)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
         return busStops;
     }
 
@@ -280,6 +329,46 @@ public class MyDatabase extends SQLiteAssetHelper {
         do  {
             tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
         } while (c.moveToNext());
+        return tubeStations;
+    }
+
+    public List<StationStop> getTubeStationsbyNearest(final Location currentLocation, String tubeLineID) {
+
+        List<StationStop> tubeStations = new ArrayList<StationStop>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "tubeStations";
+        String column1ToFetch = "tubeStationID";
+        String column2ToFetch= "tubeStationName";
+        String column3ToFetch = "longitude";
+        String column4ToFetch = "latitude";
+        String column1ToFilterBy = "tubeLineID";
+
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch + ", " + column2ToFetch + ", " + column3ToFetch + ", " + column4ToFetch + " FROM " + sqlTable1 +
+                " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" +
+                " ORDER BY " + column2ToFetch +";",null);
+
+
+        c.moveToFirst();
+        do  {
+            tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
+        } while (c.moveToNext());
+
+        Collections.sort(tubeStations, new Comparator<StationStop>() {
+
+            @Override
+            public int compare(StationStop lhs, StationStop rhs) {
+                if (lhs.getLocation().distanceTo(currentLocation) > rhs.getLocation().distanceTo(currentLocation)) {
+                    return 1;
+                } else if (lhs.getLocation().distanceTo(currentLocation) < rhs.getLocation().distanceTo(currentLocation)) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
         return tubeStations;
     }
 

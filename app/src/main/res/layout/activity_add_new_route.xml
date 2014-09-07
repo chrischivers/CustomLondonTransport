@@ -75,20 +75,6 @@
                     android:spinnerMode="dropdown"
                     android:gravity="center_vertical|left" />
 
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:id="@+id/routeMaxNumberSpinner"
-                    android:spinnerMode="dropdown"
-                    android:gravity="center_vertical|left" />
-
-                <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="58dp"
-                    android:id="@+id/routeConditionsSwitch"
-                    android:gravity="center_vertical"
-                    android:textOff="None"
-                    android:textOn="Set" />
             </LinearLayout>
 
             <LinearLayout
@@ -137,6 +123,53 @@
                     android:textSize="@dimen/menuTextSize"
                     android:gravity="center_vertical|left" />
 
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/routeConditionsPreviewText"
+                android:layout_alignEnd="@+id/frameLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textStyle="italic"
+                android:layout_below="@+id/routeLinearLayoutLeft2" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/routeLinearLayoutRight2"
+                android:layout_toRightOf="@+id/routeLinearLayoutLeft2"
+                android:layout_below="@+id/routeLinearLayoutRight1">
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeMaxNumberSpinner"
+                    android:spinnerMode="dropdown"
+                    android:gravity="center_vertical|left" />
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeConditionsSwitch"
+                    android:gravity="center_vertical"
+                    android:textOff="None"
+                    android:textOn="Set" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/routeLinearLayoutLeft1"
+                android:id="@+id/routeLinearLayoutLeft2"
+                android:layout_marginTop="5dp" >
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
@@ -155,19 +188,6 @@
                     android:textSize="@dimen/menuTextSize"
                     android:gravity="center_vertical|left" />
             </LinearLayout>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/routeConditionsPreviewText"
-                android:layout_above="@+id/frameLayout"
-                android:layout_alignRight="@+id/frameLayout"
-                android:layout_alignEnd="@+id/frameLayout"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textStyle="italic"
-                android:layout_below="@+id/routeLinearLayoutRight1" />
         </RelativeLayout>
     </ScrollView>
 
