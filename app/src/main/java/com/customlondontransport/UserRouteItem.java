@@ -33,11 +33,11 @@ public class UserRouteItem extends UserItem implements Serializable {
 
 
         if (this.transportForm.equals("Bus")) {
-            line1 = "From: " + startingStop.toString();
+            line1 = "Route: " + routeLine + ". From: " + startingStop.toString();
             line2 = "Direction: " + direction;
 
         } else if (this.transportForm.equals("Tube")) {
-            line1 = "From: " + startingStop.toString();
+            line1 = "Line:" + routeLine + ". From: " + startingStop.toString();
             line2 = "Platforms: " + direction;
 
         } else {

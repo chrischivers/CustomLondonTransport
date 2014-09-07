@@ -43,10 +43,7 @@ public class AddNewRoute extends Activity {
 
     private ArrayAdapter<RouteLine> tubeLineAdapter;
     private ArrayAdapter<RouteLine> busRouteAdapter;
-    private ArrayAdapter<StationStop> startingStopAdapter;
-    private ArrayAdapter<Direction> directionAdapter;
     private ArrayAdapter<CharSequence> transportModeAdapter;
-    private ArrayAdapter<CharSequence> maxNumberAdapter;
 
     private TextView transportModeLabel;
     private TextView routeLineLabel;
@@ -62,8 +59,6 @@ public class AddNewRoute extends Activity {
     private LinearLayout linearLayoutRight1;
     private LinearLayout linearLayoutLeft2;
     private LinearLayout linearLayoutRight2;
-
-    private Button addToOrUpdateUserListButton;
 
     private String transportModeSelected = "";
     private RouteLine routeLineSelected;
@@ -101,7 +96,7 @@ public class AddNewRoute extends Activity {
             restoreInProgress = true;
         }
 
-        addToOrUpdateUserListButton = (Button) findViewById(R.id.routeAddToOrUpdateUserListButton);
+        Button addToOrUpdateUserListButton = (Button) findViewById(R.id.routeAddToOrUpdateUserListButton);
         if (!inEditMode) {
             addToOrUpdateUserListButton.setText("Add");
         } else {
@@ -134,7 +129,7 @@ public class AddNewRoute extends Activity {
         transportModeAdapter = ArrayAdapter.createFromResource(this, R.array.transport_mode_array, android.R.layout.simple_spinner_item);
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
-        maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
         maxNumberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         maxNumberSpinner.setAdapter(maxNumberAdapter);
 
@@ -145,6 +140,7 @@ public class AddNewRoute extends Activity {
         // Restore variables if restoreInProgress
         if (restoreInProgress) {
             transportModeSelected = UserListView.userValues.get(positionToRestore).getTransportForm();
+            routeLineSelected = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getRouteLine();
             startingStopSelected = UserListView.userValues.get(positionToRestore).getStartingStop();
             directionSelected = ((UserRouteItem) UserListView.userValues.get(positionToRestore)).getDirection();
             maxNumberSelected = UserListView.userValues.get(positionToRestore).getMaxNumberToShow();
@@ -182,7 +178,7 @@ public class AddNewRoute extends Activity {
     }
 
     public void updateLayout() {
-        System.out.println("Update layour called");
+        System.out.println("Update layout called");
         linearLayoutRight1.removeAllViewsInLayout();
         linearLayoutLeft1.removeAllViewsInLayout();
 
@@ -204,8 +200,9 @@ public class AddNewRoute extends Activity {
             // With tube lines there is no local mode difference - always in alphabetical order
             if (restoreInProgress || switchingMode || tubeLineAdapter == null) {
                 tubeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchTubeLinesOrderByAlphabetical());
-                tubeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
             }
+            tubeLineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             linearLayoutLeft1.addView(routeLineLabel);
             linearLayoutRight1.addView(routeLineSpinner);
             routeLineSpinner.setAdapter(tubeLineAdapter);
@@ -221,12 +218,12 @@ public class AddNewRoute extends Activity {
         } else if (transportModeSelected.equals("Bus")) {
             if (restoreInProgress || switchingMode || busRouteAdapter == null) {
                 if (localModeOn) {
-                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.busRoutesOrderByNearest);
+                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchBusRoutesOrderByNearest());
                 } else {
-                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.busRoutesOrderByAlphabetical);
+                    busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchBusRoutesOrderByAlphabetical());
                 }
-                busRouteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             }
+            busRouteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             linearLayoutLeft1.addView(routeLineLabel);
             linearLayoutRight1.addView(routeLineSpinner);
             routeLineSpinner.setAdapter(busRouteAdapter);
@@ -245,6 +242,8 @@ public class AddNewRoute extends Activity {
 
         if (routeLineSelected != null) {
             if (!routeLineSelected.getID().equals("")) {
+                ArrayAdapter<StationStop> startingStopAdapter;
+                ArrayAdapter<Direction> directionAdapter;
                 if (transportModeSelected.equals("Tube")) {
                     List<StationStop> tubeStartingStops;
 
@@ -288,9 +287,8 @@ public class AddNewRoute extends Activity {
                             directionSpinner.setAdapter(directionAdapter);
 
                             if (directionSelected != null) {
-                                int directionID = directionSelected.getID();
                                 for (int i = 0; i < directionAdapter.getCount(); i++) {
-                                    if (directionAdapter.getItem(i).getID() == directionID) {
+                                    if (directionAdapter.getItem(i).toString().equals(directionSelected.toString())) {
                                         directionSpinner.setSelection(i, false);
                                         break;
                                     }
@@ -367,11 +365,14 @@ public class AddNewRoute extends Activity {
         linearLayoutLeft2.removeAllViewsInLayout();
         linearLayoutRight2.removeAllViewsInLayout();
         if (transportModeSelected.equals("Tube") && directionSelected != null) {
-            if (directionSelected.getID() != 0) {
+            if (!directionSelected.getLabel().equals("")) {
                 linearLayoutLeft2.addView(maxNumberLabel);
                 linearLayoutRight2.addView(maxNumberSpinner);
                 linearLayoutLeft2.addView(conditionsLabel);
                 linearLayoutRight2.addView(conditionsSwitch);
+                if (dayTimeConditionsSelected != null) {
+                    conditionsPreviewText.setText(dayTimeConditionsSelected.toString());
+                }
                 allFieldsValid = true;
             }
         } else if (transportModeSelected.equals("Bus") && startingStopSelected != null) {
@@ -380,6 +381,7 @@ public class AddNewRoute extends Activity {
                 linearLayoutRight2.addView(maxNumberSpinner);
                 linearLayoutLeft2.addView(conditionsLabel);
                 linearLayoutRight2.addView(conditionsSwitch);
+                conditionsPreviewText.setText("");
                 allFieldsValid = true;
             }
         }
@@ -479,7 +481,7 @@ public class AddNewRoute extends Activity {
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
         if (allFieldsValid) {
-            UserRouteItem userRouteItem = null;
+            UserRouteItem userRouteItem;
             int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
             userRouteItem = new UserRouteItem(transportModeSelected, routeLineSelected, directionSelected, startingStopSelected, dayTimeConditionsSelected, maxNumberToFetch);
             saveCustomSettingsToPrefs(); //Save custom prefs
@@ -569,7 +571,6 @@ public class AddNewRoute extends Activity {
             gps.showSettingsAlert();
         }
 
-        //TODO
         //For emulator testing GPS being set manually
         currentLocation.setLatitude(51.465053721837);
         currentLocation.setLongitude(-0.29280117154);
@@ -681,7 +682,7 @@ public class AddNewRoute extends Activity {
             notify();
 
             tubeStartingStopsNearest = null;
-            tubeStartingStopsNearest = db.getTubeStationsbyNearest(currentLocation,strings[0]);
+            tubeStartingStopsNearest = db.getTubeStationsbyNearest(currentLocation, strings[0]);
             tubeStartingStopsNearest.add(0, new StationStop());//insert empty to front
             notify();
 

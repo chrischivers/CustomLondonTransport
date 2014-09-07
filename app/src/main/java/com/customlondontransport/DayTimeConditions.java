@@ -30,9 +30,26 @@ public class DayTimeConditions implements Serializable {
     }
 
     // Constructor if no time info required
-    public DayTimeConditions(boolean[] selectedDays) throws ParseException {
+    public DayTimeConditions(boolean[] selectedDays, int radiusFromStartingStop) throws ParseException {
         this.selectedDays = new boolean[7];
         this.selectedDays = selectedDays;
+        this.radiusFromStartingStop = radiusFromStartingStop;
+    }
+
+    // Constructor if no day info required
+    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, int radiusFromStartingStop) throws ParseException {
+        String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
+        this.fromTime = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
+
+        String toTimeFormatted = ((toTimeHour < 10) ? "0" + toTimeHour : Integer.toString(toTimeHour)) + ":" + ((toTimeMinutes < 10) ? "0" + toTimeMinutes : Integer.toString(toTimeMinutes));
+        this.toTime = new SimpleDateFormat("HH:mm").parse(toTimeFormatted);
+
+        this.radiusFromStartingStop = radiusFromStartingStop;
+    }
+
+    // Constructor if no time or day info required
+    public DayTimeConditions(int radiusFromStartingStop) {
+        this.radiusFromStartingStop = radiusFromStartingStop;
     }
 
     public Date getFromTime() {
@@ -67,6 +84,7 @@ public class DayTimeConditions implements Serializable {
         String daysString = "";
         String fromTimeTwoDigits = "Any time";
         String toTimeTwoDigits = "";
+        String radiusString = "";
 
         String[] dayArray = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         if (selectedDays != null) {
@@ -80,7 +98,10 @@ public class DayTimeConditions implements Serializable {
             fromTimeTwoDigits = "From: " + dateFormat.format(fromTime);
             toTimeTwoDigits = " To: " + dateFormat.format(toTime);
         }
-        return daysString + fromTimeTwoDigits + toTimeTwoDigits + "\n" + radiusFromStartingStop + " metres from starting stop.";
+        if (radiusFromStartingStop != -1 ) {
+            radiusString = radiusFromStartingStop + " metres from starting stop";
+        }
+        return daysString + fromTimeTwoDigits + toTimeTwoDigits + "\n" + radiusString;
     }
 
     public boolean isCurrentTimeWithinRange() {

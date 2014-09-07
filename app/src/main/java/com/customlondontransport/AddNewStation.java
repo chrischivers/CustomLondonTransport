@@ -62,15 +62,12 @@ public class AddNewStation extends Activity {
     private ArrayAdapter<StationStop> tubeStationAdapter;
     private ArrayAdapter<StationStop> busStopAdapter;
     private ArrayAdapter<CharSequence> transportModeAdapter;
-    private ArrayAdapter<CharSequence> maxNumberAdapter;
 
     private LinearLayout linearLayoutLeft1;
     private LinearLayout linearLayoutRight1;
     private LinearLayout linearLayoutLeft2;
     private LinearLayout linearLayoutRight2;
     private LinearLayout linearLayoutRouteGrid;
-
-    private Button addToOrUpdateUserListButton;
 
     private String transportModeSelected = "";
     private List<Direction> dynamicCheckBoxesTubeArray;
@@ -90,7 +87,6 @@ public class AddNewStation extends Activity {
     private boolean localModeOn;
 
     private int screenWidth;
-    private DisplayMetrics metrics;
     private InputMethodManager imm;
 
     @Override
@@ -99,7 +95,7 @@ public class AddNewStation extends Activity {
         setContentView(R.layout.activity_add_new_station);
 
         //Get display dimensions
-        metrics = getApplicationContext().getResources().getDisplayMetrics();
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         screenWidth = metrics.widthPixels;
         imm = (InputMethodManager)getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
 
@@ -123,7 +119,7 @@ public class AddNewStation extends Activity {
 
 
         // Set button text
-        addToOrUpdateUserListButton = (Button) findViewById(R.id.stationAddToOrUpdateUserListButton);
+        Button addToOrUpdateUserListButton = (Button) findViewById(R.id.stationAddToOrUpdateUserListButton);
         if (!inEditMode) {
             addToOrUpdateUserListButton.setText("Add");
         } else {
@@ -156,7 +152,7 @@ public class AddNewStation extends Activity {
         transportModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         transportModeSpinner.setAdapter(transportModeAdapter);
         transportModeSpinner.setSelection(0, false);
-        maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
         maxNumberSpinner.setAdapter(maxNumberAdapter);
 
         // Start fetching lists on a separate thread
@@ -444,10 +440,14 @@ public class AddNewStation extends Activity {
                 linearLayoutRight2.addView(maxNumberSpinner);
                 linearLayoutLeft2.addView(conditionsLabel);
                 linearLayoutRight2.addView(conditionsSwitch);
+            if (dayTimeConditionsSelected != null) {
+                conditionsPreviewText.setText(dayTimeConditionsSelected.toString());
+            }
                 allFieldsValid = true;
             } else {
                 linearLayoutLeft2.removeAllViewsInLayout();
                 linearLayoutRight2.removeAllViewsInLayout();
+            conditionsPreviewText.setText("");
                 allFieldsValid = false;
         }
         linearLayoutLeft2.postInvalidate();

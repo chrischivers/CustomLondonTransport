@@ -59,13 +59,19 @@
 
 
     //Days of the week
-    <string name ="Monday">Monday</string>
-    <string name ="Tuesday">Tuesday</string>
-    <string name ="Wednesday">Wednesday</string>
-    <string name ="Thursday">Thursday</string>
-    <string name ="Friday">Friday</string>
-    <string name ="Saturday">Saturday</string>
-    <string name ="Sunday">Sunday</string>
+    <string name ="Monday">Mon</string>
+    <string name ="Tuesday">Tue</string>
+    <string name ="Wednesday">Wed</string>
+    <string name ="Thursday">Thu</string>
+    <string name ="Friday">Fri</string>
+    <string name ="Saturday">Sat</string>
+    <string name ="Sunday">Sun</string>
+
+    // Condition variables
+    //Days of the week
+    <string name ="TimeRange">Time</string>
+    <string name ="Days">Days</string>
+    <string name ="Radius">Radius</string>
 
 // Menu text
     <string name ="Delete">Delete</string>
