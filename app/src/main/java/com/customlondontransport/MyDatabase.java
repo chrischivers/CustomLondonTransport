@@ -187,6 +187,7 @@ public class MyDatabase extends SQLiteAssetHelper {
     }
 
     public List<RouteLine> getBusRoutesForAStop(String busStopID) {
+        System.out.println("busStopID: " + busStopID);
 
         SQLiteDatabase db = getReadableDatabase();
         List<RouteLine> busRoutesList = new ArrayList<RouteLine>();
