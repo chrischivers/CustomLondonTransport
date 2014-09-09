@@ -20,33 +20,6 @@ import java.util.Set;
 public class APIInterface   {
 
 
-    public List<Direction> fetchTubeDirectionsAndPlatforms(String tubeLineID, String tubeStationID) {
-        List<Direction> tubeDirectionPlatformList = new ArrayList<Direction>();
-
-        try {
-
-            URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLineID + "/" + tubeStationID);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            System.out.println(url);
-
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-            String inputLine;
-
-            while ((inputLine = reader.readLine()) != null) {
-                if(inputLine.matches("\\s+<P N=.*")) {
-                    String directionPlatform = inputLine.substring(inputLine.indexOf("\"")+1,inputLine.indexOf("\" Num"));
-                    tubeDirectionPlatformList.add(new Direction(directionPlatform));
-                }
-            }
-        } catch(IOException ex){
-            ex.printStackTrace();
-        }
-        return tubeDirectionPlatformList;
-    }
-
-
     public List<ResultRowItem> fetchBusRouteData(RouteLine busRoute, StationStop busStop, Direction busDirection){
         List<ResultRowItem> busDataList = new ArrayList<ResultRowItem>();
 
@@ -328,51 +301,55 @@ public class APIInterface   {
             apifetcher.execute("Station", transportType, startingStopStation, routeLineList);
             return apifetcher.getRowData();
         }
-    }
 
-class APIFetcher extends AsyncTask<Object, Void, Void> {
 
-    List<ResultRowItem> rowData;
+    class APIFetcher extends AsyncTask<Object, Void, Void> {
 
-    @Override
-    protected synchronized Void doInBackground(Object... objects) {
-        rowData = null;
-        if (objects[0].equals("Route")) {
-            if (objects[1].equals("Tube")) {
-                rowData = (new APIInterface().fetchTubeRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
-            } else if (objects[1].equals("Bus")) {
-                rowData = (new APIInterface().fetchBusRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
-            } else {
-                throw new IllegalArgumentException("Invalid transport type");
+        List<ResultRowItem> rowData;
+
+        @Override
+        protected synchronized Void doInBackground(Object... objects) {
+            rowData = null;
+            if (objects[0].equals("Route")) {
+                if (objects[1].equals("Tube")) {
+                    rowData = (new APIInterface().fetchTubeRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
+                } else if (objects[1].equals("Bus")) {
+                    rowData = (new APIInterface().fetchBusRouteData(((RouteLine) objects[2]), ((StationStop) objects[3]), ((Direction) objects[4])));
+                } else {
+                    throw new IllegalArgumentException("Invalid transport type");
+                }
+            } else if (objects[0].equals("Station")) {
+                if (objects[1].equals("Tube")) {
+                    rowData = (new APIInterface().fetchTubeStationData(((StationStop) objects[2]), (List) objects[3]));
+                } else if (objects[1].equals("Bus")) {
+                    rowData = (new APIInterface().fetchBusStationData(((StationStop) objects[2]), ((List) objects[3])));
+                } else {
+                    throw new IllegalArgumentException("Invalid transport type");
+                }
             }
-        } else if (objects[0].equals("Station")) {
-            if (objects[1].equals("Tube")) {
-                rowData = (new APIInterface().fetchTubeStationData(((StationStop) objects[2]), (List) objects[3]));
-            } else if (objects[1].equals("Bus")) {
-                rowData = (new APIInterface().fetchBusStationData(((StationStop) objects[2]), ((List) objects[3])));
-            } else {
-                throw new IllegalArgumentException("Invalid transport type");
-            }
+
+            notifyAll();
+            return null;
         }
 
-        notifyAll();
-        return null;
-    }
-
-    public synchronized List<ResultRowItem> getRowData() {
-        while (rowData == null) {
-            try {
-                wait();
-                System.out.println("Waiting");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        public synchronized List<ResultRowItem> getRowData() {
+            while (rowData == null) {
+                try {
+                    wait();
+                    System.out.println("Waiting");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+            return rowData;
         }
 
-        return rowData;
     }
 
 }
+
+
 
 
 

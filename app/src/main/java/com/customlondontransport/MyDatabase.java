@@ -417,4 +417,30 @@ public class MyDatabase extends SQLiteAssetHelper {
         } while (c.moveToNext());
         return tubeStations;
     }
+
+    public List<Direction> getTubeDirections(String tubeLineID, String tubeStationID) {
+
+        List<Direction> tubeDirections = new ArrayList<Direction>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlTable1 = "tubeDirections";
+        String column1ToFetch = "tubeDirection";
+        String column1ToFilterBy = "tubeLineID";
+        String column2ToFilterBy = "tubeStationID";
+
+        System.out.println("SELECT " + column1ToFetch + " FROM " + sqlTable1 +
+                " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" + " AND " + column2ToFilterBy + " = '" + tubeStationID + "'" +
+                " ORDER BY " + column1ToFetch +";");
+        Cursor c = db.rawQuery("SELECT " + column1ToFetch + " FROM " + sqlTable1 +
+                " WHERE " + column1ToFilterBy + " = '" + tubeLineID + "'" + " AND " + column2ToFilterBy + " = '" + tubeStationID + "'" +
+                " ORDER BY " + column1ToFetch +";",null);
+
+
+        c.moveToFirst();
+        do  {
+            tubeDirections.add(new Direction(c.getString(0)));
+        } while (c.moveToNext());
+        return tubeDirections;
+    }
 }

@@ -720,7 +720,7 @@ public class AddNewStation extends Activity {
             tubeDirectionsPlatformsLineList = new ArrayList<Direction>();
             for (RouteLine tubeLine : db.getTubeLinesByStation(strings[0])) {
                 List<Direction> tubeDirectionsAndPlatformList;
-                tubeDirectionsAndPlatformList = new APIInterface().fetchTubeDirectionsAndPlatforms(tubeLine.getID(), strings[0]);
+                tubeDirectionsAndPlatformList = db.getTubeDirections(tubeLine.getID(), strings[0]);
                 System.out.println(tubeDirectionsAndPlatformList.size());
                 for (Direction direction : tubeDirectionsAndPlatformList) {
                     tubeDirectionsPlatformsLineList.add(new Direction(0, direction.getLabel(), tubeLine));

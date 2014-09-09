@@ -22,6 +22,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -576,6 +577,23 @@ public class AddNewRoute extends Activity {
         currentLocation.setLongitude(-0.29280117154);
     }
 
+    /*private void developerTubeDirectionDump() {
+        for (RouteLine routeLine : db.getTubeLinesAlphabetical()) {
+            for (StationStop stationStop : db.getTubeStationsAlphabetical(routeLine.getID())) {
+                TubeDirectionFetcher fetchTubeDirectionsAndPlatforms = new TubeDirectionFetcher();
+                fetchTubeDirectionsAndPlatforms.execute(routeLine.getID(), stationStop.getID());
+                for (Direction direction :  fetchTubeDirectionsAndPlatforms.getTubeDirectionsAndPlatformList()) {
+                    System.out.print(routeLine.getID()+",");
+                    System.out.print(stationStop.getID()+",");
+                    System.out.print(direction.getID()+",");
+                    System.out.print(direction.getLabel()+",");
+                    System.out.println(direction.getLine());
+                }
+
+            }
+        }
+    }*/
+
 
 
 
@@ -586,7 +604,7 @@ public class AddNewRoute extends Activity {
         @Override
         protected synchronized Void doInBackground(String... strings) {
             tubeDirectionsAndPlatformList = null;
-            tubeDirectionsAndPlatformList = (new APIInterface().fetchTubeDirectionsAndPlatforms(strings[0], strings[1]));
+            tubeDirectionsAndPlatformList = db.getTubeDirections(strings[0], strings[1]);
             notify();
             return null;
         }
