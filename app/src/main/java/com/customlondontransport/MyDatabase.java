@@ -327,7 +327,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do  {
-            tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
+            tubeStations.add(new StationStop(c.getString(0), c.getString(1),c.getFloat(2),c.getFloat(3)));
         } while (c.moveToNext());
         return tubeStations;
     }
@@ -352,7 +352,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do  {
-            tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
+            tubeStations.add(new StationStop(c.getString(0), c.getString(1),c.getFloat(2),c.getFloat(3)));
         } while (c.moveToNext());
 
         Collections.sort(tubeStations, new Comparator<StationStop>() {
@@ -413,7 +413,7 @@ public class MyDatabase extends SQLiteAssetHelper {
 
         c.moveToFirst();
         do  {
-            tubeStations.add(new StationStop(c.getString(0), c.getString(1),Float.parseFloat(c.getString(2)),Float.parseFloat(c.getString(3))));
+            tubeStations.add(new StationStop(c.getString(0), c.getString(1),c.getFloat(2),c.getFloat(3)));
         } while (c.moveToNext());
         return tubeStations;
     }
