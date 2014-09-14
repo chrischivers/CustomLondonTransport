@@ -2,8 +2,10 @@ package com.customlondontransport;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +55,11 @@ public class QueryResults extends Activity  {
             }
         });
 
+
+
     }
+
+
 
     public void clearAndRefreshTable() {
 
@@ -90,6 +96,19 @@ public class QueryResults extends Activity  {
             ((TextView) myView.findViewById(R.id.directionQueryResult)).setText(result.getDestination());
             ((TextView) myView.findViewById(R.id.timeQueryResult)).setText(result.getTimeUntilArrivalFormattedString());
             queryResultsLayout.addView(myView);
+        }
+        if (queryResultsLayout.getChildCount() == 1) {
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setMinimumWidth(queryResultsLayout.getWidth());
+            linearLayout.setMinimumHeight(queryResultsLayout.getWidth());
+            linearLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            TextView tv = new TextView(this);
+            tv.setTextSize(20);
+            tv.setTypeface(null, Typeface.ITALIC);
+            tv.setText("None");
+            linearLayout.addView(tv);
+            queryResultsLayout.addView(linearLayout);
+
         }
 
     }

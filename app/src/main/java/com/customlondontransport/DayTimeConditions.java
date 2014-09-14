@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DayTimeConditions implements Serializable {
-    private Date fromTime = new Date();
-    private Date toTime = new Date();
+    private Date fromTime;
+    private Date toTime;
     private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
     private int radiusFromStartingStop  = -1;
 
@@ -93,6 +93,8 @@ public class DayTimeConditions implements Serializable {
                     daysString = daysString + dayArray[i] + ", ";
                 }
             }
+        } else {
+            daysString = "Any Day. ";
         }
         if (fromTime != null && toTime != null) {
             fromTimeTwoDigits = "From: " + dateFormat.format(fromTime);

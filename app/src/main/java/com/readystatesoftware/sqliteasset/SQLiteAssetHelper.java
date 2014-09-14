@@ -73,7 +73,7 @@ public class SQLiteAssetHelper extends SQLiteOpenHelper {
 
     private String mUpgradePathFormat;
 
-    private int mForcedUpgradeVersion = 0;
+    private int mForcedUpgradeVersion = 2;
 
     /**
      * Create a helper object to create, open, and/or manage a database in 

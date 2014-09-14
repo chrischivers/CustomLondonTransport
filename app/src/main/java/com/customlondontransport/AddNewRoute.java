@@ -565,16 +565,10 @@ public class AddNewRoute extends Activity {
             currentLocation = new Location("");
             currentLocation.setLatitude(gps.getLatitude());
             currentLocation.setLongitude(gps.getLongitude());
-
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + currentLocation.getLatitude() + "\nLong: " + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-        } else {
+         } else {
             currentLocation = null;
             gps.showSettingsAlert();
         }
-
-        //For emulator testing GPS being set manually
-        currentLocation.setLatitude(51.465053721837);
-        currentLocation.setLongitude(-0.29280117154);
     }
 
     /*private void developerTubeDirectionDump() {

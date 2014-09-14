@@ -99,6 +99,7 @@ public class APIInterface   {
         List<ResultRowItem> tubeDataList = new ArrayList<ResultRowItem>();
         try {
             URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLine.getID() + "/" + tubeStation.getID());
+            System.out.println(url);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
