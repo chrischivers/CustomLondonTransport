@@ -37,8 +37,8 @@ public class UserRouteItem extends UserItem implements Serializable {
             line2 = "Direction: " + direction;
 
         } else if (this.transportForm.equals("Tube")) {
-            line1 = "Line:" + routeLine + ". From: " + startingStop.toString();
-            line2 = "Platforms: " + direction;
+            line1 = "Line: " + routeLine + ". From: " + startingStop.toString();
+            line2 = "Direction: " + direction;
 
         } else {
             throw new IllegalStateException("Unexpected transport form or null");

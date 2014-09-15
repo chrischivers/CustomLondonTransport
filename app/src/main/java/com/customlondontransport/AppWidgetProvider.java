@@ -2,7 +2,6 @@ package com.customlondontransport;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.utils.ObjectSerializer;
@@ -20,10 +20,10 @@ import java.util.List;
 
 import static com.utils.ObjectSerializer.deserialize;
 
-public class ExampleAppWidgetProvider extends AppWidgetProvider {
+public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     public static String REFRESH = "Refresh";
-    public static String LOADSETTINGS = "Load Settings";
+    public static int refreshInterval = -1;
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
     public static List<UserItem> userValues;
@@ -103,7 +103,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
             restoreListFromPrefs(context);
 
-            watchWidget = new ComponentName(context, ExampleAppWidgetProvider.class);
+            watchWidget = new ComponentName(context, AppWidgetProvider.class);
             rv= new RemoteViews(context.getPackageName(), R.layout.main_widget);
 
             resultRows = new APIInterface().runQueryAndSort(userValues, currentLocation);
@@ -115,6 +115,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
     private RemoteViews updateWidgetQuery(Context context, RemoteViews rv) {
         rv.removeAllViews(R.id.widgetQueryLinearLayout);
+        int numberViewsAdded = 0;
 
         for (ResultRowItem result : resultRows) {
             RemoteViews queryRowRemoteView = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
@@ -135,6 +136,14 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             queryRowRemoteView.setTextViewText(R.id.timeQueryResult, result.getTimeUntilArrivalFormattedString());
 
             rv.addView(R.id.widgetQueryLinearLayout, queryRowRemoteView);
+            numberViewsAdded++;
+        }
+
+        if (numberViewsAdded == 0) {
+            RemoteViews tv = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
+            tv.setTextViewText(R.id.routeLineQueryResult, "None");
+            rv.addView(R.id.widgetQueryLinearLayout, tv);
+
         }
         return rv;
     }
@@ -143,6 +152,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
 
         userValues = new ArrayList<UserItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        refreshInterval = prefs.getInt("pref_widget_refresh_frequency", -1);
 
         try {
             userValues = (ArrayList<UserItem>) deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserItem>())));
@@ -150,6 +160,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             e.printStackTrace();
         }
     }
+
 
 
 }

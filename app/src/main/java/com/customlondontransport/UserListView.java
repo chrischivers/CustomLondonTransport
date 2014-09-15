@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -140,6 +142,10 @@ public class UserListView extends Activity {
             userListView.setAdapter(setUpNewArrayAdapter());
             return true;
         }
+        if (id == R.id.settings_menu_button) {
+            Intent intent = new Intent(getApplicationContext(), Settings.class);
+            startActivityForResult(intent, 1);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -202,6 +208,8 @@ public class UserListView extends Activity {
         editor.apply();
 
     }
+
+
 
 }
 

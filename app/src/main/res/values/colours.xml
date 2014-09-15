@@ -12,5 +12,6 @@
 
     <color name="user_list_item_route">#fff899</color>
     <color name="user_list_item_station">#c4df9b</color>
+    <color name="query_results">#d5d5d5</color>
 
 </resources>

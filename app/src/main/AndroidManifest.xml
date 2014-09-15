@@ -39,7 +39,13 @@
             android:name=".QueryResults"
             android:label="View Query Results"
             />
-        <receiver android:name="ExampleAppWidgetProvider">
+
+        <activity
+            android:name=".Settings"
+            android:label="Settings"
+            />
+
+        <receiver android:name=".AppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Widget Settings"
+        android:key="widget_settings">
+        <ListPreference
+            android:key="pref_widget_refresh_frequency"
+            android:title="Widget Refresh Frequency"
+            android:dialogTitle="How frequently should the widget be automatically refreshed?"
+            android:entries="@array/widget_refresh_array"
+            android:entryValues="@array/widget_refresh_array_values"
+            android:defaultValue="Never"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -8,6 +8,7 @@
     <string name="action_reset_route">Reset</string>
     <string name="action_clear_user_routes">Clear All</string>
     <string name="action_local_mode_toggle">Enable Local Mode</string>
+    <string name="go_to_settings_menu">Settings</string>
 
     <string name="TransportModeLabel">Transport mode</string>
     <string name ="LocalFilterModeLabel">Local Mode</string>
@@ -56,6 +57,25 @@
         <item>2000</item>
         <item>5000</item>
     </string-array>
+
+
+    <string-array name="widget_refresh_array">
+        <item>Never</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>20 minutes</item>
+        <item>30 minutes</item>
+        <item>60 minutes</item>
+    </string-array>
+
+    <int-array name="widget_refresh_array_values">
+        <item>-1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>60</item>
+    </int-array>
 
 
     //Days of the week
