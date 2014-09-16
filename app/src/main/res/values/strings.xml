@@ -68,14 +68,14 @@
         <item>60 minutes</item>
     </string-array>
 
-    <int-array name="widget_refresh_array_values">
+    <string-array name="widget_refresh_array_values">
         <item>-1</item>
         <item>5</item>
         <item>10</item>
         <item>20</item>
         <item>30</item>
         <item>60</item>
-    </int-array>
+    </string-array>
 
 
     //Days of the week

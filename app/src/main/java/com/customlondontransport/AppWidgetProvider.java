@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import com.utils.ObjectSerializer;
@@ -29,7 +28,25 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     public static List<UserItem> userValues;
     private GPSTracker gps;
     private Location currentLocation;
+    public static final String ACTION_AUTO_UPDATE = "AUTO_UPDATE";
 
+    @Override
+    public void onEnabled(Context context)
+    {
+        // start alarm
+        AppWidgetAlarm appWidgetAlarm = new AppWidgetAlarm(context.getApplicationContext());
+        appWidgetAlarm.updateIntervalAndStartAlarm();
+    }
+
+    @Override
+    public void onDisabled(Context context)
+    {
+        // TODO: alarm should be stopped only if all widgets has been disabled
+
+        // stop alarm
+        AppWidgetAlarm appWidgetAlarm = new AppWidgetAlarm(context.getApplicationContext());
+        appWidgetAlarm.stopAlarm();
+    }
 
 
     @Override
@@ -82,9 +99,9 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         super.onReceive(context, intent);
-        if (intent.getAction().equals(REFRESH)) {
+        if(intent.getAction().equals(ACTION_AUTO_UPDATE) || intent.getAction().equals(REFRESH)) {
+            System.out.println("In widget update block");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             gps = new GPSTracker(context);
@@ -152,7 +169,6 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
         userValues = new ArrayList<UserItem>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        refreshInterval = prefs.getInt("pref_widget_refresh_frequency", -1);
 
         try {
             userValues = (ArrayList<UserItem>) deserialize(prefs.getString("User_Route_Values", ObjectSerializer.serialize(new ArrayList<UserItem>())));
