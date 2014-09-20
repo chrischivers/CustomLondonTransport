@@ -9,6 +9,6 @@
             android:dialogTitle="How frequently should the widget be automatically refreshed?"
             android:entries="@array/widget_refresh_array"
             android:entryValues="@array/widget_refresh_array_values"
-            android:defaultValue="Never"/>
+            android:defaultValue="-1"/>
     </PreferenceCategory>
 </PreferenceScreen>

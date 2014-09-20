@@ -1,6 +1,7 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -158,6 +160,21 @@ public class AddNewStation extends Activity {
         // Start fetching lists on a separate thread
         fetchTubeStationsAndBusStopsByNearest = new TubStationsAndBusStopsDatabaseFetcher();
         fetchTubeStationsAndBusStopsByNearest.execute();
+
+        stopCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == 6) {
+                    if (stopCodeEditText.getAdapter().getCount() == 1) {
+                        stationStopSelected = ((StationStop) stopCodeEditText.getAdapter().getItem(0));
+                        imm.hideSoftInputFromWindow(stopCodeEditText.getWindowToken(), 0);
+                        updateLayout();
+                    }
+                }
+                return false;
+            }
+        });
 
         // Restore variables if restoreInProgress
         if (restoreInProgress) {
@@ -505,6 +522,8 @@ public class AddNewStation extends Activity {
                 updateLayout();
             }
         });
+
+
 
         stopCodeEditText.addTextChangedListener(new TextWatcher() {
             @Override

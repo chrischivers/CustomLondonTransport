@@ -27,7 +27,7 @@ public class UserStationItem extends UserItem implements Serializable {
 
         // Format towards string
         String towards = "";
-        if (startingStop.getTowards() != null) {
+        if (this.startingStop.getTowards() != null) {
             if (!startingStop.getTowards().equals("")) {
                 towards = " towards " + startingStop.getTowards() + ".";
             }

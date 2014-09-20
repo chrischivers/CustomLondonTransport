@@ -174,6 +174,8 @@ public class APIInterface   {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
             }
         }
         return tubeDataList;
