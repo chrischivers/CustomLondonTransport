@@ -197,15 +197,18 @@ public class APIInterface   {
             // if condition does not equal null
             if (userItem.getDayTimeConditions() != null) {
                 // if condition contain currents day of the week process this row
-                if (userItem.getDayTimeConditions().getSelectedDays()[currentDayOfTheWeek - 1]) {
-
-                    // if time or date is null (i.e. any time) process the row
-                    if (userItem.getDayTimeConditions().getFromTime() == null || userItem.getDayTimeConditions().getToTime() == null) {
-                        processThisRow = true;
-                        // if current time is within to/from time range
-                    } else if (userItem.getDayTimeConditions().isCurrentTimeWithinRange()) {
-                        processThisRow = true;
+                if (userItem.getDayTimeConditions().getSelectedDays() != null) {
+                    if (userItem.getDayTimeConditions().getSelectedDays()[currentDayOfTheWeek - 1]) {
+                        // if time or date is null (i.e. any time) process the row
+                        if (userItem.getDayTimeConditions().getFromTime() == null || userItem.getDayTimeConditions().getToTime() == null) {
+                            processThisRow = true;
+                            // if current time is within to/from time range
+                        } else if (userItem.getDayTimeConditions().isCurrentTimeWithinRange()) {
+                            processThisRow = true;
+                        }
                     }
+                } else {
+                    processThisRow = true;
                 }
 
 
@@ -218,9 +221,12 @@ public class APIInterface   {
 
                     // Set processThisRow to false if the distance is greater than the given radius
                     if (userItem.getDayTimeConditions().getRadiusFromStartingStop() != -1) {
+                        System.out.println("current location dist to: " + currentLocation.distanceTo(startingStopLocation));
+                        System.out.println("radius: " + userItem.getDayTimeConditions().getRadiusFromStartingStop());
                         if (currentLocation.distanceTo(startingStopLocation) > userItem.getDayTimeConditions().getRadiusFromStartingStop()) {
                             processThisRow = false;
                         }
+
                     }
                 } else {
                     //TODO

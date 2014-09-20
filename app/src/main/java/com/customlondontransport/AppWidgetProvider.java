@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
 import com.utils.ObjectSerializer;
@@ -32,7 +33,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context)
-    {
+    { super.onEnabled(context);
         // start alarm
         AppWidgetAlarm appWidgetAlarm = new AppWidgetAlarm(context.getApplicationContext());
         appWidgetAlarm.updateIntervalAndStartAlarm();
@@ -41,6 +42,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     @Override
     public void onDisabled(Context context)
     {
+        super.onDisabled(context);
         // TODO: alarm should be stopped only if all widgets has been disabled
 
         // stop alarm
@@ -132,10 +134,12 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     private RemoteViews updateWidgetQuery(Context context, RemoteViews rv) {
         rv.removeAllViews(R.id.widgetQueryLinearLayout);
+        rv.setTextViewText(R.id.widgetLastUpdatedText, "Last updated: " + DateFormat.format("dd/MM/yy HH:mm:ss", System.currentTimeMillis()));
         int numberViewsAdded = 0;
 
         for (ResultRowItem result : resultRows) {
             RemoteViews queryRowRemoteView = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
+
 
             String imageName = result.getRouteLine().getID().toLowerCase() + "_line_icon";
 
@@ -176,7 +180,5 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             e.printStackTrace();
         }
     }
-
-
 
 }
