@@ -109,7 +109,7 @@ public class APIInterface   {
 
             while ((inputLine = reader.readLine()) != null) {
 
-                if (inputLine.matches("\\s+<P N=\"" + directionPlatform.getID() + ".*")) {
+                if (inputLine.matches("\\s+<P N=\"" + directionPlatform.getLabel() + ".*")) {
                     try {
                         inputLine = reader.readLine();
                         while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
@@ -129,6 +129,7 @@ public class APIInterface   {
         } catch(IOException ex){
             ex.printStackTrace();
         }
+        System.out.println("Tube data list size: " + tubeDataList.size());
         return tubeDataList;
     }
 
@@ -178,6 +179,7 @@ public class APIInterface   {
                 ex.printStackTrace();
             }
         }
+
         return tubeDataList;
     }
 
