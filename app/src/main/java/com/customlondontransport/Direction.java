@@ -39,8 +39,11 @@ public class Direction implements Serializable{
 
     @Override
     public String toString() {
-
-        return label;
+        if (line == null) {
+            return label;
+        } else {
+            return "("+line+") " + label;
+        }
     }
 
 

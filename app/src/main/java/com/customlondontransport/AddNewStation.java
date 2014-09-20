@@ -161,20 +161,6 @@ public class AddNewStation extends Activity {
         fetchTubeStationsAndBusStopsByNearest = new TubStationsAndBusStopsDatabaseFetcher();
         fetchTubeStationsAndBusStopsByNearest.execute();
 
-        stopCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (actionId == 6) {
-                    if (stopCodeEditText.getAdapter().getCount() == 1) {
-                        stationStopSelected = ((StationStop) stopCodeEditText.getAdapter().getItem(0));
-                        imm.hideSoftInputFromWindow(stopCodeEditText.getWindowToken(), 0);
-                        updateLayout();
-                    }
-                }
-                return false;
-            }
-        });
 
         // Restore variables if restoreInProgress
         if (restoreInProgress) {
@@ -343,7 +329,7 @@ public class AddNewStation extends Activity {
                         column.setMinimumWidth(screenWidth / numberColumns);
                         while (columnCounter < maxRoutesPerColumn && recordNumber < numberTubeDirectionsStations) {
                             final CheckBox cb = new CheckBox(getApplicationContext());
-                            cb.setText("(" + tubeDirectionsStations.get(recordNumber).getLine() + ") " + tubeDirectionsStations.get(recordNumber).getLabel());
+                            cb.setText(tubeDirectionsStations.get(recordNumber).toString());
                             cb.setTextColor(Color.BLACK);
                             cb.setId(recordNumber);
                             cb.setMaxWidth(screenWidth / numberColumns);
@@ -537,6 +523,21 @@ public class AddNewStation extends Activity {
             public void afterTextChanged(Editable s) {}
         });
 
+        stopCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == 6) {
+                    if (stopCodeEditText.getAdapter().getCount() == 1) {
+                        stationStopSelected = ((StationStop) stopCodeEditText.getAdapter().getItem(0));
+                        imm.hideSoftInputFromWindow(stopCodeEditText.getWindowToken(), 0);
+                        updateLayout();
+                    }
+                }
+                return false;
+            }
+        });
+
         conditionsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -572,7 +573,7 @@ public class AddNewStation extends Activity {
 
     //button
     public void addToOrUpdateAndReturnToUserListView(View view) {
-        if (allFieldsValid) {
+        if (allFieldsValid && stationStopSelected != null) {
             UserStationItem userStationItem = null;
             int maxNumberToFetch = maxNumberSpinner.getSelectedItemPosition(); //0 = all
 

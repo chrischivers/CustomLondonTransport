@@ -82,7 +82,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             rv = updateWidgetQuery(context, rv);
 
             // Sets Settings button
-            Intent settingsIntent = new Intent(context, UserListView.class);
+            Intent settingsIntent = new Intent(context, Settings.class);
             settingsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetID);  // Identifies the particular widget...
             settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             // Make the pending intent unique...
