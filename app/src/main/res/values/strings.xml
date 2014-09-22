@@ -24,7 +24,7 @@
     <string name ="stopCodeLabel">Enter Stop/Station Code</string>
     <string name ="stopByLocationLabel">Select from list (nearest first)</string>
 
-    <string name ="RunQueryButton">Get Results</string>
+    <string name ="RunQueryButton">Run Query</string>
     <string name ="AddNewStationButton">Add New Station</string>
     <string name ="AddNewRouteButton">Add New Route</string>
 

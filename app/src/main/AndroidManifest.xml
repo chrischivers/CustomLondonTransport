@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".UserListView"
-            android:label="Custom TFL" >
+            android:label="London Transport Query Builder" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
