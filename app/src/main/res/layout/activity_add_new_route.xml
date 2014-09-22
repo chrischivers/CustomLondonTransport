@@ -56,9 +56,20 @@
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
-                    android:id="@+id/tubeLineSpinner"
+                    android:id="@+id/routeLineSpinner"
                     android:spinnerMode="dropdown"
                     android:gravity="center_vertical|left" />
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:id="@+id/routeBusRouteAutoCompleteText"
+                    android:inputType="textNoSuggestions"
+                    android:dropDownHorizontalOffset="-125dp"
+                    android:ellipsize="end"
+                    android:dropDownWidth="fill_parent"
+                    android:nextFocusUp="@id/routeBusRouteAutoCompleteText"
+                    android:nextFocusLeft="@id/routeBusRouteAutoCompleteText" />
 
                 <Spinner
                     android:layout_width="match_parent"
@@ -100,8 +111,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/RouteLineLabel"
-                    android:id="@+id/routeRouteLineLabel"
+                    android:text="@string/TubeLineLabel"
+                    android:id="@+id/routeLineSpinnerLabel"
+                    android:textSize="@dimen/menuTextSize"
+                    android:gravity="center_vertical|left" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/BusRouteLabel"
+                    android:id="@+id/routeBusRouteAutoTextLabel"
                     android:textSize="@dimen/menuTextSize"
                     android:gravity="center_vertical|left" />
 

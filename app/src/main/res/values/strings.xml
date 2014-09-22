@@ -12,7 +12,8 @@
 
     <string name="TransportModeLabel">Transport mode</string>
     <string name ="LocalFilterModeLabel">Local Mode</string>
-    <string name="RouteLineLabel">Route/Line</string>
+    <string name="TubeLineLabel">Route/Line</string>
+    <string name="BusRouteLabel">Bus Route</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
     <string name="MaxNumberLabel">Maximum Entries</string>
