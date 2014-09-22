@@ -32,7 +32,7 @@
             android:layout_height="55dp"
             android:text="@string/RunQueryButton"
             android:id="@+id/RunQueryButton"
-            android:layout_gravity="left|center_vertical"
+            android:layout_gravity="right|center_vertical"
             android:background="@color/query_results" />
 
         <Button
@@ -40,7 +40,7 @@
             android:layout_height="55dp"
             android:text="@string/AddNewRouteButton"
             android:id="@+id/addNewRouteButton"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="center|center_vertical"
             android:background="@color/user_list_item_route" />
 
         <Button
@@ -48,7 +48,7 @@
             android:layout_height="55dp"
             android:text="@string/AddNewStationButton"
             android:id="@+id/addNewStationButton"
-            android:layout_gravity="center"
+            android:layout_gravity="left|center_vertical"
             android:background="@color/user_list_item_station" />
     </FrameLayout>
 

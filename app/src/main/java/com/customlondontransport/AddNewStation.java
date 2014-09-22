@@ -233,6 +233,7 @@ public class AddNewStation extends Activity {
         }
 
         if (transportModeSelected.equals("Tube")) {
+            stationLabel.setText("Tube station (closest first)");
             // Only load adapter if null
             if (restoreInProgress || switchingMode || tubeStationAdapter == null) {
                 tubeStationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchTubeStationsOrderByNearest());
@@ -269,6 +270,7 @@ public class AddNewStation extends Activity {
             }
 
         } else if (transportModeSelected.equals("Bus")) {
+            stationLabel.setText("Bus stop (closest first)");
           if (restoreInProgress || switchingMode || busStopAdapter == null) {
               busStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchBusStopsOrderByNearest());
               busStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -310,6 +312,7 @@ public class AddNewStation extends Activity {
         if (stationStopSelected != null) {
             if (!stationStopSelected.getID().equals("")) {
                 if (transportModeSelected.equals("Tube")) {
+
                     List<Direction> tubeDirectionsStations;
 
                     // Start fetching Tube Directions and Stations
@@ -369,6 +372,7 @@ public class AddNewStation extends Activity {
                     }
 
                 } else if (transportModeSelected.equals("Bus")) {
+
                     System.out.println("Station Stop Selected: " + stationStopSelected);
                     List<RouteLine> busRoutes;
 

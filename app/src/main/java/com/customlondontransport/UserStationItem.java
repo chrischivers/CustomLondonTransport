@@ -23,7 +23,8 @@ public class UserStationItem extends UserItem implements Serializable {
     public String getItemText1() {
         String line1 = "";
         String line2 = "";
-        int MAX_NUMBER_CHARACTERS_ON_LINE = 40;
+        int MAX_NUMBER_CHARACTERS_ON_LINE1 = 42;
+        int MAX_NUMBER_CHARACTERS_ON_LINE2 = 48;
 
         // Format towards string
         String towards = "";
@@ -48,11 +49,11 @@ public class UserStationItem extends UserItem implements Serializable {
             throw new IllegalStateException("Unexpected transport form or null");
         }
 
-        if (line1.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line1 = line1.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        if (line1.length() > MAX_NUMBER_CHARACTERS_ON_LINE1) {
+            line1 = line1.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE1) + "...";
         }
-        if (line2.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line2 = line2.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        if (line2.length() > MAX_NUMBER_CHARACTERS_ON_LINE2) {
+            line2 = line2.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE2) + "...";
         }
 
         return line1 + "\n" + line2;
@@ -61,7 +62,7 @@ public class UserStationItem extends UserItem implements Serializable {
 
     public String getItemText2() {
         String line3 = "";
-        int MAX_NUMBER_CHARACTERS_ON_LINE = 40;
+        int MAX_NUMBER_CHARACTERS_ON_LINE3 = 50;
 
         if (dayTimeConditions == null) {
             line3 = "No conditions set";
@@ -69,8 +70,8 @@ public class UserStationItem extends UserItem implements Serializable {
             line3 = "Conditions: " + dayTimeConditions;
         }
 
-        if (line3.length() > MAX_NUMBER_CHARACTERS_ON_LINE) {
-            line3 = line3.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE) + "...";
+        if (line3.length() > MAX_NUMBER_CHARACTERS_ON_LINE3) {
+            line3 = line3.substring(0, MAX_NUMBER_CHARACTERS_ON_LINE3) + "...";
         }
         return line3;
     }

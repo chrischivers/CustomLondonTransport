@@ -197,7 +197,8 @@ public class AddNewRoute extends Activity {
         }
 
         if (transportModeSelected.equals("Tube")) {
-
+            routeLineLabel.setText("Tube Line");
+            startingStopLabel.setText("Starting Station");
             // With tube lines there is no local mode difference - always in alphabetical order
             if (restoreInProgress || switchingMode || tubeLineAdapter == null) {
                 tubeLineAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchTubeLinesOrderByAlphabetical());
@@ -217,6 +218,8 @@ public class AddNewRoute extends Activity {
                 }
             }
         } else if (transportModeSelected.equals("Bus")) {
+            routeLineLabel.setText("Bus Route");
+            startingStopLabel.setText("Stating Stop");
             if (restoreInProgress || switchingMode || busRouteAdapter == null) {
                 if (localModeOn) {
                     busRouteAdapter = new ArrayAdapter<RouteLine>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchBusRoutesOrderByNearest());
