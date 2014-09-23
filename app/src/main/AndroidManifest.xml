@@ -22,7 +22,7 @@
 
         <activity
         android:name=".AddNewRoute"
-        android:label="Add New Route"
+        android:label="Add A New Route"
         />
 
         <activity
@@ -32,12 +32,12 @@
 
         <activity
             android:name=".SetDayTimeConditions"
-            android:label="Set Day and Time Conditions"
+            android:label="Set Conditions"
             />
 
         <activity
             android:name=".QueryResults"
-            android:label="View Query Results"
+            android:label="Query Output"
             />
 
         <activity

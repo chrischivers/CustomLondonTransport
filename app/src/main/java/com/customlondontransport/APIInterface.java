@@ -133,12 +133,12 @@ public class APIInterface   {
         return tubeDataList;
     }
 
-    public List<ResultRowItem> fetchTubeStationData(StationStop tubeStation, List directionPlatformLine) {
+    public List<ResultRowItem> fetchTubeStationData(StationStop tubeStation, List directionLine) {
         List<ResultRowItem> tubeDataList = new ArrayList<ResultRowItem>();
         Set<String> tubeLinesSet = new HashSet<String>();
 
         // Add all the lines contained in the directionPlatformLine list into a set
-        for (Object direction : directionPlatformLine) {
+        for (Object direction : directionLine) {
             tubeLinesSet.add(((Direction) direction).getLine().getID());
         }
 
@@ -147,28 +147,33 @@ public class APIInterface   {
             try {
                 URL url = new URL("http://cloud.tfl.gov.uk/TrackerNet/PredictionDetailed/" + tubeLine + "/" + tubeStation.getID());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                System.out.println(url);
 
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
                 String inputLine;
-
-                while ((inputLine = reader.readLine()) != null) {
-                    for (Object direction : directionPlatformLine) {
-                        if (inputLine.matches("\\s+<P N=\"" + ((Direction) direction).getLabel() + ".*")) {
-                            try {
-                                inputLine = reader.readLine();
-                                while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
-
-                                    int destinationIndex = inputLine.indexOf("Destination=\"") + 13;
-                                    int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
-
-                                    tubeDataList.add(new ResultRowItem("Tube", ((Direction) direction).getLine(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), Long.parseLong(inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex)))));
+                for (Object direction : directionLine) {
+                    // Only process if the direction.line is equal to the tubeLine
+                    if (((Direction) direction).getLine().getID().equals(tubeLine)) {
+                        boolean dataFetched = false;
+                        while ((inputLine = reader.readLine()) != null && !dataFetched) {
+                            if (inputLine.matches("\\s+<P N=\"" + ((Direction) direction).getLabel() + ".*")) {
+                                try {
                                     inputLine = reader.readLine();
-                                }
-                            } catch (IndexOutOfBoundsException ex) {
-                                System.out.println("Index out of bounds exception");
+                                    while (!inputLine.contains("</P>") && !inputLine.contains("</S>") && !inputLine.matches("\\s+<P N=.*")) {
 
+                                        int destinationIndex = inputLine.indexOf("Destination=\"") + 13;
+                                        int secondsToIndex = inputLine.indexOf("SecondsTo=\"") + 11;
+
+                                        tubeDataList.add(new ResultRowItem("Tube", ((Direction) direction).getLine(), tubeStation.getLabel(), inputLine.substring(destinationIndex, inputLine.indexOf("\"", destinationIndex)), Long.parseLong(inputLine.substring(secondsToIndex, inputLine.indexOf("\"", secondsToIndex)))));
+                                        inputLine = reader.readLine();
+                                    }
+                                } catch (IndexOutOfBoundsException ex) {
+                                    System.out.println("Index out of bounds exception");
+
+                                }
+                                dataFetched = true;
                             }
                         }
                     }
