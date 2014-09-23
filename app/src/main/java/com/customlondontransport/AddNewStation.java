@@ -341,7 +341,7 @@ public class AddNewStation extends Activity {
 
                             if (restoreInProgress || switchingMode) {
                                 for (Direction direction : dynamicCheckBoxesTubeArray) {
-                                    if (direction.getLabel().equals(tubeDirectionsStations.get(finalRecordNumber).getLabel())) {
+                                    if (direction.getLabel().equals(tubeDirectionsStations.get(finalRecordNumber).getLabel()) && direction.getLine().getID().equals(tubeDirectionsStations.get(finalRecordNumber).getLine().getID())) {
                                         cb.setChecked(true);
                                     }
                                 }
