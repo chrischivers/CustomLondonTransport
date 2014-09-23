@@ -95,7 +95,7 @@ public class AddNewRoute extends Activity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         db = new MyDatabase(this);
 
-        imm = (InputMethodManager)getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 
         // Set LOCAL MODE from prefs
         localModeOn = (prefs.getBoolean("Local_Mode", false));

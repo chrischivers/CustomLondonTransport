@@ -1,15 +1,10 @@
 package com.customlondontransport;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 
-/**
- * Created by chris on 15/09/2014.
- */
+
 public class Settings extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String KEY_PREF_SYNC_CONN = "pref_widget_refresh_frequency";

@@ -23,7 +23,6 @@ import static com.utils.ObjectSerializer.deserialize;
 public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     public static String REFRESH = "Refresh";
-    public static int refreshInterval = -1;
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
     public static List<UserItem> userValues;

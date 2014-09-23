@@ -11,11 +11,6 @@ public class RouteLine implements Serializable{
         this.id = id;
     }
 
-    public RouteLine(String id, String fullName) {
-        this.id = id;
-
-        this.fullName = fullName;
-    }
     public RouteLine(String id, String abrvName, String fullName) {
         this.id = id;
         this.abrvName = abrvName;

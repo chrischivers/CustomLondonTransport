@@ -27,8 +27,8 @@ public class UserRouteItem extends UserItem implements Serializable {
 
     // For UserList View - returns first line
     public String getItemText1() {
-        String line1 = "";
-        String line2 = "";
+        String line1;
+        String line2;
         int MAX_NUMBER_CHARACTERS_ON_LINE1 = 42;
         int MAX_NUMBER_CHARACTERS_ON_LINE2 = 48;
 
@@ -56,7 +56,7 @@ public class UserRouteItem extends UserItem implements Serializable {
     }
 
     public String getItemText2() {
-        String line3 = "";
+        String line3;
         int MAX_NUMBER_CHARACTERS_ON_LINE3 = 50;
 
         if (dayTimeConditions == null) {

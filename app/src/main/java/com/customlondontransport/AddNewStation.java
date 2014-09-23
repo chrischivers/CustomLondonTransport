@@ -1,7 +1,6 @@
 package com.customlondontransport;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -99,7 +98,7 @@ public class AddNewStation extends Activity {
         //Get display dimensions
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         screenWidth = metrics.widthPixels;
-        imm = (InputMethodManager)getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+        imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 
         getGPSLocation();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);

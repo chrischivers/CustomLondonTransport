@@ -108,11 +108,7 @@ public class DayTimeConditions implements Serializable {
 
     public boolean isCurrentTimeWithinRange() {
         Date currentDate = new Date();
-        if (dateFormat.format(currentDate).compareTo(dateFormat.format(this.fromTime)) >= 0 && dateFormat.format(currentDate).compareTo(dateFormat.format(this.toTime)) <= 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return dateFormat.format(currentDate).compareTo(dateFormat.format(this.fromTime)) >= 0 && dateFormat.format(currentDate).compareTo(dateFormat.format(this.toTime)) <= 0;
 
     }
 }

@@ -177,28 +177,6 @@ public class MyDatabase extends SQLiteAssetHelper {
         return busStops;
     }
 
-    public List<StationStop> getAllDistinctBusStopsOrderByAlphabetical() {
-
-        List<StationStop> busStops = new ArrayList<StationStop>();
-
-        SQLiteDatabase db = getReadableDatabase();
-
-        String sqlTable1 = "busStops";
-        String column1ToFetch = "_id";
-        String column2ToFetch= "busStopName";
-        String column3ToFetch = "busStopLetterCode";
-        String column4ToFetch= "longitude";
-        String column5ToFetch= "latitude";
-        String column6ToFetch= "towards";
-
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch +", " +column2ToFetch +  ", " + column3ToFetch +  ", " + column4ToFetch +  ", " + column5ToFetch +  ", " + column6ToFetch + " FROM " + sqlTable1,null);
-
-        c.moveToFirst();
-        do {
-            busStops.add(new StationStop(c.getString(0), c.getString(1), c.getString(2), c.getFloat(3), c.getFloat(4), c.getString(5)));
-        } while (c.moveToNext());
-        return busStops;
-    }
 
 
     public List<RouteLine> getNearestBusRoutes(Location currentLocation) {
@@ -372,27 +350,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         return tubeStations;
     }
 
-    public List<StationStop> getDistinctTubeStationsAlphabetical() {
 
-        List<StationStop> tubeStations = new ArrayList<StationStop>();
-
-        SQLiteDatabase db = getReadableDatabase();
-
-        String sqlTable1 = "tubeStations";
-        String column1ToFetch = "tubeStationID";
-        String column2ToFetch= "tubeStationName";
-
-
-        Cursor c = db.rawQuery("SELECT DISTINCT " + column1ToFetch + ", " + column2ToFetch + " FROM " + sqlTable1 +
-                " ORDER BY " + column2ToFetch +";",null);
-
-
-        c.moveToFirst();
-        do  {
-            tubeStations.add(new StationStop(c.getString(0), c.getString(1)));
-        } while (c.moveToNext());
-        return tubeStations;
-    }
 
     public List<StationStop> getAllTubeStationsByNearest(Location currentLocation) {
 
