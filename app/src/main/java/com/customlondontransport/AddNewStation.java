@@ -508,6 +508,8 @@ public class AddNewStation extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 stationStopSelected = ((StationStop) parent.getItemAtPosition(position));
+                dynamicCheckBoxesTubeArray.clear();
+                dynamicCheckBoxesBusRouteArray.clear();
                 imm.hideSoftInputFromWindow(stopCodeEditText.getWindowToken(), 0);
                 updateLayout();
             }

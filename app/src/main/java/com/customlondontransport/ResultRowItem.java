@@ -39,7 +39,7 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
 
     public String getTimeUntilArrivalFormattedString () {
 
-        String minutesRemaining = Long.toString((this.getTimeUntilArrival()) / 60);
+        /*String minutesRemaining = Long.toString((this.getTimeUntilArrival()) / 60);
         String secondsRemaining = Long.toString((this.getTimeUntilArrival()) % 60);
 
         // this loop adds '0' prefix to single digit seconds
@@ -53,6 +53,13 @@ public class ResultRowItem implements Comparable<ResultRowItem> {
         }
 
         return minutesRemaining + ":" + secondsRemaining;
+        */
+        int minutesRounded = Math.round((float)this.getTimeUntilArrival()/60);
+        if (minutesRounded == 0) {
+            return "due";
+        } else {
+            return minutesRounded + " min";
+        }
     }
 
     public ResultRowItem(String transportMode, RouteLine routeLine, String stopStationName, String destination, Long timeUntilArrival) {
