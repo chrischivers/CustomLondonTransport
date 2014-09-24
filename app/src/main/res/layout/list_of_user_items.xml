@@ -4,7 +4,8 @@
     android:layout_height="match_parent" >
 
 
-    <TableRow android:layout_width="wrap_content">
+    <TableRow android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -32,7 +33,7 @@
             <TextView
                 android:id="@+id/txt2"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="18dp"
                 android:textStyle="italic" />
         </LinearLayout>
 

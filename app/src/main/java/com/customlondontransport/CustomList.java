@@ -14,7 +14,7 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
     private Activity context;
     private final List<UserItem> itemList;
     public CustomList(Activity context, List<UserItem> itemList) {
-        super(context, R.layout.list_of_user_routes, itemList);
+        super(context, R.layout.list_of_user_items, itemList);
         this.context = context;
         this.itemList = itemList;
     }
@@ -25,7 +25,7 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
 
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.list_of_user_routes, parent, false);
+            rowView = inflater.inflate(R.layout.list_of_user_items, parent, false);
 
             holder = new ViewHolder();
             holder.itemText1 = (TextView) rowView.findViewById(R.id.txt1);

@@ -6,6 +6,16 @@
     android:layout_height="fill_parent"
     tools:context=".SetParameters">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"
+        android:layout_alignParentBottom="true" />
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,8 +24,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="false"
         android:stackFromBottom="false"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/frameLayout" />
+        android:layout_above="@+id/frameLayout"
+        android:layout_alignParentTop="true" />
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -24,8 +34,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/frameLayout"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_margin="10dp">
 
         <Button
             android:layout_width="120dp"

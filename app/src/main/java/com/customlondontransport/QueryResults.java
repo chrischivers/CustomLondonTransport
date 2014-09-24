@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -34,8 +33,6 @@ public class QueryResults extends Activity  {
             currentLocation = new Location("");
             currentLocation.setLatitude(gps.getLatitude());
             currentLocation.setLongitude(gps.getLongitude());
-
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + currentLocation.getLatitude() + "\nLong: " + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
         } else {
             currentLocation = null;
             gps.showSettingsAlert();
