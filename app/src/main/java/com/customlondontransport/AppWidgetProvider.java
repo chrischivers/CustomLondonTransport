@@ -33,8 +33,8 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     public static final String REFRESH = "REFRESH";
     public static boolean backgroundColourUpdateRequired = false;
     public static boolean textColourUpdateRequired = false;
-    private int backgroundColourResourceID = R.color.transparent;
-    private int textColourResourceID = R.color.lightgrey;
+    private static int backgroundColourResourceID = R.color.transparent;
+    private static int textColourResourceID = R.color.lightgrey;
 
     @Override
     public void onEnabled(Context context)
@@ -211,13 +211,11 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     private String getWidgetBackgroundColour(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String backgroundColour = prefs.getString("pref_widget_background_colour","transparent");
-        return backgroundColour;
+        return prefs.getString("pref_widget_background_colour","transparent");
     }
     private String getWidgetTextColour(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String textColour = prefs.getString("pref_widget_text_colour","lightgrey");
-        return textColour;
+        return prefs.getString("pref_widget_text_colour","lightgrey");
     }
 
 
