@@ -22,13 +22,19 @@ import static com.utils.ObjectSerializer.deserialize;
 
 public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
-    public static String REFRESH = "Refresh";
+
 
     private List<ResultRowItem> resultRows = new ArrayList<ResultRowItem>();
     public static List<UserItem> userValues;
     private GPSTracker gps;
+    RemoteViews rv;
     private Location currentLocation;
     public static final String ACTION_AUTO_UPDATE = "AUTO_UPDATE";
+    public static final String REFRESH = "REFRESH";
+    public static boolean backgroundColourUpdateRequired = false;
+    public static boolean textColourUpdateRequired = false;
+    private int backgroundColourResourceID = R.color.transparent;
+    private int textColourResourceID = R.color.lightgrey;
 
     @Override
     public void onEnabled(Context context)
@@ -36,6 +42,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         // start alarm
         AppWidgetAlarm appWidgetAlarm = new AppWidgetAlarm(context.getApplicationContext());
         appWidgetAlarm.updateIntervalAndStartAlarm();
+
     }
 
     @Override
@@ -56,6 +63,11 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
         gps = new GPSTracker(context);
 
+        //Set colours according to preferences if they exist
+        backgroundColourResourceID = context.getResources().getIdentifier(getWidgetBackgroundColour(context), "color", context.getPackageName());
+        textColourResourceID = context.getResources().getIdentifier(getWidgetTextColour(context), "color", context.getPackageName());
+
+
         if(gps.canGetLocation()){
             currentLocation = new Location("");
             currentLocation.setLatitude(gps.getLatitude());
@@ -64,8 +76,6 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             currentLocation = null;
             gps.showSettingsAlert();
         }
-
-        RemoteViews rv;
 
         restoreListFromPrefs(context);
 
@@ -77,6 +87,11 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
             rv = new RemoteViews(context.getPackageName(), R.layout.main_widget);
+
+            if (backgroundColourUpdateRequired) {
+                rv.setInt(R.id.widget_main_relative_layout, "setBackgroundResource", backgroundColourResourceID); // Sets Background Colour
+                backgroundColourUpdateRequired = false;
+            }
 
             rv.setOnClickPendingIntent(R.id.widgetQueryRelativeLayout, pendingIntent);
 
@@ -101,6 +116,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+
         if(intent.getAction().equals(ACTION_AUTO_UPDATE) || intent.getAction().equals(REFRESH)) {
             System.out.println("In widget update block");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -117,7 +133,6 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             }
 
             ComponentName watchWidget;
-            RemoteViews rv;
 
             restoreListFromPrefs(context);
 
@@ -134,6 +149,13 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
     private RemoteViews updateWidgetQuery(Context context, RemoteViews rv) {
         rv.removeAllViews(R.id.widgetQueryLinearLayout);
         rv.setTextViewText(R.id.widgetLastUpdatedText, "Last updated: " + DateFormat.format("dd/MM/yy HH:mm:ss", System.currentTimeMillis()));
+        if (textColourUpdateRequired) {
+            rv.setTextColor(R.id.widgetRouteHeader, context.getResources().getColor(textColourResourceID));
+            rv.setTextColor(R.id.widgetStartingStopHeader, context.getResources().getColor(textColourResourceID));
+            rv.setTextColor(R.id.widgetDestinationHeader, context.getResources().getColor(textColourResourceID));
+            rv.setTextColor(R.id.widgetTimeHeader, context.getResources().getColor(textColourResourceID));
+            rv.setTextColor(R.id.widgetLastUpdatedText, context.getResources().getColor(textColourResourceID));
+        }
         int numberViewsAdded = 0;
 
         for (ResultRowItem result : resultRows) {
@@ -154,6 +176,13 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             queryRowRemoteView.setTextViewText(R.id.startingStopQueryResult, result.getStopStationName());
             queryRowRemoteView.setTextViewText(R.id.directionQueryResult, result.getDestination());
             queryRowRemoteView.setTextViewText(R.id.timeQueryResult, result.getTimeUntilArrivalFormattedString());
+
+            if (textColourUpdateRequired) {
+                queryRowRemoteView.setTextColor(R.id.routeLineQueryResult, context.getResources().getColor(textColourResourceID));
+                queryRowRemoteView.setTextColor(R.id.startingStopQueryResult, context.getResources().getColor(textColourResourceID));
+                queryRowRemoteView.setTextColor(R.id.directionQueryResult, context.getResources().getColor(textColourResourceID));
+                queryRowRemoteView.setTextColor(R.id.timeQueryResult, context.getResources().getColor(textColourResourceID));
+            }
 
             rv.addView(R.id.widgetQueryLinearLayout, queryRowRemoteView);
             numberViewsAdded++;
@@ -179,5 +208,17 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             e.printStackTrace();
         }
     }
+
+    private String getWidgetBackgroundColour(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String backgroundColour = prefs.getString("pref_widget_background_colour","transparent");
+        return backgroundColour;
+    }
+    private String getWidgetTextColour(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String textColour = prefs.getString("pref_widget_text_colour","lightgrey");
+        return textColour;
+    }
+
 
 }

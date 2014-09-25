@@ -4,14 +4,21 @@
     <color name="translucent_orange">#80FF8800</color>
     <color name="text_color">#0099CC</color>
     <color name="background_color">#F0FF00</color>
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
-
     <color name="text_shadow_black">#000000</color>
     <color name="text_shadow_white">#FFFFFF</color>
-
     <color name="user_list_item_route">#fff899</color>
     <color name="user_list_item_station">#c4df9b</color>
     <color name="query_results">#d5d5d5</color>
-
+    <color name = "transparent">#00000000 </color>
+    <color name = "black">#000000 </color>
+    <color name = "white">#ffffff </color>
+    <color name = "darkgrey">#363636 </color>
+    <color name = "lightgrey">#b7b7b7 </color>
+    <color name = "yellow">#ffff00 </color>
+    <color name = "orange">#f7941d</color>
+    <color name = "darkgreen">#005826 </color>
+    <color name = "lightgreen">#8dc63f </color>
+    <color name = "darkblue">#0d004c </color>
+    <color name = "lightblue">#00aeef </color>
+    <color name = "red">#ff0000 </color>
 </resources>

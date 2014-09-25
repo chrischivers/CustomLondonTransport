@@ -1,5 +1,8 @@
 package com.customlondontransport;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -7,7 +10,6 @@ import android.preference.PreferenceActivity;
 
 public class Settings extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
-    public static final String KEY_PREF_SYNC_CONN = "pref_widget_refresh_frequency";
 
 
     @Override
@@ -36,10 +38,25 @@ public class Settings extends PreferenceActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         System.out.println("In preference change block1");
-        if (key.equals(KEY_PREF_SYNC_CONN)) {
-            System.out.println("In preference change block2");
+        if (key.equals("pref_widget_refresh_frequency")) {
             new AppWidgetAlarm(getApplicationContext()).updateIntervalAndStartAlarm();
         }
+        if (key.equals("pref_widget_background_colour")) {
+            AppWidgetProvider.backgroundColourUpdateRequired = true;
+            updateWidget();
+        }
+        if (key.equals("pref_widget_text_colour")) {
+            AppWidgetProvider.textColourUpdateRequired = true;
+            updateWidget();
+        }
+    }
+
+    private void updateWidget() {
+        Intent intent = new Intent(this, AppWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), AppWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        sendBroadcast(intent);
     }
 
 

@@ -5,7 +5,8 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
     android:clickable="true"
-    android:gravity="top">
+    android:gravity="top"
+    android:id="@+id/widget_main_relative_layout">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -26,7 +27,7 @@
             android:id="@+id/linearLayout4">
 
             <TextView
-                android:id="@+id/routeHeader"
+                android:id="@+id/widgetRouteHeader"
                 android:text="Route"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="60dp"
@@ -35,7 +36,7 @@
                 android:lines="1" />
 
             <TextView
-                android:id="@+id/startingStopHeader"
+                android:id="@+id/widgetStartingStopHeader"
                 android:text="Starting"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
@@ -44,7 +45,7 @@
                 android:layout_width="115dp"/>
 
             <TextView
-                android:id="@+id/destinationHeader"
+                android:id="@+id/widgetDestinationHeader"
                 android:text="Destination"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
@@ -53,7 +54,7 @@
                 android:layout_width="110dp"/>
 
             <TextView
-                android:id="@+id/timeHeader"
+                android:id="@+id/widgetTimeHeader"
                 android:text="Time"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="47dp"

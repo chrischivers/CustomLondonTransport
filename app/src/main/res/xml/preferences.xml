@@ -10,5 +10,20 @@
             android:entries="@array/widget_refresh_array"
             android:entryValues="@array/widget_refresh_array_values"
             android:defaultValue="-1"/>
+        <ListPreference
+            android:key="pref_widget_background_colour"
+            android:title="Widget Background Colour"
+            android:dialogTitle="Choose widget background colour"
+            android:entries="@array/widget_colour_array"
+            android:entryValues="@array/widget_colour_array_values"
+            android:defaultValue="transparent"/>
+        <ListPreference
+            android:key="pref_widget_text_colour"
+            android:title="Widget Text Colour"
+            android:dialogTitle="Choose widget text colour"
+            android:entries="@array/widget_colour_array"
+            android:entryValues="@array/widget_colour_array_values"
+            android:defaultValue="lightgrey"/>
     </PreferenceCategory>
+
 </PreferenceScreen>
