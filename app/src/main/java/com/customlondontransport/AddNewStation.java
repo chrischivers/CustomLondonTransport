@@ -122,9 +122,9 @@ public class AddNewStation extends Activity {
         // Set button text
         Button addToOrUpdateUserListButton = (Button) findViewById(R.id.stationAddToOrUpdateUserListButton);
         if (!inEditMode) {
-            addToOrUpdateUserListButton.setText("Add");
+            addToOrUpdateUserListButton.setText(R.string.AddButtonLabel);
         } else {
-            addToOrUpdateUserListButton.setText("Update");
+            addToOrUpdateUserListButton.setText(R.string.UpdateButtonLabel);
         }
 
 
@@ -154,6 +154,7 @@ public class AddNewStation extends Activity {
         transportModeSpinner.setAdapter(transportModeAdapter);
         transportModeSpinner.setSelection(0, false);
         ArrayAdapter<CharSequence> maxNumberAdapter = ArrayAdapter.createFromResource(this, R.array.max_number_array, android.R.layout.simple_spinner_item);
+        maxNumberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         maxNumberSpinner.setAdapter(maxNumberAdapter);
 
         // Start fetching lists on a separate thread
@@ -210,7 +211,6 @@ public class AddNewStation extends Activity {
 
 
     public void updateLayout() {
-        System.out.println("Update layout called");
 
         linearLayoutLeft1.removeAllViewsInLayout();
         linearLayoutRight1.removeAllViewsInLayout();
@@ -232,7 +232,7 @@ public class AddNewStation extends Activity {
         }
 
         if (transportModeSelected.equals("Tube")) {
-            stationLabel.setText("Tube station (closest first)");
+            stationLabel.setText(R.string.SelectTubeStationClosestFirst);
             // Only load adapter if null
             if (restoreInProgress || switchingMode || tubeStationAdapter == null) {
                 tubeStationAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchTubeStationsOrderByNearest());
@@ -253,11 +253,10 @@ public class AddNewStation extends Activity {
                     }
                 }
             } else {
-                System.out.println("Here to add");
                 linearLayoutLeft1.addView(stopCodeLabel);
                 linearLayoutRight1.addView(stopCodeEditText);
                 stopCodeEditText.setAdapter(tubeStationAdapter);
-                stopCodeLabel.setText("Enter tube station name");
+                stopCodeLabel.setText(R.string.EnterTubeStationName);
 
                 if (stationStopSelected != null) {
                     StationStop temporaryStationStop = stationStopSelected;
@@ -269,7 +268,7 @@ public class AddNewStation extends Activity {
             }
 
         } else if (transportModeSelected.equals("Bus")) {
-            stationLabel.setText("Bus stop (closest first)");
+            stationLabel.setText(R.string.SelectBusStopClosestFirst);
           if (restoreInProgress || switchingMode || busStopAdapter == null) {
               busStopAdapter = new ArrayAdapter<StationStop>(getBaseContext(), android.R.layout.simple_spinner_item, fetchTubeStationsAndBusStopsByNearest.fetchBusStopsOrderByNearest());
               busStopAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -294,7 +293,7 @@ public class AddNewStation extends Activity {
                 linearLayoutLeft1.addView(stopCodeLabel);
                 linearLayoutRight1.addView(stopCodeEditText);
                 stopCodeEditText.setAdapter(busStopAdapter);
-                stopCodeLabel.setText("Enter bus stop name or code");
+                stopCodeLabel.setText(R.string.EnterBusStopName);
 
                 if (stationStopSelected != null) {
                     StationStop temporaryStationStop = stationStopSelected;
@@ -372,7 +371,6 @@ public class AddNewStation extends Activity {
 
                 } else if (transportModeSelected.equals("Bus")) {
 
-                    System.out.println("Station Stop Selected: " + stationStopSelected);
                     List<RouteLine> busRoutes;
 
                     // Start fetching Bus routes by Stop ID
@@ -423,8 +421,6 @@ public class AddNewStation extends Activity {
                             recordNumber++;
                         }
                         linearLayoutRouteGrid.addView(column);
-
-                        System.out.println("Child count:" + linearLayoutRouteGrid.getChildCount());
 
                     }
 
@@ -483,7 +479,6 @@ public class AddNewStation extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 // Do not fire if the empty record is selected
-                System.out.println("Station Spinner Listener being fired");
                 if (((StationStop) adapterView.getItemAtPosition(i)).getID().equals(""))  {
                     stationStopSelected = null;
                     linearLayoutRouteGrid.removeAllViewsInLayout();
@@ -599,7 +594,7 @@ public class AddNewStation extends Activity {
             setResult(RESULT_OK, null);
             finish();
         } else {
-            Toast.makeText(this, "Please select a valid stop or station from the drop down list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.InvalidRouteSelectedErrorMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -649,10 +644,10 @@ public class AddNewStation extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             dayTimeConditionsSelected = (DayTimeConditions) data.getSerializableExtra("DayTimeConditions");
-            Toast.makeText(this, "Conditions set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.ConditionsSetInform, Toast.LENGTH_SHORT).show();
             conditionsPreviewText.setText(dayTimeConditionsSelected.toString());
         } else {
-            Toast.makeText(this, "No conditions set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.NoConditionsSetInform, Toast.LENGTH_SHORT).show();
             conditionsSwitch.setChecked(false);
             conditionsPreviewText.setText("");
 

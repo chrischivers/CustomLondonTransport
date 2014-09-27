@@ -1,6 +1,8 @@
 package com.customlondontransport;
 
 
+import android.content.Context;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,12 +14,13 @@ public class DayTimeConditions implements Serializable {
     private Date toTime;
     private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
     private int radiusFromStartingStop  = -1;
+    private Context context;
 
     //Sunday to Saturday
     private boolean[] selectedDays = null;
 
     // Constructor for time info and day info
-    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays, int radiusFromStartingStop) throws ParseException {
+    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, boolean[] selectedDays, int radiusFromStartingStop, Context context) throws ParseException {
         String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
         this.fromTime = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
 
@@ -30,14 +33,14 @@ public class DayTimeConditions implements Serializable {
     }
 
     // Constructor if no time info required
-    public DayTimeConditions(boolean[] selectedDays, int radiusFromStartingStop) throws ParseException {
+    public DayTimeConditions(boolean[] selectedDays, int radiusFromStartingStop, Context context) throws ParseException {
         this.selectedDays = new boolean[7];
         this.selectedDays = selectedDays;
         this.radiusFromStartingStop = radiusFromStartingStop;
     }
 
     // Constructor if no day info required
-    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, int radiusFromStartingStop) throws ParseException {
+    public DayTimeConditions(int fromTimeHour, int fromTimeMinutes, int toTimeHour, int toTimeMinutes, int radiusFromStartingStop, Context context) throws ParseException {
         String fromTimeFormatted = ((fromTimeHour < 10) ? "0" + fromTimeHour : Integer.toString(fromTimeHour)) + ":" + ((fromTimeMinutes < 10) ? "0" + fromTimeMinutes : Integer.toString(fromTimeMinutes));
         this.fromTime = new SimpleDateFormat("HH:mm").parse(fromTimeFormatted);
 
@@ -48,7 +51,7 @@ public class DayTimeConditions implements Serializable {
     }
 
     // Constructor if no time or day info required
-    public DayTimeConditions(int radiusFromStartingStop) {
+    public DayTimeConditions(int radiusFromStartingStop, Context context) {
         this.radiusFromStartingStop = radiusFromStartingStop;
     }
 
@@ -82,7 +85,7 @@ public class DayTimeConditions implements Serializable {
     @Override
     public String toString() {
         String daysString = "";
-        String fromTimeTwoDigits = "Any time";
+        String fromTimeTwoDigits = context.getString(R.string.conditions_AnyTime) + ". ";
         String toTimeTwoDigits = "";
         String radiusString = "";
 
@@ -94,14 +97,14 @@ public class DayTimeConditions implements Serializable {
                 }
             }
         } else {
-            daysString = "Any Day. ";
+            daysString = context.getString(R.string.conditions_AnyDay) + ". ";
         }
         if (fromTime != null && toTime != null) {
-            fromTimeTwoDigits = "From: " + dateFormat.format(fromTime);
-            toTimeTwoDigits = " To: " + dateFormat.format(toTime);
+            fromTimeTwoDigits = context.getString(R.string.conditions_From) + ": " + dateFormat.format(fromTime);
+            toTimeTwoDigits = context.getString(R.string.conditions_To) + ": " + dateFormat.format(toTime);
         }
         if (radiusFromStartingStop != -1 ) {
-            radiusString = radiusFromStartingStop + " metres from starting stop";
+            radiusString = radiusFromStartingStop + " " + context.getString(R.string.conditions_metresFromStartingStationStop);
         }
         return daysString + fromTimeTwoDigits + toTimeTwoDigits + "\n" + radiusString;
     }

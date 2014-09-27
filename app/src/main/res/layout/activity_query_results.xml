@@ -18,7 +18,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refresh"
+            android:text="@string/query_refreshButton"
             android:id="@+id/refreshQueryButton"
             android:layout_gravity="center"
             android:layout_column="2" />
@@ -44,7 +44,7 @@
 
                 <TextView
                     android:id="@+id/routeHeader"
-                    android:text="Route"
+                    android:text="@string/query_route"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
 
                 <TextView
                     android:id="@+id/startingStopHeader"
-                    android:text="Starting"
+                    android:text="@string/query_starting"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:layout_height="wrap_content"
 
@@ -67,7 +67,7 @@
 
                 <TextView
                     android:id="@+id/destinationHeader"
-                    android:text="Destination"
+                    android:text="@string/query_destination"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -78,7 +78,7 @@
 
                 <TextView
                     android:id="@+id/timeHeader"
-                    android:text="Time"
+                    android:text="@string/query_time"
                     android:textAppearance="@android:style/TextAppearance.Small"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"

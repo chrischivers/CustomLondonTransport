@@ -1,6 +1,7 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -32,6 +33,8 @@ public class SetDayTimeConditions  extends Activity{
     private DayTimeConditions dtc;
     private boolean[] selectedDays = new boolean[7]; //false by default
 
+    private Context context;
+
 
 
 
@@ -39,6 +42,8 @@ public class SetDayTimeConditions  extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conditions);
+
+        context = getApplicationContext();
 
         timePickerTo = (TimePicker) findViewById(R.id.timePickerTo);
         timePickerFrom = (TimePicker) findViewById(R.id.timePickerFrom);
@@ -83,19 +88,24 @@ public class SetDayTimeConditions  extends Activity{
 
                     // Time and Day conditions set
                     if (timeCheckBox.isChecked() && daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), selectedDays, radiusFromStartingStop);
+                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), selectedDays, radiusFromStartingStop, context);
                     }
                     // Time conditions set, Day conditions not set
                     else if (timeCheckBox.isChecked() && !daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), radiusFromStartingStop);
+                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), radiusFromStartingStop, context);
                     }
                     // Days conditions set, Time conditions not set
                     else if (!timeCheckBox.isChecked() && daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(selectedDays, radiusFromStartingStop);
+                        dtc = new DayTimeConditions(selectedDays, radiusFromStartingStop, context);
                     }
-                    // Days condiitons not set, Time conditions not set
+                    // Days conditions not set, Time conditions not set
                     else if (!timeCheckBox.isChecked() && !daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(radiusFromStartingStop);
+                        if (radiusFromStartingStop != -1) {
+                            dtc = new DayTimeConditions(radiusFromStartingStop, context);
+                        } else { //No selection criteria. Treat as cancel
+                            setResult(RESULT_CANCELED, null);
+                            finish();
+                        }
                     }
 
                 } catch (ParseException e) {

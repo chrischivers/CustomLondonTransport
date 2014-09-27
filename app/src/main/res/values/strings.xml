@@ -4,16 +4,23 @@
 
     // Add a new route screen
     <string name="AddANewRouteTitleText">Add a new route</string>
-
-    <string name="TubeLineLabel">Route/Line</string>
-    <string name="BusRouteLabel">Bus Route</string>
     <string name="DirectionLabel">Direction</string>
-    <string name="StartingStopLabel">Starting Stop</string>
+    <string name="StartingStopBusLabel">Starting Stop</string>
+    <string name="StartingStationTubeLabel">Starting Station</string>
+
+    <string name ="SelectBusRouteClosestFirst">Bus route (closest first)</string>
+    <string name ="SelectTubeLine">Tube line</string>
+    <string name="BusRouteLabel">Bus Route</string>
+
 
     // Add a new station screen
     <string name="AddANewStationTitleText">Add a new station</string>
     <string name ="stopCodeLabel">Enter Stop/Station Name</string>
     <string name ="stopByLocationLabel">Select from list (nearest first)</string>
+    <string name ="SelectTubeStationClosestFirst">Tube station (closest first)</string>
+    <string name ="SelectBusStopClosestFirst">Bus stop (closest first)</string>
+    <string name ="EnterTubeStationName">Enter tube station name</string>
+    <string name ="EnterBusStopName">Enter bus stop name</string>
 
 
     // Both 'add' screens
@@ -22,8 +29,12 @@
     <string name="MaxNumberLabel">Maximum Entries</string>
     <string name="ConditionsLabel">Specify Conditions</string>
     <string name="AddButtonLabel">Add</string>
+    <string name="UpdateButtonLabel">Update</string>
     <string name ="ConditionsTitleText">Set Conditions</string>
+    <string name ="ConditionsSetInform">Conditions set</string>
+    <string name ="NoConditionsSetInform">No conditions set</string>
     <string name ="action_local_mode_toggle">Local Mode</string>
+    <string name="InvalidRouteSelectedErrorMessage">Please select a valid stop or station from the drop down list</string>
 
     //User List View screen
     <string name="action_clear_user_routes">Clear All</string>
@@ -32,9 +43,38 @@
     <string name ="AddNewStationButton">Add New Station</string>
     <string name ="AddNewRouteButton">Add New Route</string>
 
+
+    // Conditions
+    <string name ="conditions_AnyTime">Any time</string>
+    <string name ="conditions_AnyDay">Any day</string>
+    <string name ="conditions_Time">Time</string>
+    <string name ="conditions_Days">Days</string>
+    <string name ="conditions_Radius">Radius</string>
+    <string name ="conditions_From">From</string>
+    <string name ="conditions_To">To</string>
+    <string name ="conditions_SelectDay">Select days: </string>
+    <string name ="conditions_RadiusFromStartingStopStation">Radius from starting stop/station</string>
+    <string name ="conditions_metresFromStartingStationStop">metres</string>
+    <string name ="conditions_okButton">Ok</string>
+    <string name ="conditions_cancelButton">Cancel</string>
+
+
     // Query Results Screen
     <string name ="no_results">None</string>
     <string name ="no_connection">No internet connection detected</string>
+    <string name ="query_route">Route</string>
+    <string name ="query_destination">Destination</string>
+    <string name ="query_time">Time</string>
+    <string name ="query_starting">Starting</string>
+    <string name ="query_refreshButton">Refresh</string>
+
+    //Widget
+    <string name ="WidgetLastUpdated">Last updated</string>
+
+    // Menu text
+    <string name ="Delete">Delete</string>
+    <string name ="Edit">Edit</string>
+
 
     // Transport mode choices
     <string-array name="transport_mode_array">
@@ -127,14 +167,7 @@
     <string name ="Saturday">Sat</string>
     <string name ="Sunday">Sun</string>
 
-    // Condition variables
-    //Days of the week
-    <string name ="TimeRange">Time</string>
-    <string name ="Days">Days</string>
-    <string name ="Radius">Radius</string>
 
-    // Menu text
-    <string name ="Delete">Delete</string>
-    <string name ="Edit">Edit</string>
+
 
 </resources>

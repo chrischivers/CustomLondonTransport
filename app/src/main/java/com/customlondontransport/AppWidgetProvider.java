@@ -120,7 +120,6 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         super.onReceive(context, intent);
 
         if(intent.getAction().equals(ACTION_AUTO_UPDATE) || intent.getAction().equals(REFRESH)) {
-            System.out.println("In widget update block");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             gps = new GPSTracker(context);
@@ -150,7 +149,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
     private RemoteViews updateWidgetQuery(Context context, RemoteViews rv) {
         rv.removeAllViews(R.id.widgetQueryLinearLayout);
-        rv.setTextViewText(R.id.widgetLastUpdatedText, "Last updated: " + DateFormat.format("dd/MM/yy HH:mm:ss", System.currentTimeMillis()));
+        rv.setTextViewText(R.id.widgetLastUpdatedText, context.getString(R.string.WidgetLastUpdated) + ": " + DateFormat.format("dd/MM/yy HH:mm:ss", System.currentTimeMillis()));
         if (textColourUpdateRequired) {
             rv.setTextColor(R.id.widgetRouteHeader, context.getResources().getColor(textColourResourceID));
             rv.setTextColor(R.id.widgetStartingStopHeader, context.getResources().getColor(textColourResourceID));

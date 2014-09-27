@@ -99,7 +99,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/stopCodeLabel"
                     android:id="@+id/stationStopCodeLabel"
                     android:textSize="@dimen/menuTextSize"
                     android:gravity="center_vertical|left" />
@@ -108,7 +107,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/stopByLocationLabel"
                     android:id="@+id/stationStationLabel"
                     android:textSize="@dimen/menuTextSize"
                     android:gravity="center_vertical|left" />

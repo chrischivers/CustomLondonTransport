@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/widgetRouteHeader"
-                android:text="Route"
+                android:text="@string/query_route"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/widgetStartingStopHeader"
-                android:text="Starting"
+                android:text="@string/query_starting"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/widgetDestinationHeader"
-                android:text="Destination"
+                android:text="@string/query_destination"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/widgetTimeHeader"
-                android:text="Time"
+                android:text="@string/query_time"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:layout_width="47dp"
                 android:layout_height="wrap_content"

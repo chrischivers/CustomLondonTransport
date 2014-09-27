@@ -49,7 +49,10 @@ public class APIInterface   {
 
         } catch(IOException ex){
             ex.printStackTrace();
-        } catch(ArrayIndexOutOfBoundsException ex){
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        catch(ArrayIndexOutOfBoundsException ex){
             //TODO error handlers
             ex.printStackTrace();
         }
@@ -87,7 +90,10 @@ public class APIInterface   {
 
         } catch(IOException ex){
             ex.printStackTrace();
-        } catch(ArrayIndexOutOfBoundsException ex){
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        catch(ArrayIndexOutOfBoundsException ex){
             //TODO error handlers
             ex.printStackTrace();
         }
@@ -127,6 +133,8 @@ public class APIInterface   {
                 }
             }
         } catch(IOException ex){
+            ex.printStackTrace();
+        } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
         System.out.println("Tube data list size: " + tubeDataList.size());
@@ -364,9 +372,3 @@ public class APIInterface   {
     }
 
 }
-
-
-
-
-
-
