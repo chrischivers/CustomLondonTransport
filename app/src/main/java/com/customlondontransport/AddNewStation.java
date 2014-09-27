@@ -79,7 +79,7 @@ public class AddNewStation extends Activity {
 
     private boolean allFieldsValid;
 
-    TubStationsAndBusStopsDatabaseFetcher fetchTubeStationsAndBusStopsByNearest;
+    private TubStationsAndBusStopsDatabaseFetcher fetchTubeStationsAndBusStopsByNearest;
 
     private Location currentLocation;
     private MyDatabase db;

@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="AddANewRouteTitleText">Add a new route</string>
-    <string name="AddANewStationTitleText">Add a new station</string>
-
     <string name="app_name">Custom London Transport</string>
-    <string name="action_reset_route">Reset</string>
-    <string name="action_clear_user_routes">Clear All</string>
-    <string name="action_local_mode_toggle">Enable Local Mode</string>
-    <string name="go_to_settings_menu">Settings</string>
 
-    <string name="TransportModeLabel">Transport mode</string>
-    <string name ="LocalFilterModeLabel">Local Mode</string>
+    // Add a new route screen
+    <string name="AddANewRouteTitleText">Add a new route</string>
+
     <string name="TubeLineLabel">Route/Line</string>
     <string name="BusRouteLabel">Bus Route</string>
     <string name="DirectionLabel">Direction</string>
     <string name="StartingStopLabel">Starting Stop</string>
+
+    // Add a new station screen
+    <string name="AddANewStationTitleText">Add a new station</string>
+    <string name ="stopCodeLabel">Enter Stop/Station Name</string>
+    <string name ="stopByLocationLabel">Select from list (nearest first)</string>
+
+
+    // Both 'add' screens
+    <string name="action_reset">Reset</string>
+    <string name="TransportModeLabel">Transport mode</string>
     <string name="MaxNumberLabel">Maximum Entries</string>
     <string name="ConditionsLabel">Specify Conditions</string>
     <string name="AddButtonLabel">Add</string>
     <string name ="ConditionsTitleText">Set Conditions</string>
+    <string name ="action_local_mode_toggle">Local Mode</string>
 
-    <string name ="stopCodeLabel">Enter Stop/Station Code</string>
-    <string name ="stopByLocationLabel">Select from list (nearest first)</string>
-
+    //User List View screen
+    <string name="action_clear_user_routes">Clear All</string>
+    <string name="go_to_settings_menu">Settings</string>
     <string name ="RunQueryButton">Run Query</string>
     <string name ="AddNewStationButton">Add New Station</string>
     <string name ="AddNewRouteButton">Add New Route</string>
 
+    // Query Results Screen
+    <string name ="no_results">None</string>
+    <string name ="no_connection">No internet connection detected</string>
 
+    // Transport mode choices
     <string-array name="transport_mode_array">
         <item></item>
         <item>Bus</item>
         <item>Tube</item>
     </string-array>
 
+    //Max number choices
     <string-array name="max_number_array">
         <item>All</item>
         <item>1</item>
@@ -49,7 +58,7 @@
         <item>10</item>
     </string-array>
 
-
+    // Radius choices
     <string-array name="radius_starting_station_array">
         <item>OFF</item>
         <item>100</item>
@@ -59,7 +68,7 @@
         <item>5000</item>
     </string-array>
 
-
+    // Preference Refresh Interval
     <string-array name="widget_refresh_array">
         <item>Manual only</item>
         <item>5 minutes</item>
@@ -78,6 +87,7 @@
         <item>60</item>
     </string-array>
 
+    //Preference Colour Array
     <string-array name="widget_colour_array">
         <item>Transparent</item>
         <item>Black</item>
@@ -123,7 +133,7 @@
     <string name ="Days">Days</string>
     <string name ="Radius">Radius</string>
 
-// Menu text
+    // Menu text
     <string name ="Delete">Delete</string>
     <string name ="Edit">Edit</string>
 

@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,13 +23,21 @@ import java.util.List;
 public class QueryResults extends Activity  {
 
     private LinearLayout queryResultsLayout;
+    private ScrollView queryResultsScrollView;
     private Location currentLocation;
+    private Button refreshQueryButton;
+    private int screenWidth;
+    private int screenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_query_results);
 
+        //Get display dimensions
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        screenWidth = metrics.widthPixels;
+        screenWidth = metrics.heightPixels;
 
         GPSTracker gps = new GPSTracker(QueryResults.this);
 
@@ -39,11 +52,9 @@ public class QueryResults extends Activity  {
         }
 
 
-        Button refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
+        refreshQueryButton = (Button) findViewById(R.id.refreshQueryButton);
         queryResultsLayout = (LinearLayout) findViewById(R.id.queryResultsLayout);
-
-
-        refreshAndPopulate();
+        queryResultsScrollView = (ScrollView) findViewById(R.id.queryResultsScrollView);
 
         refreshQueryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +63,13 @@ public class QueryResults extends Activity  {
             }
         });
 
+        clearAndRefreshTable();
+
 
 
     }
+
+
 
 
 
@@ -72,7 +87,6 @@ public class QueryResults extends Activity  {
 
 
         //Populate table
-
         for (ResultRowItem result : resultRows) {
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -94,20 +108,31 @@ public class QueryResults extends Activity  {
             ((TextView) myView.findViewById(R.id.timeQueryResult)).setText(result.getTimeUntilArrivalFormattedString());
             queryResultsLayout.addView(myView);
         }
+        // If child count is 1, there are no results (the header row is the only child)
         if (queryResultsLayout.getChildCount() == 1) {
             LinearLayout linearLayout = new LinearLayout(this);
-            linearLayout.setMinimumWidth(queryResultsLayout.getWidth());
-            linearLayout.setMinimumHeight(queryResultsLayout.getWidth());
+            linearLayout.setMinimumWidth(screenWidth);
+            linearLayout.setMinimumHeight(screenWidth-200);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             TextView tv = new TextView(this);
             tv.setTextSize(20);
             tv.setTypeface(null, Typeface.ITALIC);
-            tv.setText("None");
+            if (!isNetworkAvailable()) {
+                tv.setText(R.string.no_connection);
+            } else {
+                tv.setText(R.string.no_results);
+            }
             linearLayout.addView(tv);
             queryResultsLayout.addView(linearLayout);
-
         }
 
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 

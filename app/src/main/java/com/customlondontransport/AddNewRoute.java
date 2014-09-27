@@ -77,7 +77,7 @@ public class AddNewRoute extends Activity {
 
     private boolean allFieldsValid;
 
-    TubeLinesAndBusRoutesDatabaseFetcher fetchTubeStationsAndBusStopsByNearest;
+    private TubeLinesAndBusRoutesDatabaseFetcher fetchTubeStationsAndBusStopsByNearest;
 
     private Location currentLocation;
     private MyDatabase db;

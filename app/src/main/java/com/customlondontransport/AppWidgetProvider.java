@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -190,7 +192,11 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
 
         if (numberViewsAdded == 0) {
             RemoteViews tv = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
-            tv.setTextViewText(R.id.routeLineQueryResult, "None");
+            if (!isNetworkAvailable(context)) {
+                tv.setTextViewText(R.id.routeLineQueryResult, context.getResources().getString(R.string.no_connection));
+            } else {
+                tv.setTextViewText(R.id.routeLineQueryResult, context.getResources().getString(R.string.no_results));
+            }
             rv.addView(R.id.widgetQueryLinearLayout, tv);
 
         }
@@ -218,5 +224,11 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         return prefs.getString("pref_widget_text_colour","lightgrey");
     }
 
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 }
