@@ -161,7 +161,7 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
         int numberViewsAdded = 0;
 
         for (ResultRowItem result : resultRows) {
-            RemoteViews queryRowRemoteView = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
+            RemoteViews queryRowRemoteView = new RemoteViews(context.getPackageName(), R.layout.widget_query_view_row);
 
 
             String imageName = result.getRouteLine().getID().toLowerCase() + "_line_icon";
@@ -190,12 +190,13 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             numberViewsAdded++;
         }
 
+        // If no results, display a message
         if (numberViewsAdded == 0) {
-            RemoteViews tv = new RemoteViews(context.getPackageName(), R.layout.query_view_row_widget);
+            RemoteViews tv = new RemoteViews(context.getPackageName(), R.layout.widget_query_view_row_message);
             if (!isNetworkAvailable(context)) {
-                tv.setTextViewText(R.id.routeLineQueryResult, context.getResources().getString(R.string.no_connection));
+                tv.setTextViewText(R.id.widget_query_result_message, context.getResources().getString(R.string.no_connection));
             } else {
-                tv.setTextViewText(R.id.routeLineQueryResult, context.getResources().getString(R.string.no_results));
+                tv.setTextViewText(R.id.widget_query_result_message, context.getResources().getString(R.string.no_results));
             }
             rv.addView(R.id.widgetQueryLinearLayout, tv);
 

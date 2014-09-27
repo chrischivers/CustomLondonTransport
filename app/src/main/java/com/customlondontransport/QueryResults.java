@@ -27,7 +27,6 @@ public class QueryResults extends Activity  {
     private Location currentLocation;
     private Button refreshQueryButton;
     private int screenWidth;
-    private int screenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class QueryResults extends Activity  {
         //Get display dimensions
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         screenWidth = metrics.widthPixels;
-        screenWidth = metrics.heightPixels;
 
         GPSTracker gps = new GPSTracker(QueryResults.this);
 
@@ -112,7 +110,7 @@ public class QueryResults extends Activity  {
         if (queryResultsLayout.getChildCount() == 1) {
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setMinimumWidth(screenWidth);
-            linearLayout.setMinimumHeight(screenWidth-200);
+            linearLayout.setMinimumHeight(screenWidth);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             TextView tv = new TextView(this);
             tv.setTextSize(20);
