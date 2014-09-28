@@ -1,4 +1,4 @@
-package com.customlondontransport;
+package com.londontransportquerybuilder;
 
 import android.location.Location;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.customlondontransport">
+    package="com.londontransportquerybuilder">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -12,7 +12,7 @@
         android:label="London Transport Query Builder"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.customlondontransport.UserListView"
+            android:name="com.londontransportquerybuilder.UserListView"
             android:label="London Transport Query Builder" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,33 +22,33 @@
         </activity>
 
         <activity
-        android:name="com.customlondontransport.AddNewRoute"
+        android:name="com.londontransportquerybuilder.AddNewRoute"
         android:label="Add A New Route"
         />
 
         <activity
-            android:name="com.customlondontransport.AddNewStation"
+            android:name="com.londontransportquerybuilder.AddNewStation"
             android:label="Add A New Station"
             />
 
         <activity
-            android:name="com.customlondontransport.SetDayTimeConditions"
+            android:name="com.londontransportquerybuilder.SetDayTimeConditions"
             android:label="Set Conditions"
             />
 
         <activity
-            android:name="com.customlondontransport.QueryResults"
+            android:name="com.londontransportquerybuilder.QueryResults"
             android:label="Query Output"
             />
 
         <activity
-            android:name="com.customlondontransport.Settings"
+            android:name="com.londontransportquerybuilder.Settings"
             android:label="Settings"
             />
 
 
 
-        <receiver android:name="com.customlondontransport.AppWidgetProvider">
+        <receiver android:name="com.londontransportquerybuilder.AppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
