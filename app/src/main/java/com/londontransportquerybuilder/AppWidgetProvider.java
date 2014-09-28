@@ -103,11 +103,17 @@ public class AppWidgetProvider extends android.appwidget.AppWidgetProvider {
             Intent settingsIntent = new Intent(context, Settings.class);
             settingsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetID);  // Identifies the particular widget...
             settingsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // Make the pending intent unique...
             settingsIntent.setData(Uri.parse(settingsIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent pendIntent = PendingIntent.getActivity(context, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent settingsPendIntent = PendingIntent.getActivity(context, 0, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setOnClickPendingIntent(R.id.settingsImageButton, settingsPendIntent);
 
-            rv.setOnClickPendingIntent(R.id.settingsImageButton, pendIntent);
+            // Sets App button
+            Intent loadAppIntent = new Intent(context, UserListView.class);
+            loadAppIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetID);  // Identifies the particular widget...
+            loadAppIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            loadAppIntent.setData(Uri.parse(settingsIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent loadAppPendIntent = PendingIntent.getActivity(context, 0, loadAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setOnClickPendingIntent(R.id.widgetAppIconButton, loadAppPendIntent);
 
             appWidgetManager.updateAppWidget(appWidgetID,rv);
         }
