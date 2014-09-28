@@ -1,4 +1,4 @@
-package com.londontransportquerybuilder;
+package com.customlondontransport;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -107,7 +107,7 @@ public class AddNewStation extends Activity {
         db = new MyDatabase(this);
 
         // Set LOCAL MODE from prefs
-        localModeOn = (prefs.getBoolean("Local_Mode", false));
+        localModeOn = (prefs.getBoolean("Local_Mode", true));
 
         if (getIntent().hasExtra("Position")) {
             Bundle b = getIntent().getExtras();

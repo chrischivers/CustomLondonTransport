@@ -1,4 +1,4 @@
-package com.londontransportquerybuilder;
+package com.customlondontransport;
 
 import android.content.Context;
 import android.database.Cursor;

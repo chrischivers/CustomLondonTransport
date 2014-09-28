@@ -1,4 +1,4 @@
-package com.londontransportquerybuilder;
+package com.customlondontransport;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

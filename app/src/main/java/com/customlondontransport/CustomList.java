@@ -1,4 +1,4 @@
-package com.londontransportquerybuilder;
+package com.customlondontransport;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -39,8 +39,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
 
 
         if (itemList.get(position) instanceof UserRouteItem) {
-            holder.itemText1.setText(((com.londontransportquerybuilder.UserRouteItem) itemList.get(position)).getItemText1());
-            holder.itemText2.setText(((com.londontransportquerybuilder.UserRouteItem) itemList.get(position)).getItemText2());
+            holder.itemText1.setText(((com.customlondontransport.UserRouteItem) itemList.get(position)).getItemText1());
+            holder.itemText2.setText(((com.customlondontransport.UserRouteItem) itemList.get(position)).getItemText2());
             rowView.setBackgroundColor(context.getResources().getColor(R.color.user_list_item_route));
             if (((UserRouteItem) itemList.get(position)).getTransportForm().equals("Bus")) {
                 holder.transportIcon.setImageResource(R.drawable.bus_icon);
@@ -48,8 +48,8 @@ public class CustomList<UserItem> extends ArrayAdapter<UserItem>{
                 holder.transportIcon.setImageResource(R.drawable.underground_logo);
             }
         } else if (itemList.get(position) instanceof UserStationItem) {
-            holder.itemText1.setText(((com.londontransportquerybuilder.UserStationItem) itemList.get(position)).getItemText1());
-            holder.itemText2.setText(((com.londontransportquerybuilder.UserStationItem) itemList.get(position)).getItemText2());
+            holder.itemText1.setText(((com.customlondontransport.UserStationItem) itemList.get(position)).getItemText1());
+            holder.itemText2.setText(((com.customlondontransport.UserStationItem) itemList.get(position)).getItemText2());
             rowView.setBackgroundColor(context.getResources().getColor(R.color.user_list_item_station));
             if (((UserStationItem) itemList.get(position)).getTransportForm().equals("Bus")) {
                 holder.transportIcon.setImageResource(R.drawable.bus_icon);

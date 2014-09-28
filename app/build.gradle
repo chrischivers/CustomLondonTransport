@@ -5,11 +5,11 @@ android {
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "com.customlondontransport"
+        applicationId "com.londontransportquerybuilder"
         minSdkVersion 15
         targetSdkVersion 20
-        versionCode 2
-        versionName "1.01"
+        versionCode 3
+        versionName "1.02"
     }
     buildTypes {
         release {

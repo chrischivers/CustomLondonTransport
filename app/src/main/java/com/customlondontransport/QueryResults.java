@@ -1,4 +1,4 @@
-package com.londontransportquerybuilder;
+package com.customlondontransport;
 
 import android.app.Activity;
 import android.content.Context;
@@ -65,9 +65,6 @@ public class QueryResults extends Activity  {
 
 
     }
-
-
-
 
 
     public void clearAndRefreshTable() {
