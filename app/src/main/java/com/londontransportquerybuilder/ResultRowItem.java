@@ -1,4 +1,4 @@
-package com.customlondontransport;
+package com.londontransportquerybuilder;
 
 public class ResultRowItem implements Comparable<ResultRowItem> {
 

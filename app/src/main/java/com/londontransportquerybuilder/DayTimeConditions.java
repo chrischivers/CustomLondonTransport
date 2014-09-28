@@ -1,7 +1,5 @@
-package com.customlondontransport;
+package com.londontransportquerybuilder;
 
-
-import android.content.Context;
 
 import java.io.Serializable;
 import java.text.DateFormat;

@@ -1,7 +1,6 @@
-package com.customlondontransport;
+package com.londontransportquerybuilder;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
