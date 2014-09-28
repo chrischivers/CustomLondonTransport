@@ -2,12 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SetParameters" >
     <item android:id="@+id/settings_menu_button"
-        android:title="@string/go_to_settings_menu"
+        android:title="@string/action_settings_menu"
         android:orderInCategory="100"
         android:showAsAction="never" />
 
     <item android:id="@+id/clear_user_routes"
         android:title="@string/action_clear_user_routes"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/about_dialog"
+        android:title="@string/action_about"
         android:orderInCategory="100"
         android:showAsAction="never" />
 

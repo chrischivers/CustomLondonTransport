@@ -39,7 +39,8 @@
 
     //User List View screen
     <string name="action_clear_user_routes">Clear All</string>
-    <string name="go_to_settings_menu">Settings</string>
+    <string name="action_settings_menu">Settings</string>
+    <string name="action_about">About</string>
     <string name ="RunQueryButton">Run Query</string>
     <string name ="AddNewStationButton">Add New Station</string>
     <string name ="AddNewRouteButton">Add New Route</string>

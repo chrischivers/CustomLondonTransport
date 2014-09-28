@@ -1,6 +1,7 @@
 package com.customlondontransport;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -144,6 +145,12 @@ public class UserListView extends Activity {
             Intent intent = new Intent(getApplicationContext(), Settings.class);
             startActivityForResult(intent, 1);
         }
+        if (id == R.id.about_dialog) {
+            AboutDialog dialog = new AboutDialog(this);
+            dialog.show();
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

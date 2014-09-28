@@ -46,6 +46,8 @@
             android:label="Settings"
             />
 
+
+
         <receiver android:name=".AppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
