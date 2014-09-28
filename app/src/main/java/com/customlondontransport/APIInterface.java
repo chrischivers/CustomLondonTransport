@@ -235,7 +235,7 @@ public class APIInterface   {
                     startingStopLocation.setLatitude(userItem.getStartingStop().getLatitudeCoordinate());
 
                     // Set processThisRow to false if the distance is greater than the given radius
-                    if (userItem.getDayTimeConditions().getRadiusFromStartingStop() != -1) {
+                    if (userItem.getDayTimeConditions().getRadiusFromStartingStop() != null) {
                         System.out.println("current location dist to: " + currentLocation.distanceTo(startingStopLocation));
                         System.out.println("radius: " + userItem.getDayTimeConditions().getRadiusFromStartingStop());
                         if (currentLocation.distanceTo(startingStopLocation) > userItem.getDayTimeConditions().getRadiusFromStartingStop()) {

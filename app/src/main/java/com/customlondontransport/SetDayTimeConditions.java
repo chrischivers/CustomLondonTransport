@@ -33,8 +33,6 @@ public class SetDayTimeConditions  extends Activity{
     private DayTimeConditions dtc;
     private boolean[] selectedDays = new boolean[7]; //false by default
 
-    private Context context;
-
 
 
 
@@ -42,8 +40,6 @@ public class SetDayTimeConditions  extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conditions);
-
-        context = getApplicationContext();
 
         timePickerTo = (TimePicker) findViewById(R.id.timePickerTo);
         timePickerFrom = (TimePicker) findViewById(R.id.timePickerFrom);
@@ -62,8 +58,6 @@ public class SetDayTimeConditions  extends Activity{
 
 
 
-
-
         Button cancelButton = (Button) findViewById(R.id.CancelConditionPopupButton);
         Button OKButton = (Button) findViewById(R.id.OkConditionPopupButton);
 
@@ -79,33 +73,36 @@ public class SetDayTimeConditions  extends Activity{
             @Override
             public void onClick(View view) {
                 try {
-                    int radiusFromStartingStop = -1; // -1 if none selected
-                    if (radiusCheckBox.isChecked()) {
-                        if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("OFF")) {
-                            radiusFromStartingStop = Integer.parseInt(radiusStartingStopSpinner.getSelectedItem().toString());
-                        }
-                    }
+                    //No selection criteria. Treat as cancel
+                    if (!radiusCheckBox.isChecked() && !timeCheckBox.isChecked() && !daysCheckBox.isChecked()) {
+                        setResult(RESULT_CANCELED, null);
+                        finish();
+                    } else {
+                        Integer radiusFromStartingStop = null; // -1 if none selected
+                        Integer fromTimeHour = null;
+                        Integer fromTimeMinute = null;
+                        Integer toTimeHour = null;
+                        Integer toTimeMinute = null;
 
-                    // Time and Day conditions set
-                    if (timeCheckBox.isChecked() && daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), selectedDays, radiusFromStartingStop, context);
-                    }
-                    // Time conditions set, Day conditions not set
-                    else if (timeCheckBox.isChecked() && !daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(timePickerFrom.getCurrentHour(), timePickerFrom.getCurrentMinute(), timePickerTo.getCurrentHour(), timePickerTo.getCurrentMinute(), radiusFromStartingStop, context);
-                    }
-                    // Days conditions set, Time conditions not set
-                    else if (!timeCheckBox.isChecked() && daysCheckBox.isChecked()) {
-                        dtc = new DayTimeConditions(selectedDays, radiusFromStartingStop, context);
-                    }
-                    // Days conditions not set, Time conditions not set
-                    else if (!timeCheckBox.isChecked() && !daysCheckBox.isChecked()) {
-                        if (radiusFromStartingStop != -1) {
-                            dtc = new DayTimeConditions(radiusFromStartingStop, context);
-                        } else { //No selection criteria. Treat as cancel
+                        if (radiusCheckBox.isChecked()) {
+                            if (!radiusStartingStopSpinner.getSelectedItem().toString().equals("OFF")) {
+                                radiusFromStartingStop = Integer.parseInt(radiusStartingStopSpinner.getSelectedItem().toString());
+                            }
+                        }
+                        if (timeCheckBox.isChecked()) {
+                            fromTimeHour = timePickerFrom.getCurrentHour();
+                            fromTimeMinute = timePickerFrom.getCurrentMinute();
+                            toTimeHour = timePickerTo.getCurrentHour();
+                            toTimeMinute = timePickerTo.getCurrentMinute();
+                        }
+
+                        // Call cancel if boxes checked but nothing selected as radius or days
+                        if (!timeCheckBox.isChecked() && radiusFromStartingStop == null && areSelectedDaysAllFalse(selectedDays)) {
                             setResult(RESULT_CANCELED, null);
                             finish();
                         }
+
+                        dtc = new DayTimeConditions(fromTimeHour, fromTimeMinute, toTimeHour, toTimeMinute, selectedDays, radiusFromStartingStop);
                     }
 
                 } catch (ParseException e) {
@@ -188,6 +185,11 @@ public class SetDayTimeConditions  extends Activity{
                 selectedDays[6] = checked;
                 break;
         }
+    }
+
+    public boolean areSelectedDaysAllFalse (boolean[] array) {
+        for(boolean b : array) if(b) return false;
+        return true;
     }
 
 

@@ -26,14 +26,14 @@
     // Both 'add' screens
     <string name="action_reset">Reset</string>
     <string name="TransportModeLabel">Transport mode</string>
-    <string name="MaxNumberLabel">Maximum Entries</string>
-    <string name="ConditionsLabel">Specify Conditions</string>
+    <string name="MaxNumberLabel">Maximum entries</string>
+    <string name="ConditionsLabel">Specify conditions</string>
     <string name="AddButtonLabel">Add</string>
     <string name="UpdateButtonLabel">Update</string>
-    <string name ="ConditionsTitleText">Set Conditions</string>
+    <string name ="ConditionsTitleText">Set conditions</string>
     <string name ="ConditionsSetInform">Conditions set</string>
     <string name ="NoConditionsSetInform">No conditions set</string>
-    <string name ="action_local_mode_toggle">Local Mode</string>
+    <string name ="action_local_mode_toggle">Local mode</string>
     <string name="InvalidRouteSelectedErrorMessage">Please select a valid stop or station from the drop down list</string>
 
     //User List View screen
