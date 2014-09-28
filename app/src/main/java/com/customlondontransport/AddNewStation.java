@@ -53,6 +53,8 @@ public class AddNewStation extends Activity {
     private TextView stationLabel;
     private Spinner stationSpinner;
 
+    private TextView busTowardsText;
+
     private TextView maxNumberLabel;
     private Spinner maxNumberSpinner;
 
@@ -138,6 +140,7 @@ public class AddNewStation extends Activity {
         stopCodeLabel = (TextView) findViewById(R.id.stationStopCodeLabel);
         maxNumberLabel = (TextView) findViewById(R.id.stationMaxNumberLabel);
         conditionsLabel = (TextView) findViewById(R.id.stationConditionsLabel);
+        busTowardsText = (TextView) findViewById(R.id.stationBusTowardsText);
 
         conditionsSwitch = (Switch) findViewById(R.id.stationConditionsSwitch);
         conditionsPreviewText = (TextView) findViewById(R.id.stationConditionsPreviewText);
@@ -371,8 +374,9 @@ public class AddNewStation extends Activity {
 
                 } else if (transportModeSelected.equals("Bus")) {
 
-                    List<RouteLine> busRoutes;
+                   busTowardsText.setText(getString(R.string.busTowardsText) + " " + stationStopSelected.getTowards());
 
+                    List<RouteLine> busRoutes;
                     // Start fetching Bus routes by Stop ID
                     BusRoutesByStopFetcher fetchBusRoutesByStop = new BusRoutesByStopFetcher();
                     fetchBusRoutesByStop.execute(stationStopSelected.getID());

@@ -21,6 +21,7 @@
     <string name ="SelectBusStopClosestFirst">Bus stop (closest first)</string>
     <string name ="EnterTubeStationName">Enter tube station name</string>
     <string name ="EnterBusStopName">Enter bus stop name</string>
+    <string name ="busTowardsText">Towards</string>
 
 
     // Both 'add' screens

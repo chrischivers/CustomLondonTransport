@@ -117,8 +117,28 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/stationLinearLayoutRouteGrid"
+                android:id="@+id/stationLinearLayoutBusTowardsBox"
                 android:layout_below="@+id/stationLinearLayoutRight1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentEnd="true" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/stationBusTowardsText"
+                    android:textStyle="italic"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stationLinearLayoutRouteGrid"
+                android:layout_below="@+id/stationLinearLayoutBusTowardsBox"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="5dp"
@@ -188,6 +208,7 @@
                 android:layout_alignParentStart="true"
                 android:textStyle="italic"
                 android:layout_below="@+id/stationLinearLayoutLeft2" />
+
         </RelativeLayout>
     </ScrollView>
 
